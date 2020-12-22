@@ -8,7 +8,7 @@ using WengaPort.Wrappers;
 
 namespace WengaPort.Modules
 {
-    internal class Movement : MelonMod
+    internal class Movement
     {
         public static void NoClipEnable()
         {
@@ -82,7 +82,7 @@ namespace WengaPort.Modules
             NoClipToggle = false;
         }
 
-        public override void VRChat_OnUiManagerInit()
+        public static void UIInit()
         {
             isInVR = GeneralWrappers.IsInVr();
         }
@@ -158,14 +158,14 @@ namespace WengaPort.Modules
                     MainMenu.NoClipButton.setToggleState(true, false);
                 }
             }
-            if (currentPlayer == null || transform == null)
-            {
-                currentPlayer = Utils.CurrentUser;
-                transform = Camera.main.transform;
-                isInVR = UnityEngine.XR.XRDevice.isPresent;
-            }
             if (FlyToggle)
             {
+                if (currentPlayer == null || transform == null)
+                {
+                    currentPlayer = Utils.CurrentUser;
+                    transform = Camera.main.transform;
+                    isInVR = UnityEngine.XR.XRDevice.isPresent;
+                }
                 if (RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
                 {
                     return;
@@ -312,6 +312,12 @@ namespace WengaPort.Modules
 
             if (Rotate)
             {
+                if (currentPlayer == null || transform == null)
+                {
+                    currentPlayer = Utils.CurrentUser;
+                    transform = Camera.main.transform;
+                    isInVR = UnityEngine.XR.XRDevice.isPresent;
+                }
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);

@@ -33,6 +33,14 @@ namespace WengaPort.Buttons
             {
                 Movement.InfJump = false;
             }, "Jump infinite High");
+
+            new QMToggleButton(ThisMenu, 3, 0, "Rotate", () =>
+            {
+                Movement.ToggleRotate(true);
+            }, "Disabled", () =>
+            {
+                Movement.ToggleRotate(false);
+            }, "Rotate with Arrow Keys");
         }
     }
 }

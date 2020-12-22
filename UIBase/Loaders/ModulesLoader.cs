@@ -21,6 +21,7 @@ namespace WengaPort.Loaders
             PlayerList.Init();
             ESP.Initialize();
             LovenseRemote.UIInit();
+            Movement.UIInit();
             MelonLoader.MelonCoroutines.Start(UIChanges.Initialize());
             MelonLoader.MelonCoroutines.Start(UIChanges.UpdateClock());
         }
