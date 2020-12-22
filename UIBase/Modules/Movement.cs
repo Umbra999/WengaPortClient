@@ -319,19 +319,19 @@ namespace WengaPort.Modules
 			{
 				if (Input.GetKey(KeyCode.UpArrow))
 				{
-					currentPlayer.transform.Rotate(Vector3.right, 150 * Time.deltaTime);
+					currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
 				}
 				if (Input.GetKey(KeyCode.DownArrow))
 				{
-					currentPlayer.transform.Rotate(Vector3.left, 150 * Time.deltaTime);
+					currentPlayer.transform.Rotate(Vector3.left, RotateSpeed * Time.deltaTime);
 				}
 				if (Input.GetKey(KeyCode.RightArrow))
 				{
-					currentPlayer.transform.Rotate(Vector3.back, 150 * Time.deltaTime);
+					currentPlayer.transform.Rotate(Vector3.back, RotateSpeed * Time.deltaTime);
 				}
 				if (Input.GetKey(KeyCode.LeftArrow))
 				{
-					currentPlayer.transform.Rotate(Vector3.forward, 150 * Time.deltaTime);
+					currentPlayer.transform.Rotate(Vector3.forward, RotateSpeed * Time.deltaTime);
 				}
 				alignTrackingToPlayer();
 			}
@@ -382,6 +382,7 @@ namespace WengaPort.Modules
 		public static bool VRFlyToggle = true;
 		public static bool Rotate = false;
 		public static float FlySpeed = 4.2f;
+		public static float RotateSpeed = 150f;
 	}
 }
 
