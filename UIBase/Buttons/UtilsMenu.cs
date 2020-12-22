@@ -165,6 +165,13 @@ namespace WengaPort.Buttons
                     PlayerExtensions.ReloadAvatar(P);
                 }
             }, "Toggle Dynamic bones for Friends Only", Color.cyan, Color.white, false, true);
+            new QMToggleButton(ThisMenu, 5, 1, "Rotate", () =>
+            {
+                Movement.ToggleRotate(true);
+            }, "Disabled", () =>
+            {
+                Movement.ToggleRotate(false);
+            }, "Toggle: Rotatin with Arrow Keys", Color.cyan, Color.white, false, true);
         }
     }
 }

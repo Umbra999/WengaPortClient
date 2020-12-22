@@ -5,10 +5,13 @@ using VRC.UserCamera;
 using Transmtn.DTO.Notifications;
 using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
 using System.Collections.Generic;
+using UnhollowerRuntimeLib.XrefScans;
+using System.Reflection;
+using System;
 
 namespace WengaPort.Modules
 {
-	class Utils
+	static class Utils
 	{
 		public static VRCUiPopupManager VRCUiPopupManager
 		{
@@ -200,5 +203,33 @@ namespace WengaPort.Modules
 			"die",
 			"sadness"
 		};
+		internal static bool XRefScanForMethod(this MethodBase methodBase, string methodName = null, string reflectedType = null)
+		{
+			bool flag = false;
+			foreach (XrefInstance xrefInstance in XrefScanner.XrefScan(methodBase))
+			{
+				if (xrefInstance.Type == XrefType.Method)
+				{
+					MethodBase methodBase2 = xrefInstance.TryResolve();
+					if (!(methodBase2 == null))
+					{
+						if (!string.IsNullOrEmpty(methodName))
+						{
+							flag = (!string.IsNullOrEmpty(methodBase2.Name) && methodBase2.Name.IndexOf(methodName, StringComparison.OrdinalIgnoreCase) >= 0);
+						}
+						if (!string.IsNullOrEmpty(reflectedType))
+						{
+							Type reflectedType2 = methodBase2.ReflectedType;
+							flag = (!string.IsNullOrEmpty((reflectedType2 != null) ? reflectedType2.Name : null) && methodBase2.ReflectedType.Name.IndexOf(reflectedType, StringComparison.OrdinalIgnoreCase) >= 0);
+						}
+						if (flag)
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
 	}
 }

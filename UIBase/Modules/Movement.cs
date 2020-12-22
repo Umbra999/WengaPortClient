@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
+using System.Reflection;
 using MelonLoader;
 using UnityEngine;
 using VRC;
@@ -312,13 +314,72 @@ namespace WengaPort.Modules
 				{
 				}
 			}
+
+			if (Rotate)
+			{
+				if (Input.GetKey(KeyCode.UpArrow))
+				{
+					currentPlayer.transform.Rotate(Vector3.right, 150 * Time.deltaTime);
+				}
+				if (Input.GetKey(KeyCode.DownArrow))
+				{
+					currentPlayer.transform.Rotate(Vector3.left, 150 * Time.deltaTime);
+				}
+				if (Input.GetKey(KeyCode.RightArrow))
+				{
+					currentPlayer.transform.Rotate(Vector3.back, 150 * Time.deltaTime);
+				}
+				if (Input.GetKey(KeyCode.LeftArrow))
+				{
+					currentPlayer.transform.Rotate(Vector3.forward, 150 * Time.deltaTime);
+				}
+				alignTrackingToPlayer();
+			}
 		}
+		internal static AlignTrackingToPlayerDelegate GetAlignTrackingToPlayerDelegate
+		{
+			get
+			{
+				if (alignTrackingToPlayerMethod == null)
+				{
+					alignTrackingToPlayerMethod = typeof(VRCPlayer).GetMethods(BindingFlags.Instance | BindingFlags.Public).
+						First((MethodInfo m) => m.ReturnType == typeof(void)
+						&& m.GetParameters().Length == 0
+						&& m.XRefScanForMethod("get_Transform", null)
+						&& m.XRefScanForMethod(null, "Player")
+						&& m.XRefScanForMethod("Vector3_Quaternion", "VRCPlayer")
+						&& m.XRefScanForMethod(null, "VRCTrackingManager")
+						&& m.XRefScanForMethod(null, "InputStateController"));
+				}
+				return (AlignTrackingToPlayerDelegate)Delegate.CreateDelegate(typeof(AlignTrackingToPlayerDelegate), Utils.CurrentUser, alignTrackingToPlayerMethod);
+			}
+		}
+		private static AlignTrackingToPlayerDelegate alignTrackingToPlayer;
+		private static MethodInfo alignTrackingToPlayerMethod;
+		internal static void ToggleRotate(bool state)
+		{
+			if (state)
+			{
+				Rotate = true;
+				alignTrackingToPlayer = GetAlignTrackingToPlayerDelegate;
+			}
+			else
+			{
+				Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
+				Rotate = false;
+				Quaternion localRotation = Utils.CurrentUser.transform.localRotation;
+				Utils.CurrentUser.transform.localRotation = new Quaternion(0f, localRotation.y, 0f, localRotation.w);
+				alignTrackingToPlayer();
+			}
+		}
+		internal delegate void AlignTrackingToPlayerDelegate();
 
 		public static Vector3 gravity = Physics.gravity;
 		private static VRCPlayer currentPlayer;
 		private static Transform transform;
 		public static bool isInVR;
 		public static bool VRFlyToggle = true;
+		public static bool Rotate = false;
 		public static float FlySpeed = 4.2f;
 	}
 }
