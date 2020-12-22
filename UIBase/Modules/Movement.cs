@@ -370,6 +370,7 @@ namespace WengaPort.Modules
 				Quaternion localRotation = Utils.CurrentUser.transform.localRotation;
 				Utils.CurrentUser.transform.localRotation = new Quaternion(0f, localRotation.y, 0f, localRotation.w);
 				alignTrackingToPlayer();
+				Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
 			}
 		}
 		internal delegate void AlignTrackingToPlayerDelegate();
