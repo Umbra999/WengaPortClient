@@ -185,3 +185,6 @@ C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\obj\Release\UIBase.csprojAssem
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\obj\Release\UIBase.csproj.CoreCompileInputs.cache
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\obj\Release\UIBase.csproj.CopyComplete
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\obj\Release\WengaPort.dll
+C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\obj\Release\UIBase.csprojAssemblyReference.cache
+C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\obj\Release\UIBase.csproj.CoreCompileInputs.cache
+C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\obj\Release\WengaPort.dll

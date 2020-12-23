@@ -22,12 +22,7 @@ namespace WengaPort.Modules
         public static GameObject Slider1;
         static KeyCode lockButton;
         static KeyCode holdButton;
-<<<<<<< Updated upstream
-        public static void UIInit()
-=======
-
         public void Start()
->>>>>>> Stashed changes
         {
             menu = new QMNestedButton(Buttons.UtilsMenu.ThisMenu, 5, 0, "Lovense", "Lovense Menu", null, null, null, Color.yellow);
             MenuText Text = new MenuText(menu, 800, 280, "Connected toys: 0 / 2");
