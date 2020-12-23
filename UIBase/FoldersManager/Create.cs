@@ -1,5 +1,6 @@
 ﻿using Il2CppSystem;
 using MelonLoader;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -7,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using WengaPort.Api.Object;
 using WengaPort.Extensions;
 
 namespace WengaPort.FoldersManager
@@ -61,6 +63,11 @@ namespace WengaPort.FoldersManager
                     PatchManager.QuestSpoof = false;
                     Logger.WengaLogger("[Cache] Cleaned...");
                 }
+            }
+            if (!File.Exists("WengaPort\\AvatarFavorites.json"))
+            {
+                string contents = JsonConvert.SerializeObject(new List<AvatarObject>(), Formatting.Indented);
+                File.WriteAllText("WengaPort\\AvatarFavorites.json", contents);
             }
         }
     }

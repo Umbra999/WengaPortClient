@@ -430,6 +430,8 @@
     <Compile Include="Api\ButtonImage.cs" />
     <Compile Include="Api\MenuSlider2.cs" />
     <Compile Include="Api\Panels.cs" />
+    <Compile Include="Api\VRChatAPIObjects.cs" />
+    <Compile Include="Api\VRCList.cs" />
     <Compile Include="Buttons\ButtonsMainColor.cs" />
     <Compile Include="Buttons\ButtonsRGB.cs" />
     <Compile Include="Api\ButtonTypes.cs" />
@@ -468,6 +470,7 @@
     <Compile Include="Loaders\MainLoader.cs" />
     <Compile Include="Loaders\ModulesLoader.cs" />
     <Compile Include="LoadingMusic\LoadingMusic.cs" />
+    <Compile Include="Modules\AvatarFavs.cs" />
     <Compile Include="Modules\BotOrbit.cs" />
     <Compile Include="Modules\CameraHandler.cs" />
     <Compile Include="Modules\ESP.cs" />

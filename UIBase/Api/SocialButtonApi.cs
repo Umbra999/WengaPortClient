@@ -9,7 +9,7 @@ namespace WengaPort.Utility
 {
     class MenuButton
     {
-        public MenuButton(MenuType type, MenuButtonType buttontype, string text, float x_pos, float y_pos, UnityAction listener)
+        public MenuButton(MenuType type, MenuButtonType buttontype, string text, float x_pos, float y_pos, Action listener)
         {
             try
             {

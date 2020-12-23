@@ -52,6 +52,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<LovenseRemote>();
             ClassInjector.RegisterTypeInIl2Cpp<PlayerList>();
             ClassInjector.RegisterTypeInIl2Cpp<ThirdPerson>();
+            ClassInjector.RegisterTypeInIl2Cpp<AvatarFavs>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -353,6 +354,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<LovenseRemote>();
             Client.AddComponent<PlayerList>();
             Client.AddComponent<ThirdPerson>();
+            Client.AddComponent<AvatarFavs>();
         }
         GameObject menu;
         Button button;
