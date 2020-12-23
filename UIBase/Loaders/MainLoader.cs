@@ -53,6 +53,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<PlayerList>();
             ClassInjector.RegisterTypeInIl2Cpp<ThirdPerson>();
             ClassInjector.RegisterTypeInIl2Cpp<AvatarFavs>();
+            ClassInjector.RegisterTypeInIl2Cpp<AttachmentManager>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -355,6 +356,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<PlayerList>();
             Client.AddComponent<ThirdPerson>();
             Client.AddComponent<AvatarFavs>();
+            Client.AddComponent<AttachmentManager>();
         }
         GameObject menu;
         Button button;
