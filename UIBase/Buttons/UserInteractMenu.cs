@@ -168,7 +168,7 @@ namespace WengaPort.Buttons
             }, "Drop Infinite Portal on the Player");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            RpcToggle = new QMToggleButton(ThisMenu, 4, 0, "Block \nEvents", () =>
+            RpcToggle = new QMToggleButton(ThisMenu, 4, 0, "Block \nRPC", () =>
             {
                 VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
                 if (!RPCAndEventBlock.Check(instance.UserID()))
@@ -185,7 +185,7 @@ namespace WengaPort.Buttons
                     File.Delete("WengaPort\\BlockedEvents.json");
                     File.WriteAllLines("WengaPort\\BlockedEvents.json", RPCAndEventBlock.Block);
                 }
-            }, "Block incoming Events");
+            }, "Block incoming Events/RPCs");
 
             BlockToggle = new QMToggleButton(ThisMenu, 4, 1, "Silent \nBlock", () =>
             {

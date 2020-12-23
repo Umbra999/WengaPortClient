@@ -349,7 +349,7 @@ namespace WengaPort.MainLoader
             menu = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend");
             button = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend/Actions/Invite").GetComponent<Button>();
             var Client = new GameObject();
-            GameObject.DontDestroyOnLoad(Client);
+            UnityEngine.Object.DontDestroyOnLoad(Client);
             Client.AddComponent<Movement>();
             Client.AddComponent<LovenseRemote>();
             Client.AddComponent<PlayerList>();

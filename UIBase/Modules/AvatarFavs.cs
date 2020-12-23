@@ -23,7 +23,6 @@ namespace WengaPort.Modules
     {
         public void Start()
         {
-            Extensions.Logger.WengaLogger("[AvatarFavs] Start. . .");
             avatarPage = GameObject.Find("UserInterface/MenuContent/Screens/Avatar");
             PublicAvatarList = GameObject.Find("/UserInterface/MenuContent/Screens/Avatar/Vertical Scroll View/Viewport/Content/Public Avatar List");
             currPageAvatar = avatarPage.GetComponent<PageAvatar>();
@@ -41,21 +40,19 @@ namespace WengaPort.Modules
             });
             AvatarList = new VRCList(PublicAvatarList.transform.parent, "WengaPort Favorites", 0);
             AvatarObjects = JsonConvert.DeserializeObject<List<AvatarObject>>(File.ReadAllText("WengaPort\\AvatarFavorites.json"));
-            Extensions.Logger.WengaLogger("[AvatarFavs] Done!");
+            Extensions.Logger.WengaLogger("[AvatarFavs] Loaded");
         } 
 
         public void Update()
         {
             try
             {
-
                 if (avatarPage.activeSelf && !JustOpened)
                 {
                     JustOpened = true;
                     MelonCoroutines.Start(RefreshMenu(1f));
                 }
-
-                if (!avatarPage.activeSelf && JustOpened)
+                else if (!avatarPage.activeSelf && JustOpened)
                     JustOpened = false;
             }
             catch { }
