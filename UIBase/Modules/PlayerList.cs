@@ -45,7 +45,7 @@ namespace WengaPort.Modules
                     PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
                 }
             }
-            catch (Exception)
+            catch
             { }
         }
 
@@ -85,11 +85,8 @@ namespace WengaPort.Modules
                 Wenga = new WebClient().DownloadString(str + "Wenga.txt");
                 ClientUser = new WebClient().DownloadString(str + "ClientUser.txt");
             }
-            catch (Exception value)
-            {
-                Console.WriteLine(value);
-                throw;
-            }
+            catch
+            {}
         }
 
         public static bool CheckWenga(string Id)
@@ -152,16 +149,14 @@ namespace WengaPort.Modules
         {
             foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
             {
-                string text4 = player.GetAPIUser().GetRank().ToLower();
                 bool WengaCheck = CheckWenga(player.UserID());
-                bool TrialCheck = CheckTrial(player.UserID());
-                bool ClientCheck = CheckClient(player.UserID());
-                var nameplate = player.GetVRCPlayer().nameplate;
                 if (WengaCheck)
                 {
 
                 }
-                else if (TrialCheck)
+                bool TrialCheck = CheckTrial(player.UserID());
+                bool ClientCheck = CheckClient(player.UserID());
+                if (TrialCheck)
                 {
                     Color color = new Color(0.333f, 0.153f, 0.667f);
                     if (player.GetVRCPlayer().nameplate.uiName.color != color)
@@ -179,6 +174,8 @@ namespace WengaPort.Modules
                 }
                 else
                 {
+                    var nameplate = player.GetVRCPlayer().nameplate;
+                    string text4 = player.GetAPIUser().GetRank().ToLower();
                     switch (text4.ToString())
                     {
                         case "user":

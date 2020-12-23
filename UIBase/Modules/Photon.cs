@@ -16,9 +16,7 @@ namespace WengaPort.Modules
 {
     class Photon
     {
-
 		public static bool EmojiSpam = false;
-
 		public static void EmojiRPC(int i)
 		{
 			try
@@ -88,10 +86,8 @@ namespace WengaPort.Modules
 					Serialize = false;
 				}
 			}
-			catch (System.Exception)
-            {
-
-            }
+			catch
+            {}
 		}
 
 		private static string RandomString(int length)

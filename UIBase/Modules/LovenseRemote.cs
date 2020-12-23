@@ -22,7 +22,6 @@ namespace WengaPort.Modules
         public static GameObject Slider1;
         static KeyCode lockButton;
         static KeyCode holdButton;
-
         public static void UIInit()
         {
             menu = new QMNestedButton(Buttons.UtilsMenu.ThisMenu, 5, 0, "Lovense", "Lovense Menu", null, null, null, Color.yellow);
@@ -67,8 +66,8 @@ namespace WengaPort.Modules
         public static void Update()
         {
             float speed = 0;
-            if (findButton != null) getButton();
             if (toys.Count == 0) return;
+            else if (findButton != null) getButton();
             foreach (Toy toy in toys)
             {
                 switch (toy.hand)

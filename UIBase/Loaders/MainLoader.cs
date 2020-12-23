@@ -136,10 +136,7 @@ namespace WengaPort.MainLoader
             LoadingDelay += Time.deltaTime;
             if (LoadingDelay > 13f)
             {
-                if (AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0)
-                {
-                    AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
-                }
+                AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
                 LoadingDelay = 0f;
             }
             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) ButtonsMainColor.Initialize3(); //Really scuffed but this is to disable the blue loading screen
@@ -209,7 +206,7 @@ namespace WengaPort.MainLoader
                     }
 
                     PlateDelay += Time.deltaTime;
-                    if (PlateDelay > 1.8f)
+                    if (PlateDelay > 2f)
                     {
                         PlayerList.PlateChanger();
                         PlateDelay = 0f;

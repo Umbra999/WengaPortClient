@@ -306,7 +306,7 @@ namespace WengaPort.Extensions
                     Api.ApiExtension.Start();
                 }
             }
-            catch (System.Exception)
+            catch
             {
             }
         }
@@ -328,8 +328,6 @@ namespace WengaPort.Extensions
         public static bool EventLog = false;
         public static bool DictLog = false;
         public static bool RPCLog = true;
-
-        public static System.Collections.Generic.List<string> CrashAvis = new System.Collections.Generic.List<string>();
 
         private static bool UdonSyncPatch(string __0)
         {
@@ -356,19 +354,13 @@ namespace WengaPort.Extensions
                     {
                         __1 = (VrcBroadcastType)2;
                     }
-                }
-                if (__1 == VrcBroadcastType.Always || __1 == VrcBroadcastType.AlwaysUnbuffered || __1 == VrcBroadcastType.AlwaysBufferOne)
-                {
                     if (__0.EventType == VrcEventType.AnimationBool || __0.EventType == VrcEventType.SetComponentActive || __0.EventType == VrcEventType.ActivateCustomTrigger)
                     {
-                        if (__0.ParameterString == "UnityEngine.Animator")
+                        if (__0.ParameterString == "UnityEngine.Animator" && AntiFreefall)
                         {
-                            if (AntiFreefall)
-                            {
-                                Logger.WengaLogger($"[Room] [Protection] Prevented AnimationBool Event on [{__0.ParameterObject}]");
-                                VRConsole.Log(VRConsole.LogsType.Protection, "Prevented AnimationBool Event");
-                                return false;
-                            }       
+                            Logger.WengaLogger($"[Room] [Protection] Prevented AnimationBool Event on [{__0.ParameterObject}]");
+                            VRConsole.Log(VRConsole.LogsType.Protection, "Prevented AnimationBool Event");
+                            return false;
                         }
                     }
                 }
@@ -504,7 +496,6 @@ namespace WengaPort.Extensions
             }
             catch
             {
-
             }
             return true;
         }
@@ -606,70 +597,63 @@ namespace WengaPort.Extensions
                 bool Check2 = __1.ParameterString != null;
                 if (Check2)
                 {
-                    if (__1.ParameterString == "SetTimerRPC")
+                    switch (__1.ParameterString)
                     {
-                        return true;
-                    }
-                    else if (__1.ParameterString == "ConfigurePortal")
-                    {
-                        VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
-                        Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
-                        if (PortalHandler.AntiPortal)
-                        {
-                            return false;
-                        }
-                    }
-                    else if (__1.ParameterString == "PlayEffect")
-                    {
-                        VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portal entered");
-                        Logger.WengaLogger("[Room] [Portal]" + text + " entered a Portal");
-                    }
-                    else if (__1.ParameterString == "_DestroyObject")
-                    {
-                        VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Destroyed Object");
-                        Logger.WengaLogger($"[Room] [Portal] {text} destroyed an Object");
-                    }
-                    else if (__1.ParameterString == "CleanRoomRPC")
-                    {
-                        VRConsole.Log(VRConsole.LogsType.Info, text + " --> Cleaned Room");
-                        Logger.WengaLogger($"[Room] [Info] {text} cleaned the Room");
-                    }
-                    else if (__1.ParameterString == "PlayEmoteRPC")
-                    {
-                        //VRConsole.Log(VRConsole.LogsType.Info,$" {text} --> Emote");
-                        Logger.WengaLogger($"[Room] [Info] {text} played Emote");
-                    }
-                    else if (__1.ParameterString == "SpawnEmojiRPC")
-                    {
-                        VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Emoji");
-                        Logger.WengaLogger($"[Room] [Info] {text} played Emoji");
-                    }
-                    else if (__1.ParameterString == "_InstantiateObject")
-                    {
-                        if (text4.Contains("Infinity") && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Instantiate Infinity-Objects");
-                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from Instantiating Objects at Infinity");
-                            return false;
-                        }
-                        else
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Instantiate Object");
-                            Logger.WengaLogger($"[Room] [Info] {text} instantiated Object");
-                        }
-                    }
-                    else if (__1.ParameterString == "ChangeVisibility")
-                    {
-                        if (text4.Contains("True"))
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Camera Show");
-                            Logger.WengaLogger($"[Room] [Info] {text} showed the Camera");
-                        }
-                        else if (text4.Contains("False"))
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Camera Hide");
-                            Logger.WengaLogger($"[Room] [Info] {text} hide the Camera");
-                        }
+                        case "SetTimerRPC":
+                            return true;
+                        case "ConfigurePortal":
+                            VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
+                            Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
+                            if (PortalHandler.AntiPortal)
+                            {
+                                return false;
+                            }
+                            break;
+                        case "PlayEffect":
+                            VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portal entered");
+                            Logger.WengaLogger("[Room] [Portal]" + text + " entered a Portal");
+                            break;
+                        case "_DestroyObject":
+                            VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Destroyed Object");
+                            Logger.WengaLogger($"[Room] [Portal] {text} destroyed an Object");
+                            break;
+                        case "CleanRoomRPC":
+                            VRConsole.Log(VRConsole.LogsType.Info, text + " --> Cleaned Room");
+                            Logger.WengaLogger($"[Room] [Info] {text} cleaned the Room");
+                            break;
+                        case "PlayEmoteRPC":
+                            //VRConsole.Log(VRConsole.LogsType.Info,$" {text} --> Emote");
+                            Logger.WengaLogger($"[Room] [Info] {text} played Emote");
+                            break;
+                        case "SpawnEmojiRPC":
+                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Emoji");
+                            Logger.WengaLogger($"[Room] [Info] {text} played Emoji");
+                            break;
+                        case "_InstantiateObject":
+                            if (text4.Contains("Infinity") && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Instantiate Infinity-Objects");
+                                Logger.WengaLogger($"[Room] [Protection] Prevented {text} from Instantiating Objects at Infinity");
+                                return false;
+                            }
+                            else
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Instantiate Object");
+                                Logger.WengaLogger($"[Room] [Info] {text} instantiated Object");
+                            }
+                            break;
+                        case "ChangeVisibility":
+                            if (text4.Contains("True"))
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Camera Show");
+                                Logger.WengaLogger($"[Room] [Info] {text} showed the Camera");
+                            }
+                            else if (text4.Contains("False"))
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Camera Hide");
+                                Logger.WengaLogger($"[Room] [Info] {text} hide the Camera");
+                            }
+                            break;
                     }
                 }
                 VrcBroadcastType vrcBroadcastType = __2;

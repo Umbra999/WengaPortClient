@@ -11,18 +11,6 @@ namespace WengaPort.Modules
     {
 		public static float APIDelay = 0f;
 		private static int count = 0;
-		public static int GetDelayedBlock()
-        {
-			APIDelay += Time.deltaTime;
-			if (APIDelay > 90f)
-			{
-				APIDelay = 0f;
-				var Moderations = Utils.ModerationManager.GetModerationAgainstYOU((VRC.Core.ApiPlayerModeration.ModerationType)1);
-				count = Moderations;
-				return count;
-			}
-			return count;
-		}
 
         public static void GuiInit()
         {
