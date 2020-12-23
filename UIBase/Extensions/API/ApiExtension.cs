@@ -94,7 +94,7 @@ namespace WengaPort.Api
 						{
 							if (WebSocketData.location == "private")
                             {
-								Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> PRIVATE");
+								//Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> PRIVATE");
 								Extensions.Logger.WengaLogger($"[World] {apiuser.displayName} -> [PRIVATE]");
 							}
 							else if (ApiConsole)
@@ -105,7 +105,7 @@ namespace WengaPort.Api
 							else if (WebSocketData.location.Contains("wrld_"))
                             {
 								Extensions.Logger.WengaLogger($"[World] {apiuser.displayName} -> {WebSocketData.world.name}");
-								Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}");
+								//Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}");
 							}
 						}
 						break;
