@@ -144,10 +144,15 @@ namespace WengaPort.Buttons
                 Utils.QuickMenu.SelectedVRCPlayer().field_Private_Boolean_3 = false;
             }, "Mute yourself for this User", Color.cyan, Color.white, false, true);
 
-            HalfButton = new QMSingleButton(ThisMenu, 1, 0.25f, "Open \nSteam", () =>
+            HalfButton = new QMSingleButton(ThisMenu, 1, 0.25f, "Spawn \nPrefab", () =>
             {
-                Process.Start("https://steamcommunity.com/profiles/" + Utils.QuickMenu.SelectedVRCPlayer().field_Private_UInt64_0.ToString());
-            }, "Open Steam Profile");
+                VRCPlayer player = Utils.QuickMenu.SelectedVRCPlayer();
+                List<GameObject> Prefabs = VRCUiManagerExtension.GetWorldPrefabs();
+                foreach (GameObject SelectedPrefab in Prefabs)
+                {
+                    Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, player.transform.position, player.transform.rotation);
+                }
+            }, "Spawn Prefabs on the Player");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 1, -0.25f, "Open \nVRChat", () =>
@@ -237,16 +242,6 @@ namespace WengaPort.Buttons
             }, "Teleport all Items to the Player");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            new QMSingleButton(ThisMenu, 2, 2, "Spawn \nPrefab", () =>
-            {
-                VRCPlayer player = Utils.QuickMenu.SelectedVRCPlayer();
-                List<GameObject> Prefabs = VRCUiManagerExtension.GetWorldPrefabs();
-                foreach (GameObject SelectedPrefab in Prefabs)
-                {
-                    Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, player.transform.position, player.transform.rotation);
-                }
-            }, "Spawn Prefabs on the Player");
-
             HalfButton = new QMSingleButton(ThisMenu, 3, 1.75f, "Audio \nCrash", () =>
             {
                 MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_ce9c4c0a-f646-48c6-8856-a53b8d7b9bf4"));
@@ -258,6 +253,15 @@ namespace WengaPort.Buttons
                 MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab"));
             }, "Crash the Player with a Stack overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            new QMToggleButton(ThisMenu, 2, 2, "Attach", () =>
+            {
+                VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
+                AttachmentManager.SetAttachment(instance, HumanBodyBones.Head);
+            }, "Disabled", () =>
+            {
+                AttachmentManager.Reset();
+            }, "Attach on Head");
 
             HalfButton = new QMSingleButton(ThisMenu, 2, 0.25f, "Forceclone", () =>
             {
