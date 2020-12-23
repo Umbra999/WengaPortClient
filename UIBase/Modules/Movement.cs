@@ -316,17 +316,22 @@ namespace WengaPort.Modules
                 {
                     currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
                 }
-                if (Input.GetKey(KeyCode.DownArrow))
+                else if (Input.GetKey(KeyCode.DownArrow))
                 {
                     currentPlayer.transform.Rotate(Vector3.left, RotateSpeed * Time.deltaTime);
                 }
-                if (Input.GetKey(KeyCode.RightArrow))
+                else if (Input.GetKey(KeyCode.RightArrow))
                 {
                     currentPlayer.transform.Rotate(Vector3.back, RotateSpeed * Time.deltaTime);
                 }
-                if (Input.GetKey(KeyCode.LeftArrow))
+                else if (Input.GetKey(KeyCode.LeftArrow))
                 {
                     currentPlayer.transform.Rotate(Vector3.forward, RotateSpeed * Time.deltaTime);
+                }
+                else if (Input.GetKey(KeyCode.X))
+                {
+                    ToggleRotate(false);
+                    ToggleRotate(true);
                 }
                 alignTrackingToPlayer?.Invoke();
             }

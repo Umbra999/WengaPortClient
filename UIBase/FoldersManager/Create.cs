@@ -13,7 +13,6 @@ namespace WengaPort.FoldersManager
 {
     class Create
     {
-        public static string WengaPortFolder = Path.Combine("WengaPort");
         public static IniFile Ini = new IniFile("WengaPort\\Config.ini");
         private static long GetDirectorySize(string folderPath)
         {
@@ -25,9 +24,9 @@ namespace WengaPort.FoldersManager
         {
             var pathWithEnv = @"%USERPROFILE%\AppData\LocalLow\VRChat\VRChat\Cache-WindowsPlayer";
             var filePath = System.Environment.ExpandEnvironmentVariables(pathWithEnv);
-            if (!Directory.Exists(WengaPortFolder))
+            if (!Directory.Exists("WengaPort"))
             {
-                Directory.CreateDirectory(WengaPortFolder);
+                Directory.CreateDirectory("WengaPort");
             }
             if (!File.Exists("WengaPort\\Config.ini"))
             {
