@@ -470,6 +470,7 @@
     <Compile Include="Loaders\MainLoader.cs" />
     <Compile Include="Loaders\ModulesLoader.cs" />
     <Compile Include="LoadingMusic\LoadingMusic.cs" />
+    <Compile Include="Modules\AttachmentManager.cs" />
     <Compile Include="Modules\AvatarFavs.cs" />
     <Compile Include="Modules\BotOrbit.cs" />
     <Compile Include="Modules\CameraHandler.cs" />
