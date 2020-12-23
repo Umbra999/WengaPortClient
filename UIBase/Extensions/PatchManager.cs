@@ -233,7 +233,7 @@ namespace WengaPort.Extensions
                     item2.m_DistantDisable = true;
                 }
             }
-            catch (System.Exception)
+            catch
             { }
         }
 

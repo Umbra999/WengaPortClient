@@ -25,7 +25,6 @@ namespace WengaPort.Api
 
 		public static void CloseWebsocket()
         {
-			MelonCoroutines.Stop(Connect());
 			ws.Close();
 		}
 
@@ -58,9 +57,8 @@ namespace WengaPort.Api
 				Extensions.Logger.WengaLogger("[API Error] VRChat Pipeline WebSocket closed due to: " + e.Reason + "  |  Code: " + e.Code);
 				ws.Connect();
 			}
-			catch (Exception)
+			catch
 			{
-				
 			}
 		}
 		
@@ -157,9 +155,8 @@ namespace WengaPort.Api
 				}
 				
 			}
-            catch (Exception)
-            {
-	            
+            catch
+            {  
             }
 		}
 	}

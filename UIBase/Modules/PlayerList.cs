@@ -149,118 +149,121 @@ namespace WengaPort.Modules
 
         public void Update()
         {
-
             PlateDelay -= Time.deltaTime;
             if (PlateDelay < 0)
             {
-                PlateDelay = 1.8f;
-                foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
+                PlateDelay = 2f;
+                try
                 {
-                    bool WengaCheck = CheckWenga(player.UserID());
-                    if (WengaCheck)
+                    foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
+                        bool WengaCheck = CheckWenga(player.UserID());
+                        if (WengaCheck)
+                        {
+
+                        }
+                        bool TrialCheck = CheckTrial(player.UserID());
+                        bool ClientCheck = CheckClient(player.UserID());
+                        if (TrialCheck)
+                        {
+                            Color color = new Color(0.333f, 0.153f, 0.667f);
+                            if (player.GetVRCPlayer().nameplate.uiName.color != color)
+                            {
+                                NameplateHandler.givePlateText(player, color, "ღ Wenga's Egirl ღ");
+                            }
+                        }
+                        else if (ClientCheck)
+                        {
+                            Color color = new Color(0.63f, 0.24f, 0.16f);
+                            if (player.GetVRCPlayer().nameplate.uiName.color != color)
+                            {
+                                NameplateHandler.givePlateText(player, color, "WengaPort");
+                            }
+                        }
+                        else
+                        {
+                            var nameplate = player.GetVRCPlayer().nameplate;
+                            string text4 = player.GetAPIUser().GetRank().ToLower();
+                            switch (text4.ToString())
+                            {
+                                case "user":
+                                    {
+                                        Color color = new Color(0f, 1f, 0f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "User");
+                                        }
+                                        break;
+                                    }
+                                case "legend":
+                                    {
+                                        Color color = new Color(0.95f, 0.95f, 0.95f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Legend");
+                                        }
+                                        break;
+                                    }
+                                case "known":
+                                    {
+                                        Color color = new Color(0.92f, 0.37f, 0f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Known");
+                                        }
+                                        break;
+                                    }
+                                case "new user":
+                                    {
+                                        Color color = new Color(0, 1f, 1f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "New");
+                                        }
+                                        break;
+                                    }
+                                case "visitor":
+                                    {
+                                        Color color = new Color(0.09f, 0.09f, 0.09f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Visitor");
+                                        }
+                                        break;
+                                    }
+                                case "trusted":
+                                    {
+                                        Color color = new Color(0.87f, 0f, 0.5f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Trusted");
+                                        }
+                                        break;
+                                    }
+                                case "veteran":
+                                    {
+                                        Color color = new Color(1f, 0.81f, 0.03f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Veteran");
+                                        }
+                                        break;
+                                    }
+                                case "negativetrust":
+                                    {
+                                        Color color = new Color(0.44f, 0.01f, 0.01f);
+                                        if (nameplate.uiName.color != color)
+                                        {
+                                            NameplateHandler.givePlateText(player, color, "Nuisance");
+                                        }
+                                        break;
+                                    }
+                            }
+                        }
 
                     }
-                    bool TrialCheck = CheckTrial(player.UserID());
-                    bool ClientCheck = CheckClient(player.UserID());
-                    if (TrialCheck)
-                    {
-                        Color color = new Color(0.333f, 0.153f, 0.667f);
-                        if (player.GetVRCPlayer().nameplate.uiName.color != color)
-                        {
-                            NameplateHandler.givePlateText(player, color, "ღ Wenga's Egirl ღ");
-                        }
-                    }
-                    else if (ClientCheck)
-                    {
-                        Color color = new Color(0.63f, 0.24f, 0.16f);
-                        if (player.GetVRCPlayer().nameplate.uiName.color != color)
-                        {
-                            NameplateHandler.givePlateText(player, color, "WengaPort");
-                        }
-                    }
-                    else
-                    {
-                        var nameplate = player.GetVRCPlayer().nameplate;
-                        string text4 = player.GetAPIUser().GetRank().ToLower();
-                        switch (text4.ToString())
-                        {
-                            case "user":
-                                {
-                                    Color color = new Color(0f, 1f, 0f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "User");
-                                    }
-                                    break;
-                                }
-                            case "legend":
-                                {
-                                    Color color = new Color(0.95f, 0.95f, 0.95f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Legend");
-                                    }
-                                    break;
-                                }
-                            case "known":
-                                {
-                                    Color color = new Color(0.92f, 0.37f, 0f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Known");
-                                    }
-                                    break;
-                                }
-                            case "new user":
-                                {
-                                    Color color = new Color(0, 1f, 1f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "New");
-                                    }
-                                    break;
-                                }
-                            case "visitor":
-                                {
-                                    Color color = new Color(0.09f, 0.09f, 0.09f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Visitor");
-                                    }
-                                    break;
-                                }
-                            case "trusted":
-                                {
-                                    Color color = new Color(0.87f, 0f, 0.5f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Trusted");
-                                    }
-                                    break;
-                                }
-                            case "veteran":
-                                {
-                                    Color color = new Color(1f, 0.81f, 0.03f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Veteran");
-                                    }
-                                    break;
-                                }
-                            case "negativetrust":
-                                {
-                                    Color color = new Color(0.44f, 0.01f, 0.01f);
-                                    if (nameplate.uiName.color != color)
-                                    {
-                                        NameplateHandler.givePlateText(player, color, "Nuisance");
-                                    }
-                                    break;
-                                }
-                        }
-                    }
-
                 }
+                catch { }
             }
         }
         public PlayerList(IntPtr ptr) : base(ptr)
