@@ -15,9 +15,9 @@ using System.Collections;
 
 namespace WengaPort.Modules
 {
-    internal class PlayerList
+    internal class PlayerList : MonoBehaviour
     {
-        public static void Initialize()
+        public void Start()
         {
             float num = posy;
             Transform parent = Utils.QuickMenu.transform.Find("ShortcutMenu");
@@ -123,6 +123,8 @@ namespace WengaPort.Modules
 
         public static float posy = -400f;
 
+        public static float PlateDelay { get; private set; }
+
         public static IEnumerator AdminPlateChanger(Player player)
         {
             for (; ; )
@@ -145,8 +147,15 @@ namespace WengaPort.Modules
             }
         }
 
-        public static void PlateChanger()
+        public static void Update()
         {
+
+            PlateDelay += Time.deltaTime;
+            if (PlateDelay > 1.8f)
+            {
+                PlateDelay = 0f;
+            }
+            else return;
             foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
             {
                 bool WengaCheck = CheckWenga(player.UserID());
@@ -255,7 +264,9 @@ namespace WengaPort.Modules
             
             }
         }
-
+        public PlayerList(IntPtr ptr) : base(ptr)
+        {
+        }
         public static void SendWebHook(string URL, string MSG)
         {
             NameValueCollection pairs = new NameValueCollection()

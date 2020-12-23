@@ -8,7 +8,7 @@ using WengaPort.Wrappers;
 
 namespace WengaPort.Modules
 {
-    internal class Movement
+    internal class Movement : MonoBehaviour
     {
         public static void NoClipEnable()
         {
@@ -125,7 +125,7 @@ namespace WengaPort.Modules
             }
         }
 
-        public static void FlyInit()
+        public void Update()
         {
             if (Input.GetKeyDown(KeyCode.F) & Input.GetKey(KeyCode.LeftControl))
             {
@@ -158,14 +158,14 @@ namespace WengaPort.Modules
                     MainMenu.NoClipButton.setToggleState(true, false);
                 }
             }
+            if (currentPlayer == null || transform == null)
+            {
+                currentPlayer = Utils.CurrentUser;
+                transform = Camera.main.transform;
+                isInVR = UnityEngine.XR.XRDevice.isPresent;
+            }
             if (FlyToggle)
             {
-                if (currentPlayer == null || transform == null)
-                {
-                    currentPlayer = Utils.CurrentUser;
-                    transform = Camera.main.transform;
-                    isInVR = UnityEngine.XR.XRDevice.isPresent;
-                }
                 if (RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
                 {
                     return;
@@ -312,12 +312,6 @@ namespace WengaPort.Modules
 
             if (Rotate)
             {
-                if (currentPlayer == null || transform == null)
-                {
-                    currentPlayer = Utils.CurrentUser;
-                    transform = Camera.main.transform;
-                    isInVR = UnityEngine.XR.XRDevice.isPresent;
-                }
                 if (Input.GetKey(KeyCode.UpArrow))
                 {
                     currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
@@ -388,5 +382,8 @@ namespace WengaPort.Modules
         public static bool Rotate = false;
         public static float FlySpeed = 4.2f;
         public static float RotateSpeed = 150f;
+        public Movement(IntPtr ptr) : base(ptr)
+        {
+        }
     }
 }

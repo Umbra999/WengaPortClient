@@ -13,7 +13,7 @@ using WengaPort.Api;
 
 namespace WengaPort.Modules
 {
-    public class LovenseRemote
+    public class LovenseRemote : MonoBehaviour
     {
         public static ArrayList toys = new ArrayList();
         static string findButton = null;
@@ -22,7 +22,12 @@ namespace WengaPort.Modules
         public static GameObject Slider1;
         static KeyCode lockButton;
         static KeyCode holdButton;
+<<<<<<< Updated upstream
         public static void UIInit()
+=======
+
+        public void Start()
+>>>>>>> Stashed changes
         {
             menu = new QMNestedButton(Buttons.UtilsMenu.ThisMenu, 5, 0, "Lovense", "Lovense Menu", null, null, null, Color.yellow);
             MenuText Text = new MenuText(menu, 800, 280, "Connected toys: 0 / 2");
@@ -63,7 +68,7 @@ namespace WengaPort.Modules
             }, 0, 100, 0, true);
         }
         static float sliderspeed = 0;
-        public static void Update()
+        public void Update()
         {
             float speed = 0;
             if (toys.Count == 0) return;
@@ -197,7 +202,9 @@ namespace WengaPort.Modules
             int pos = url.LastIndexOf("/") + 1;
             return url.Substring(pos, url.Length - pos);
         }
-
+        public LovenseRemote(IntPtr ptr) : base(ptr)
+        {
+        }
     }
 
     public class Toy

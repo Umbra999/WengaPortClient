@@ -19,6 +19,7 @@ using System.Threading;
 using UnityEngine.UI;
 using Logger = WengaPort.Extensions.Logger;
 using WengaPort.ConsoleUtils;
+using UnhollowerRuntimeLib;
 
 namespace WengaPort.MainLoader
 {
@@ -47,6 +48,10 @@ namespace WengaPort.MainLoader
                 }
             }
             PatchManager.QuestIni();
+            ClassInjector.RegisterTypeInIl2Cpp<Movement>();
+            ClassInjector.RegisterTypeInIl2Cpp<LovenseRemote>();
+            ClassInjector.RegisterTypeInIl2Cpp<PlayerList>();
+            ClassInjector.RegisterTypeInIl2Cpp<ThirdPerson>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -142,9 +147,7 @@ namespace WengaPort.MainLoader
             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) ButtonsMainColor.Initialize3(); //Really scuffed but this is to disable the blue loading screen
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                Movement.FlyInit();
                 Movement.JumpInit();
-                LovenseRemote.Update();
                 RoomTime += Time.deltaTime;
                 if (UnityEngine.XR.XRDevice.isPresent)
                 {
@@ -152,7 +155,6 @@ namespace WengaPort.MainLoader
                 }
                 else
                 {
-                    ThirdPerson.ThirdPersonUpdate();
                     CameraHandler.Zoom();
 
                     if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
@@ -204,14 +206,6 @@ namespace WengaPort.MainLoader
                         }
                         PlayerDelay = 0f;
                     }
-
-                    PlateDelay += Time.deltaTime;
-                    if (PlateDelay > 2f)
-                    {
-                        PlayerList.PlateChanger();
-                        PlateDelay = 0f;
-                    }
-
                     if (Modules.Photon.DisconnectToggle)
                     {
                         DCDelay += Time.deltaTime;
@@ -353,6 +347,12 @@ namespace WengaPort.MainLoader
             VRCPlayer.field_Internal_Static_Color_9 = new Color(255, 255, 255);
             menu = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend");
             button = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend/Actions/Invite").GetComponent<Button>();
+            var Client = new GameObject();
+            GameObject.DontDestroyOnLoad(Client);
+            Client.AddComponent<Movement>();
+            Client.AddComponent<LovenseRemote>();
+            Client.AddComponent<PlayerList>();
+            Client.AddComponent<ThirdPerson>();
         }
         GameObject menu;
         Button button;

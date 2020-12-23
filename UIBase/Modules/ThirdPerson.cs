@@ -7,10 +7,10 @@ using UnityEngine;
 
 namespace WengaPort.Modules
 {
-    class ThirdPerson
+    class ThirdPerson : MonoBehaviour 
     {
 		public static bool Enabled = false;
-		public static void Initialize()
+		public void Start()
 		{
 			GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
 			UnityEngine.Object.Destroy(gameObject.GetComponent<MeshRenderer>());
@@ -82,7 +82,7 @@ namespace WengaPort.Modules
 			}
 		}
 
-		public static void ThirdPersonUpdate()
+		public void Update()
 		{
 			try
 			{
@@ -145,7 +145,9 @@ namespace WengaPort.Modules
 		internal static float Fov = 75f;
 
 		public static int CameraSetup;
-
+		public ThirdPerson(IntPtr ptr) : base(ptr)
+		{
+		}
 	}
 }
 
