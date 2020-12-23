@@ -123,7 +123,7 @@ namespace WengaPort.Modules
 
         public static float posy = -400f;
 
-        public static float PlateDelay { get; private set; }
+        public static float PlateDelay = 0;
 
         public static IEnumerator AdminPlateChanger(Player player)
         {
@@ -147,11 +147,11 @@ namespace WengaPort.Modules
             }
         }
 
-        public static void Update()
+        public void Update()
         {
 
             PlateDelay -= Time.deltaTime;
-            if (PlateDelay > 0)
+            if (PlateDelay < 0)
             {
                 PlateDelay = 1.8f;
                 foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
