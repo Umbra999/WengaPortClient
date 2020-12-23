@@ -35,6 +35,10 @@ namespace WengaPort.Modules
             YOffset = Offset.y;
             ZOffset = Offset.z;
         }
+        internal static void Reset()
+        {
+            TransformParent = null;
+        }
         private static Transform TransformParent;
         private static float XOffset = 0;
         private static float YOffset = 0;
