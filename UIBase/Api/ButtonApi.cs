@@ -88,6 +88,27 @@ namespace WengaPort.Api
             }
             catch { }
         }
+        public void LoadSprite(string url)
+        {
+            MelonLoader.MelonCoroutines.Start(LoadSprite(button.GetComponent<Image>(), url));
+        }
+        private static IEnumerator LoadSprite(Image Instance, string url)
+        {
+            while (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) yield return null;
+            var Sprite = new Sprite();
+            WWW www = new WWW(url);
+            yield return www;
+            {
+                Sprite = Sprite.CreateSprite(www.texture, new Rect(0, 0, www.texture.width, www.texture.height), new Vector2(0, 0), 100 * 1000, 1000, SpriteMeshType.FullRect, Vector4.zero, false);
+            }
+            Instance.sprite = Sprite;
+            Instance.color = Color.white;
+            yield break;
+        }
+        public void SetParent(QMNestedButton Parent)
+        {
+            button.transform.SetParent(QMStuff.GetQuickMenuInstance().transform.Find(Parent.getMenuName()));
+        }
 
         public virtual void setBackgroundColor(Color buttonBackgroundColor, bool save = true) { }
         public virtual void setTextColor(Color buttonTextColor, bool save = true) { }
