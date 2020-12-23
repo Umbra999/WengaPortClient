@@ -58,7 +58,6 @@ namespace WengaPort.Modules
             }
 
             return false;
-
         }
 
         public static bool GetIsMuted(this ModerationManager instance, string UserID)

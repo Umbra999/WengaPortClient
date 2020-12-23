@@ -32,16 +32,16 @@ namespace WengaPort.Modules
 
         public static void IncreaseSpeed()
         {
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().walkSpeed = 4;
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().runSpeed = 8;
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
+            FindObjectOfType<LocomotionInputController>().walkSpeed = 4;
+            FindObjectOfType<LocomotionInputController>().runSpeed = 8;
+            FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
         }
 
         public static void DecreaseSpeed()
         {
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().walkSpeed = 2;
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().runSpeed = 4;
-            UnityEngine.Object.FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
+            FindObjectOfType<LocomotionInputController>().walkSpeed = 2;
+            FindObjectOfType<LocomotionInputController>().runSpeed = 4;
+            FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
         }
 
         public static void QuickMenuFly()
@@ -58,7 +58,7 @@ namespace WengaPort.Modules
                     Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
                 }
             }
-            catch (Exception)
+            catch
             { }
         }
 
@@ -305,35 +305,39 @@ namespace WengaPort.Modules
                     }
                     Physics.gravity = Vector3.zero;
                 }
-                catch (Exception)
+                catch
                 {
                 }
             }
 
-            if (Rotate)
+            if (Rotate && RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                if (Input.GetKey(KeyCode.UpArrow))
+                try
                 {
-                    currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
+                    if (Input.GetKey(KeyCode.UpArrow))
+                    {
+                        currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
+                    }
+                    else if (Input.GetKey(KeyCode.DownArrow))
+                    {
+                        currentPlayer.transform.Rotate(Vector3.left, RotateSpeed * Time.deltaTime);
+                    }
+                    else if (Input.GetKey(KeyCode.RightArrow))
+                    {
+                        currentPlayer.transform.Rotate(Vector3.back, RotateSpeed * Time.deltaTime);
+                    }
+                    else if (Input.GetKey(KeyCode.LeftArrow))
+                    {
+                        currentPlayer.transform.Rotate(Vector3.forward, RotateSpeed * Time.deltaTime);
+                    }
+                    else if (Input.GetKey(KeyCode.X))
+                    {
+                        ToggleRotate(false);
+                        ToggleRotate(true);
+                    }
+                    alignTrackingToPlayer?.Invoke();
                 }
-                else if (Input.GetKey(KeyCode.DownArrow))
-                {
-                    currentPlayer.transform.Rotate(Vector3.left, RotateSpeed * Time.deltaTime);
-                }
-                else if (Input.GetKey(KeyCode.RightArrow))
-                {
-                    currentPlayer.transform.Rotate(Vector3.back, RotateSpeed * Time.deltaTime);
-                }
-                else if (Input.GetKey(KeyCode.LeftArrow))
-                {
-                    currentPlayer.transform.Rotate(Vector3.forward, RotateSpeed * Time.deltaTime);
-                }
-                else if (Input.GetKey(KeyCode.X))
-                {
-                    ToggleRotate(false);
-                    ToggleRotate(true);
-                }
-                alignTrackingToPlayer?.Invoke();
+                catch { }
             }
         }
 
