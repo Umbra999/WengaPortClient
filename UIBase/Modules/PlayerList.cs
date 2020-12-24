@@ -158,13 +158,13 @@ namespace WengaPort.Modules
                     foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         bool WengaCheck = CheckWenga(player.UserID());
+                        bool TrialCheck = CheckTrial(player.UserID());
+                        bool ClientCheck = CheckClient(player.UserID());
                         if (WengaCheck)
                         {
 
                         }
-                        bool TrialCheck = CheckTrial(player.UserID());
-                        bool ClientCheck = CheckClient(player.UserID());
-                        if (TrialCheck)
+                        else if (TrialCheck)
                         {
                             Color color = new Color(0.333f, 0.153f, 0.667f);
                             if (player.GetVRCPlayer().nameplate.uiName.color != color)

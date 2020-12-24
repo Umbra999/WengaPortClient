@@ -310,10 +310,14 @@ namespace WengaPort.Modules
                 }
             }
 
-            if (Rotate && RoomManager.field_Internal_Static_ApiWorld_0 != null)
+            if (Rotate)
             {
                 try
                 {
+                    if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                    {
+                        ToggleRotate(false);
+                    }
                     if (Input.GetKey(KeyCode.UpArrow))
                     {
                         currentPlayer.transform.Rotate(Vector3.right, RotateSpeed * Time.deltaTime);
@@ -390,7 +394,7 @@ namespace WengaPort.Modules
         public static bool VRFlyToggle = true;
         public static bool Rotate = false;
         public static float FlySpeed = 4.2f;
-        public static float RotateSpeed = 150f;
+        public static float RotateSpeed = 170f;
         public Movement(IntPtr ptr) : base(ptr)
         {
         }

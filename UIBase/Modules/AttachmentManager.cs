@@ -13,9 +13,10 @@ namespace WengaPort.Modules
         public void Update()
         {
             if (RoomManager.field_Internal_Static_ApiWorld_0 == null || TransformParent == null) return;
-
-            Utils.CurrentUser.transform.position = TransformParent.position;
-
+            else
+            {
+                Utils.CurrentUser.transform.position = TransformParent.position;
+            }
         }
         internal static void SetAttachment(Transform Instance)
         {
