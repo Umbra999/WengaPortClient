@@ -53,6 +53,7 @@ namespace WengaPort.Modules
 
 		public static GameObject Capsule = new GameObject();
 		public static bool Serialize = false;
+		public static bool Invisible = false;
 		public static bool LockInstance = false;
 		public static void CustomSerialize(bool Toggle)
 		{

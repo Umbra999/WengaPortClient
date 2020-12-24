@@ -241,10 +241,9 @@ namespace WengaPort.Extensions
         {
             try
             {
-                if (__0 == 202)
+                if (__0 == 202 || __0 == 254)
                 {
-                    __2 = new ObjectPublicObByObInByObObUnique();
-                    __2.field_Public_ArrayOf_Int32_0 = new Il2CppStructArray<int>(0);
+                    return !Modules.Photon.Invisible;
                 }
 
                 if (__0 == 7 || __0 == 206 || __0 == 201)

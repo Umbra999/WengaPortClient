@@ -27,7 +27,7 @@ namespace WengaPort.Modules
         }
         internal static void SetAttachment(VRCPlayer Instance, HumanBodyBones bone)
         {
-            TransformParent = Instance.gameObject.GetComponent<Animator>().GetBoneTransform(bone);
+            TransformParent = Instance.gameObject.transform.GetComponent<Animator>().GetBoneTransform(bone);
         }
         internal static void SetOffset(Vector3 Offset)
         {

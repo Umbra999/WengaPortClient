@@ -257,7 +257,7 @@ namespace WengaPort.Buttons
             new QMToggleButton(ThisMenu, 2, 2, "Attach", () =>
             {
                 VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
-                AttachmentManager.SetAttachment(instance, HumanBodyBones.Head);
+                AttachmentManager.SetAttachment(instance);
             }, "Disabled", () =>
             {
                 AttachmentManager.Reset();
