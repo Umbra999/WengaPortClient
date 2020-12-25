@@ -31,6 +31,7 @@ namespace WengaPort.Buttons
         public static QMToggleButton RpcToggle;
         public static QMToggleButton BlockToggle;
         public static QMToggleButton BonesToggle;
+        public static QMToggleButton AttachmentToggle;
 
         public static MenuText InfoText1;
         public static MenuText InfoText2;
@@ -129,7 +130,7 @@ namespace WengaPort.Buttons
                         BonesToggle.setToggleState(false, false);
                     }
                 }
-                catch (Exception)
+                catch
                 { }
 
             }, "WengaPort User Menu", Color.black, Color.clear, null, "https://i.imgur.com/jQEn1MA.png"));
@@ -254,13 +255,16 @@ namespace WengaPort.Buttons
             }, "Crash the Player with a Stack overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            new QMToggleButton(ThisMenu, 2, 2, "Attach", () =>
+            AttachmentToggle = new QMToggleButton(ThisMenu, 2, 2, "Attach", () =>
             {
                 VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
-                AttachmentManager.SetAttachment(instance);
+                Movement.NoClipEnable();
+                Movement.Attachment = true;
+                AttachmentManager.SetAttachment(instance, HumanBodyBones.Head);
             }, "Disabled", () =>
             {
                 AttachmentManager.Reset();
+                Movement.Attachment = false;
             }, "Attach on Head");
 
             HalfButton = new QMSingleButton(ThisMenu, 2, 0.25f, "Forceclone", () =>

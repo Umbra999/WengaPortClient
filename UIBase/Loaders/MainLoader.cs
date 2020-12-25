@@ -311,8 +311,8 @@ namespace WengaPort.MainLoader
                 OnGui.GuiInit();
             }
             if (menu == null) return;
-            if (!menu.active) return;
-            if (button.interactable) return;
+            else if (!menu.active) return;
+            else if (button.interactable) return;
             button.interactable = true;
             button.m_Interactable = true;
         }

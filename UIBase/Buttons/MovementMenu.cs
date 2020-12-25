@@ -12,6 +12,7 @@ namespace WengaPort.Buttons
     class MovementMenu
     {
         public static QMNestedButton ThisMenu;
+        public static QMToggleButton RotateToggle;
 
         public static void Initialize()
         {
@@ -32,9 +33,9 @@ namespace WengaPort.Buttons
             }, "Disabled", () =>
             {
                 Movement.InfJump = false;
-            }, "Jump infinite High");
+            }, "Jump infinite High", Color.cyan, Color.white, false, true);
 
-            new QMToggleButton(ThisMenu, 3, 0, "Rotate", () =>
+            RotateToggle = new QMToggleButton(ThisMenu, 3, 0, "Rotate", () =>
             {
                 Movement.ToggleRotate(true);
             }, "Disabled", () =>

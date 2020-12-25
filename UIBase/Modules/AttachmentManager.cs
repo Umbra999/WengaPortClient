@@ -13,10 +13,7 @@ namespace WengaPort.Modules
         public void Update()
         {
             if (RoomManager.field_Internal_Static_ApiWorld_0 == null || TransformParent == null) return;
-            else
-            {
-                Utils.CurrentUser.transform.position = TransformParent.position;
-            }
+            Utils.CurrentUser.transform.position = TransformParent.position;
         }
         internal static void SetAttachment(Transform Instance)
         {
@@ -28,7 +25,7 @@ namespace WengaPort.Modules
         }
         internal static void SetAttachment(VRCPlayer Instance, HumanBodyBones bone)
         {
-            TransformParent = Instance.gameObject.transform.GetComponent<Animator>().GetBoneTransform(bone);
+            TransformParent = Instance.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(bone);
         }
         internal static void SetOffset(Vector3 Offset)
         {

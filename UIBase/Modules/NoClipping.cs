@@ -34,7 +34,7 @@ namespace WengaPort.Modules
 
         public static IEnumerator SetNearClipPlane(float znear)
         {
-            yield return new WaitForSecondsRealtime(15);
+            yield return new WaitForSecondsRealtime(16);
             Extensions.Logger.WengaLogger("[Utils] Clipping Adjusted");
             ChangeNearClipPlane(znear);
         }

@@ -1,8 +1,10 @@
 ﻿using MelonLoader;
 using System;
+using System.Collections;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using VRC.SDKBase;
 using WengaPort.Buttons;
 using WengaPort.Wrappers;
 
@@ -19,6 +21,7 @@ namespace WengaPort.Modules
             Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
             FlyEnable();
             MainMenu.FlyButton.setToggleState(true, false);
+            MainMenu.NoClipButton.setToggleState(true, false);
             NoClipToggle = true;
         }
 
@@ -27,6 +30,7 @@ namespace WengaPort.Modules
             Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
             FlyDisable();
             MainMenu.FlyButton.setToggleState(false, false);
+            MainMenu.NoClipButton.setToggleState(false, false);
             NoClipToggle = false;
         }
 
@@ -63,7 +67,8 @@ namespace WengaPort.Modules
         }
 
         public static bool FlyToggle = false;
-        public static bool InfJump = false;
+        public static bool InfJump = true;
+        public static bool Attachment = false;
         public static bool NoClipToggle = false;
         public static bool ShortcutActive = false;
         public static bool ShortcutInactive = true;
@@ -80,6 +85,9 @@ namespace WengaPort.Modules
             Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
             MainMenu.NoClipButton.setToggleState(false, false);
             NoClipToggle = false;
+            AttachmentManager.Reset();
+            Attachment = false;
+            InteractMenu.AttachmentToggle.setToggleState(false, false);
         }
 
         public static void UIInit()
@@ -91,36 +99,11 @@ namespace WengaPort.Modules
         {
             if (InfJump && !FlyToggle)
             {
-                if (Input.GetKey(KeyCode.Space))
+                if (Input.GetAxis("Jump") == 1)
                 {
-                    currentPlayer = Utils.CurrentUser;
-                    if (currentPlayer == null || transform == null)
-                    {
-                        currentPlayer = Utils.CurrentUser;
-                        transform = Camera.main.transform;
-                    }
-                    currentPlayer.transform.position += transform.transform.up * 3.5f * Time.deltaTime;
-                    if (Input.GetKey((KeyCode)119))
-                    {
-                        currentPlayer.transform.position += transform.transform.forward * 3.5f * Time.deltaTime;
-                    }
-                    if (Input.GetKey((KeyCode)97))
-                    {
-                        currentPlayer.transform.position += transform.transform.right * -1f * 3.5f * Time.deltaTime;
-                    }
-                    if (Input.GetKey((KeyCode)100))
-                    {
-                        currentPlayer.transform.position += transform.transform.right * 3.5f * Time.deltaTime;
-                    }
-                    if (Input.GetKey((KeyCode)115))
-                    {
-                        currentPlayer.transform.position += transform.transform.forward * -1f * 3.5f * Time.deltaTime;
-                    }
-                    Physics.gravity = Vector3.zero;
-                }
-                else
-                {
-                    Physics.gravity = gravity;
+                    var Jump = Networking.LocalPlayer.GetVelocity();
+                    Jump.y = Networking.LocalPlayer.GetJumpImpulse();
+                    Networking.LocalPlayer.SetVelocity(Jump);
                 }
             }
         }
@@ -316,6 +299,7 @@ namespace WengaPort.Modules
                 {
                     if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                     {
+                        MovementMenu.RotateToggle.setToggleState(false, false);
                         ToggleRotate(false);
                     }
                     if (Input.GetKey(KeyCode.UpArrow))
@@ -342,6 +326,16 @@ namespace WengaPort.Modules
                     alignTrackingToPlayer?.Invoke();
                 }
                 catch { }
+            }
+
+            if (Attachment)
+            {
+                if (Input.GetKey(KeyCode.W) || RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                {
+                    InteractMenu.AttachmentToggle.setToggleState(false, false);
+                    Attachment = false;
+                    AttachmentManager.Reset();
+                }
             }
         }
 
@@ -394,7 +388,7 @@ namespace WengaPort.Modules
         public static bool VRFlyToggle = true;
         public static bool Rotate = false;
         public static float FlySpeed = 4.2f;
-        public static float RotateSpeed = 170f;
+        public static float RotateSpeed = 190f;
         public Movement(IntPtr ptr) : base(ptr)
         {
         }
