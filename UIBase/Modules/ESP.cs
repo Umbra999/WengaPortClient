@@ -15,6 +15,7 @@ namespace WengaPort.Modules
 		public static void Initialize()
 		{
 			MelonCoroutines.Start(Loop());
+			HighlightColor(Color.green);
 		}
 		public static void HighlightColor(Color highlightcolor)
 		{
