@@ -80,7 +80,7 @@ namespace WengaPort.Buttons
                 }
             }));
 
-            new MenuButton(MenuType.WorldInfoMenu, MenuButtonType.ReportButton, "RIP VRCA", 65f, -255f, new Action(() =>
+            new MenuButton(MenuType.WorldInfoMenu, MenuButtonType.ReportButton, "RIP VRCW", 65f, -255f, new Action(() =>
             {
                 var WorldScreen = GameObject.Find("Screens").transform.Find("WorldInfo");
                 var Info = WorldScreen.transform.GetComponentInChildren<PageWorldInfo>();

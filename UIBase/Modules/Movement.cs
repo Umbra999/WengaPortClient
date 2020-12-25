@@ -387,7 +387,7 @@ namespace WengaPort.Modules
         public static bool isInVR;
         public static bool VRFlyToggle = true;
         public static bool Rotate = false;
-        public static float FlySpeed = 4.25f;
+        public static float FlySpeed = 4.2f;
         public static float RotateSpeed = 180f;
         public Movement(IntPtr ptr) : base(ptr)
         {

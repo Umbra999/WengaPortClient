@@ -173,8 +173,8 @@ namespace WengaPort.Modules
 			instance.prop_EnumPublicSealedvaNoSmLo4vUnique_0 = EnumPublicSealedvaNoSmLo4vUnique.Look_At;
 			instance.prop_EnumPublicSealedvaAtLoWoCO5vUnique_0 = EnumPublicSealedvaAtLoWoCO5vUnique.World;
 			yield return new WaitForSeconds(0.5f);
-			instance.transform.position = Vector3.negativeInfinity;
-			instance.field_Private_Vector3_0 = Vector3.negativeInfinity;
+			instance.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+			instance.field_Private_Vector3_0 = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
 			instance.field_Internal_UserCameraIndicator_0.Speaker.enabled = false;
 			instance.photoCaptureCooldown = 0f;
 			yield return new WaitForSeconds(0.5f);
@@ -183,8 +183,8 @@ namespace WengaPort.Modules
 				TakePicture(int.MaxValue);
 			}
 			yield return new WaitForSeconds(5.5f);
-			instance.transform.position = Vector3.negativeInfinity;
-			instance.field_Private_Vector3_0 = Vector3.negativeInfinity;
+			instance.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+			instance.field_Private_Vector3_0 = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
 			yield return new WaitForSeconds(4f);
 			instance.StopAllCoroutines();
 			yield return new WaitForSeconds(0.5f);

@@ -10,6 +10,7 @@ using VRCSDK2;
 using VRC.SDKBase;
 using System.Threading;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WengaPort.Modules
 {
@@ -17,14 +18,13 @@ namespace WengaPort.Modules
 	{
 		public static void BringPickups()
 		{
-			foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
-			{
-                TakeOwnershipIfNecessary(vrc_Pickup.gameObject);
-                vrc_Pickup.transform.localPosition = new Vector3(0f, 0f, 0f);
-				Transform transform = vrc_Pickup.transform;
-				transform.position = Utils.CurrentUser.transform.position + new Vector3(0f, 0.1f, 0f);
-			}
-		}
+            foreach (VRC_ObjectSync vrc_ObjectSync in World_ObjectSyncs)
+            {
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
+                vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                vrc_ObjectSync.transform.position = Utils.CurrentUser.transform.position;
+            }
+        }
 
 		public static List<VRCSDK2.VRC_Pickup> World_Pickups = new List<VRCSDK2.VRC_Pickup>();
 
@@ -58,6 +58,38 @@ namespace WengaPort.Modules
                 }
             }
             return null;
+        }
+
+        public static IEnumerator ItemLag(VRCPlayer P)
+        {
+            foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
+            {
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
+                vrc_Pickup.transform.position = new Vector3(1, 1, 1);
+                vrc_Pickup.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+            }
+            yield return new WaitForSeconds(6f);
+            ItemsToPlayer(P);
+            yield return new WaitForSeconds(6f);
+            foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
+            {
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
+                vrc_Pickup.transform.position = new Vector3(1, 1, 1);
+                vrc_Pickup.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+            }
+            yield return new WaitForSeconds(5f);
+            ItemsToPlayer(P);
+            yield break;
+        }
+
+        public static void ItemsToPlayer(VRCPlayer Player)
+        {
+            foreach (VRC_ObjectSync vrc_ObjectSync in World_ObjectSyncs)
+            {
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
+                vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                vrc_ObjectSync.transform.position = Player.transform.position;
+            }
         }
 
         public static IEnumerator FallExploit()

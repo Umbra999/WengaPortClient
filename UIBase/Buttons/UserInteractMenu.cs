@@ -234,12 +234,7 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton(ThisMenu, 1, 2.25f, "Teleport \nItems", () =>
             {
-                foreach (VRC_ObjectSync vrc_ObjectSync in ItemHandler.World_ObjectSyncs)
-			    {
-				    Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
-				    vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
-				    vrc_ObjectSync.transform.position = Utils.QuickMenu.SelectedVRCPlayer().transform.position;
-			    }
+                ItemHandler.ItemsToPlayer(Utils.QuickMenu.SelectedVRCPlayer());
             }, "Teleport all Items to the Player");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
@@ -307,6 +302,11 @@ namespace WengaPort.Buttons
             {
                 CameraHandler.UserCamAnnoy = false;
             }, "Play Annoying Camera Sounds for this Player");
+
+             new QMSingleButton(ThisMenu, 5, 1, "Item \nCrash", () =>
+            {
+                MelonCoroutines.Start(ItemHandler.ItemLag(Utils.QuickMenu.SelectedVRCPlayer()));
+            }, "Crash the Player with Items");
         }
         public static List<string> HearOffPlayers = new List<string>();
     }
