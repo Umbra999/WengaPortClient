@@ -65,19 +65,19 @@ namespace WengaPort.Modules
             foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
             {
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
-                vrc_Pickup.transform.position = new Vector3(1, 1, 1);
-                vrc_Pickup.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+                vrc_Pickup.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue);
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
             }
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(15f);
             ItemsToPlayer(P);
-            yield return new WaitForSeconds(6f);
+            yield return new WaitForSeconds(15f);
             foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
             {
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
-                vrc_Pickup.transform.position = new Vector3(1, 1, 1);
-                vrc_Pickup.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+                vrc_Pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
             }
-            yield return new WaitForSeconds(5f);
+            yield return new WaitForSeconds(15f);
             ItemsToPlayer(P);
             yield break;
         }
@@ -88,7 +88,15 @@ namespace WengaPort.Modules
             {
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
                 vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
-                vrc_ObjectSync.transform.position = Player.transform.position;
+                if (Player.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).transform.position != null)
+                {
+                    vrc_ObjectSync.transform.position = Player.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).transform.position;
+                }
+                else
+                {
+                    vrc_ObjectSync.transform.position = Player.transform.position;
+                }
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
             }
         }
 

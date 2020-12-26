@@ -254,6 +254,10 @@ namespace WengaPort.Extensions
                 {
                     return !Modules.Photon.LockInstance;
                 }
+                if (__0 == 33)
+                {
+                    return !Modules.Photon.ConnectOnly;
+                }
                 var Dict = __1.TryCast<Il2CppSystem.Collections.Generic.Dictionary<byte, Il2CppSystem.Object>>();
                 if (Dict != null && __0 == 33 && DictLog)
                 {
