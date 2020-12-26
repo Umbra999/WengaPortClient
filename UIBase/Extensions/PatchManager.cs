@@ -1,49 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Threading;
-using WengaPort.Extensions;
-using ExitGames.Client.Photon;
+﻿using ExitGames.Client.Photon;
 using Harmony;
 using Il2CppSystem;
-using Il2CppSystem.Collections.Generic;
+using Il2CppSystem.Collections;
 using MelonLoader;
+using RootMotion.FinalIK;
+using System;
+using System.Linq;
+using System.Reflection;
 using Transmtn;
 using UnhollowerBaseLib;
-using UnhollowerRuntimeLib.XrefScans;
 using UnityEngine;
-using UnityEngine.UI;
 using VRC;
 using VRC.Core;
-using VRC.SDKBase;
-using WengaPort.Wrappers;
-using WengaPort.Modules;
-using WengaPort.ConsoleUtils;
-using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
-using static VRC.SDKBase.VRC_EventHandler;
-using RootMotion.FinalIK;
 using VRC.Networking;
-using Il2CppSystem.Collections;
-using WengaPort.FoldersManager;
+using VRC.SDKBase;
 using WengaPort.Buttons;
+using WengaPort.ConsoleUtils;
+using WengaPort.FoldersManager;
+using WengaPort.Modules;
+using WengaPort.Wrappers;
+using static VRC.SDKBase.VRC_EventHandler;
 
 namespace WengaPort.Extensions
 {
-	internal class PatchManager : MelonMod
-	{
+    internal class PatchManager : MelonMod
+    {
         public static HarmonyInstance Instance = HarmonyInstance.Create("WengaPortPatches");
+
         private static HarmonyMethod GetPatch(string name)
-		{
-			return new HarmonyMethod(typeof(PatchManager).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic));
-		}
+        {
+            return new HarmonyMethod(typeof(PatchManager).GetMethod(name, BindingFlags.Static | BindingFlags.NonPublic));
+        }
+
         public unsafe static void InitPatch()
-		{
-			try
-			{
+        {
+            try
+            {
                 Instance.Patch(AccessTools.Method(typeof(VRC_EventHandler), "InternalTriggerEvent", null, null), GetPatch("TriggerEvent"), null, null);
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTime").GetMethod, null, GetPatch("FakePing"), null);
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTimeVariance").GetMethod, null, GetPatch("FakePing"), null);
@@ -57,22 +49,22 @@ namespace WengaPort.Extensions
                 Instance.Patch(AccessTools.Property(typeof(Time), "smoothDeltaTime").GetMethod, null, GetPatch("FakeFrames"), null);
                 Instance.Patch(typeof(UdonSync).GetMethod(nameof(UdonSync.UdonSyncRunProgramAsRPC)), GetPatch("UdonSyncPatch"), null);
                 Instance.Patch(AccessTools.Property(typeof(Tools), "Platform").GetMethod, null, GetPatch("ModelSpoof"));
-                Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(),prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
+                Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(), prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
                 MethodInfo SteamPatch = typeof(PhotonPeer).Assembly.GetType("ExitGames.Client.Photon.EnetPeer").GetMethod("EnqueueOperation", (BindingFlags)(-1));
                 Instance.Patch(SteamPatch, GetPatch("EnqueueOperationPatched"), null, null);
                 Logger.WengaLogger("[Patches] World Triggers");
                 Logger.WengaLogger("[Patches] NoSteam");
-				Logger.WengaLogger("[Patches] FakePing");
+                Logger.WengaLogger("[Patches] FakePing");
                 Logger.WengaLogger("[Patches] Moderations/Events");
                 Logger.WengaLogger("[Patches] Serialize");
                 Logger.WengaLogger("[Patches] Photon");
                 Logger.WengaLogger("[Patches] Avatars");
                 Logger.WengaLogger("[Patches] Portals");
             }
-			catch (System.Exception arg)
-			{
-				Logger.WengaLogger(string.Format("[Patches] Failed Patching \n{0}", arg));
-			}
+            catch (System.Exception arg)
+            {
+                Logger.WengaLogger(string.Format("[Patches] Failed Patching \n{0}", arg));
+            }
             try
             {
                 MethodInfo[] methods = typeof(ObjectPublicAbstractSealedInObInObObObObUnique).GetMethods(BindingFlags.Public | BindingFlags.Static);
@@ -86,12 +78,13 @@ namespace WengaPort.Extensions
             }
         }
 
-		private static bool IsInitialized;
-		private static bool SeenFire;
-		private static bool AFiredFirst;
+        private static bool IsInitialized;
+        private static bool SeenFire;
+        private static bool AFiredFirst;
 
-		public static event System.Action<Player> OnJoin;
-		public static event System.Action<Player> OnLeave;
+        public static event System.Action<Player> OnJoin;
+
+        public static event System.Action<Player> OnLeave;
 
         private static bool IsValid(ref IKSolverHeuristic __instance, ref bool __result)
         {
@@ -104,6 +97,7 @@ namespace WengaPort.Extensions
             }
             return true;
         }
+
         private static bool EnterPortalPrefix(PortalTrigger __instance, MethodInfo __originalMethod)
         {
             try
@@ -115,14 +109,14 @@ namespace WengaPort.Extensions
                 }
                 {
                     var Dropper = Utils.PlayerManager.GetPlayerWithPlayerID(portalInternal.field_Private_Int32_0);
-                    Utils.VRCUiPopupManager.Alert("Enter Portal",$"{portalInternal.field_Private_ApiWorld_0.name} by\n {(Dropper != null ? $"{Dropper.DisplayName()}" : "No Owner")}", "Yes", new System.Action(() =>
-                    {
-                        Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
-                        Utils.VRCUiPopupManager.HideCurrentPopUp();
-                    }), "No", new System.Action(() =>
-                    {
-                        Utils.VRCUiPopupManager.HideCurrentPopUp();
-                    }));
+                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name} by\n {(Dropper != null ? $"{Dropper.DisplayName()}" : "No Owner")}", "Yes", new System.Action(() =>
+                     {
+                         Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
+                         Utils.VRCUiPopupManager.HideCurrentPopUp();
+                     }), "No", new System.Action(() =>
+                     {
+                         Utils.VRCUiPopupManager.HideCurrentPopUp();
+                     }));
                     return false;
                 }
             }
@@ -141,7 +135,9 @@ namespace WengaPort.Extensions
                 QuestSpoof = false;
             }
         }
+
         public static bool QuestSpoof = false;
+
         private static void ModelSpoof(ref string __result)
         {
             if (QuestSpoof)
@@ -152,55 +148,58 @@ namespace WengaPort.Extensions
                 }
             }
         }
+
         private static bool CalculatePerformance() => false;
+
         public static void EventHandlerA(Player player)
-		{
-			if (!SeenFire)
-			{
-				AFiredFirst = true;
-				SeenFire = true;
-			}
-			(AFiredFirst ? OnJoin : OnLeave)?.Invoke(player);
-		}
-		public static void EventHandlerB(Player player)
-		{
-			if (!SeenFire)
-			{
-				AFiredFirst = false;
-				SeenFire = true;
-			}
-			(AFiredFirst ? OnLeave : OnJoin)?.Invoke(player);
-		}
+        {
+            if (!SeenFire)
+            {
+                AFiredFirst = true;
+                SeenFire = true;
+            }
+            (AFiredFirst ? OnJoin : OnLeave)?.Invoke(player);
+        }
+
+        public static void EventHandlerB(Player player)
+        {
+            if (!SeenFire)
+            {
+                AFiredFirst = false;
+                SeenFire = true;
+            }
+            (AFiredFirst ? OnLeave : OnJoin)?.Invoke(player);
+        }
 
         public static void JoinInitialize()
-		{
-			if (IsInitialized) return;
-			if (ReferenceEquals(NetworkManager.field_Internal_Static_NetworkManager_0, null)) return;
+        {
+            if (IsInitialized) return;
+            if (ReferenceEquals(NetworkManager.field_Internal_Static_NetworkManager_0, null)) return;
 
-			var field0 = NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0;
-			var field1 = NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_1;
+            var field0 = NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_0;
+            var field1 = NetworkManager.field_Internal_Static_NetworkManager_0.field_Internal_ObjectPublicHa1UnT1Unique_1_Player_1;
 
-			AddDelegate(field0, EventHandlerA);
-			AddDelegate(field1, EventHandlerB);
+            AddDelegate(field0, EventHandlerA);
+            AddDelegate(field1, EventHandlerB);
 
-			IsInitialized = true;
+            IsInitialized = true;
 
-			OnJoin += OnPlayerJoin;
-			OnLeave += OnPlayerLeft;
+            OnJoin += OnPlayerJoin;
+            OnLeave += OnPlayerLeft;
         }
 
         private static void AddDelegate(ObjectPublicHa1UnT1Unique<Player> field, System.Action<Player> eventHandlerA)
-		{
-			field.field_Private_HashSet_1_UnityAction_1_T_0.Add(eventHandlerA);
-		}
+        {
+            field.field_Private_HashSet_1_UnityAction_1_T_0.Add(eventHandlerA);
+        }
 
-		private static void FakePing(ref short __result)
-		{
+        private static void FakePing(ref short __result)
+        {
             if (PingSpoof)
             {
                 __result = -69;
             }
-		}
+        }
 
         private static void FakeFrames(ref float __result)
         {
@@ -212,9 +211,9 @@ namespace WengaPort.Extensions
         }
 
         private static bool returnFalse()
-		{
-			return false;
-		}
+        {
+            return false;
+        }
 
         private static void OnAvatarInstantiate(ref GameObject __0, ref VRCAvatarManager __instance)
         {
@@ -268,24 +267,25 @@ namespace WengaPort.Extensions
                 }
             }
             catch
-            {}
+            { }
             return true;
         }
 
         private static void OnPlayerLeft(Player __0)
-		{
+        {
             try
             {
                 VRConsole.Log(VRConsole.LogsType.Left, __0.DisplayName());
                 Logger.WengaLogger($"[-] {__0.DisplayName()}");
             }
             catch
-            {}
-		}
+            { }
+        }
 
         public static bool LoginDelay = true;
+
         private static void OnPlayerJoin(Player __0)
-		{
+        {
             try
             {
                 //PlayerList.IsAllowedClient();
@@ -344,13 +344,13 @@ namespace WengaPort.Extensions
         }
 
         private static bool TriggerEvent(ref VrcEvent __0, ref VrcBroadcastType __1, ref int __2)
-		{
-			try
-			{
-				if (WorldTrigger)
-				{
-					__1 = 0;
-				}
+        {
+            try
+            {
+                if (WorldTrigger)
+                {
+                    __1 = 0;
+                }
                 if (__1 == VrcBroadcastType.Always || __1 == VrcBroadcastType.AlwaysUnbuffered || __1 == VrcBroadcastType.AlwaysBufferOne)
                 {
                     if (AntiWorldTrigger)
@@ -368,17 +368,17 @@ namespace WengaPort.Extensions
                     }
                 }
                 if (AntiUdon && (__0.EventType == (VrcEventType)34))
-		        {
+                {
                     Logger.WengaLogger("[Room] [Protection] Prevented Udon Event");
                     VRConsole.Log(VRConsole.LogsType.Protection, "Prevented Udon Event");
                     return false;
                 }
             }
-			catch (System.Exception)
+            catch (System.Exception)
             {
             }
             return true;
-		}
+        }
 
         private static bool EnqueueOperationPatched(Il2CppSystem.Collections.Generic.Dictionary<byte, Il2CppSystem.Object> __0, byte __1)
         {
@@ -397,6 +397,7 @@ namespace WengaPort.Extensions
         }
 
         public static bool VRMode = true;
+
         private static void maskProperties(Il2CppSystem.Collections.Generic.Dictionary<byte, Il2CppSystem.Object> param, byte propertyIndex)
         {
             try
@@ -422,10 +423,21 @@ namespace WengaPort.Extensions
 
         public static bool BlockPlayer = false;
         public static bool EventDelay = false;
+
+        private static byte[] IgnoreCodes = new byte[]
+       {
+            1,6,7,8,9,206,201,226
+       };
+
         private static bool OnEvent(ref EventData __0)
         {
             try
             {
+                if (!IgnoreCodes.Contains(__0.Code) && Config.Instance.DevPhotonEvents)
+                {
+                    object Data = Utils.Serialization.FromIL2CPPToManaged<object>(__0.Parameters);
+                    System.Console.WriteLine($"[Event {__0.Code}] Event \n{Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented)}");
+                }
                 var Dict = __0.CustomData.TryCast<Il2CppSystem.Collections.Generic.Dictionary<byte, Il2CppSystem.Object>>();
                 if (Dict != null && __0.Code == 33)
                 {
@@ -494,7 +506,7 @@ namespace WengaPort.Extensions
                 }
                 if (EventLog)
                 {
-                Logger.WengaLogger($"[PhotonEvent] {__0.Code}");
+                    Logger.WengaLogger($"[PhotonEvent] {__0.Code}");
                 }
             }
             catch
@@ -502,6 +514,7 @@ namespace WengaPort.Extensions
             }
             return true;
         }
+
         private static bool IsNaN(Vector3 v3)
         {
             return float.IsNaN(v3.x) || float.IsNaN(v3.y) || float.IsNaN(v3.z);
@@ -604,6 +617,7 @@ namespace WengaPort.Extensions
                     {
                         case "SetTimerRPC":
                             return true;
+
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
@@ -612,26 +626,32 @@ namespace WengaPort.Extensions
                                 return false;
                             }
                             break;
+
                         case "PlayEffect":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portal entered");
                             Logger.WengaLogger("[Room] [Portal]" + text + " entered a Portal");
                             break;
+
                         case "_DestroyObject":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Destroyed Object");
                             Logger.WengaLogger($"[Room] [Portal] {text} destroyed an Object");
                             break;
+
                         case "CleanRoomRPC":
                             VRConsole.Log(VRConsole.LogsType.Info, text + " --> Cleaned Room");
                             Logger.WengaLogger($"[Room] [Info] {text} cleaned the Room");
                             break;
+
                         case "PlayEmoteRPC":
                             //VRConsole.Log(VRConsole.LogsType.Info,$" {text} --> Emote");
                             Logger.WengaLogger($"[Room] [Info] {text} played Emote");
                             break;
+
                         case "SpawnEmojiRPC":
                             VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Emoji");
                             Logger.WengaLogger($"[Room] [Info] {text} played Emoji");
                             break;
+
                         case "_InstantiateObject":
                             if (text4.Contains("Infinity") && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
                             {
@@ -645,6 +665,7 @@ namespace WengaPort.Extensions
                                 Logger.WengaLogger($"[Room] [Info] {text} instantiated Object");
                             }
                             break;
+
                         case "ChangeVisibility":
                             if (text4.Contains("True"))
                             {
