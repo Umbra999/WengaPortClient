@@ -222,7 +222,7 @@ namespace WengaPort.Modules
             {
                 if (!ItemOrbitEnabled)
                 {
-                    break;
+                    yield break;
                 }
                 GameObject gameObject = new GameObject();
                 Transform transform = gameObject.transform;
@@ -238,16 +238,15 @@ namespace WengaPort.Modules
                         gameObject.transform.Rotate(new Vector3(0f, 360 / World_ObjectSyncs.Count, 0f));
                     }
                 }
-                catch (Exception)
+                catch 
                 {
-
                 }
                 UnityEngine.Object.Destroy(gameObject);
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForSeconds(0.5f);
             }
             yield break;
         }
-        public static bool ItemOrbitEnabled;
+        public static bool ItemOrbitEnabled = false;
     }
 }
 

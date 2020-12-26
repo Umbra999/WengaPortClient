@@ -679,13 +679,21 @@ namespace WengaPort.Extensions
                         return a == APIUser.CurrentUser.id;
                     }
                 }
-                if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
+                if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive)
                 {
                     if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysBufferOne || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered)
                     {
-                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> World Trigger");
-                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Worldtrigger");
-                        return false;
+                        if (AntiWorldTrigger)
+                        {
+                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> World Trigger");
+                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Worldtrigger");
+                            return false;
+                        }
+                        else
+                        {
+                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> World Trigger");
+                            Logger.WengaLogger($"[Room] [Info] {text} used Worldtrigger");
+                        }
                     }
                 }
             }

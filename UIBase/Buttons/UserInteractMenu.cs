@@ -284,15 +284,13 @@ namespace WengaPort.Buttons
             }, "Draw Circles around the Player");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            object ItemOrbitEnum2 = new object();
             new QMToggleButton(ThisMenu, 2, 1, "Item \nOrbit", () =>
             {
                 ItemHandler.ItemOrbitEnabled = true;
-                ItemOrbitEnum2 = MelonCoroutines.Start(ItemHandler.ItemRotate(Utils.QuickMenu.SelectedPlayer()));
+                MelonCoroutines.Start(ItemHandler.ItemRotate(Utils.QuickMenu.SelectedPlayer()));
             }, "Disabled", () =>
             {
                 ItemHandler.ItemOrbitEnabled = false;
-                MelonCoroutines.Stop(ItemOrbitEnum2);
             }, "Orbit Items around the Player");
 
             new QMToggleButton(ThisMenu, 4, 2, "Annoying \nSound", () =>
