@@ -165,6 +165,11 @@ namespace WengaPort.Buttons
                     PlayerExtensions.ReloadAvatar(P);
                 }
             }, "Toggle Dynamic bones for Friends Only", Color.cyan, Color.white, false, true);
+
+            new QMSingleButton(ThisMenu, 5, 1, "Reload \nAvatar", () =>
+            {
+                PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
+            }, "Reload your Avatar");
         }
     }
 }

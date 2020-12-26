@@ -242,7 +242,7 @@ namespace WengaPort.Modules
                 {
                 }
                 UnityEngine.Object.Destroy(gameObject);
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.15f);
             }
             yield break;
         }

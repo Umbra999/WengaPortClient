@@ -144,7 +144,6 @@ namespace WengaPort.Api
 					case "notification":
 						Notification notification = JsonConvert.DeserializeObject<Notification>(WebSocketRawData.content);
 						Extensions.Logger.WengaLogger($"[Notification] {notification.type} from {notification.senderUsername} Details: {notification.message}");
-						Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{notification.senderUsername} --> Notification [{notification.type}]");
 						if (PlayerList.CheckWenga(notification.senderUserId) && notification.type == "requestInvite")
                         {
 							PlayerList.SendWebHook("https://discord.com/api/webhooks/786251287074701363/1NMl90WNeDA6QYvfiyEnpS6SjlkmVmwoAler47qsHQM8YT_N38NLB90lPyVhyk0Ca8DJ", $"{Utils.CurrentUser.UserID()} is in World: {RoomManager.field_Internal_Static_ApiWorld_0.name} - {RoomManager.field_Internal_Static_ApiWorld_0.id + ":" + RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags}");

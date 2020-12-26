@@ -51,6 +51,14 @@ namespace WengaPort.Buttons
                 }
             }, "Forcemute Everyone");
 
+            new QMToggleButton(ThisMenu, 0, 0, "Mini \nHide", () =>
+            {
+                PatchManager.MiniHide = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.MiniHide = false;
+            }, "Be a Mini hide Roboter");
+
             VRToggle = new QMToggleButton(ThisMenu, 5, 0, "VR", () =>
             {
                 PatchManager.VRMode = true;

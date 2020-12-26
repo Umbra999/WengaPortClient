@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using UnhollowerRuntimeLib.XrefScans;
 using System.Reflection;
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace WengaPort.Modules
 {
@@ -244,8 +246,8 @@ namespace WengaPort.Modules
 			public static byte[] ToByteArray(object obj)
 			{
 				if (obj == null) return null;
-				var bf = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
-				var ms = new System.IO.MemoryStream();
+				var bf = new BinaryFormatter();
+				var ms = new MemoryStream();
 				bf.Serialize(ms, obj);
 				return ms.ToArray();
 			}
