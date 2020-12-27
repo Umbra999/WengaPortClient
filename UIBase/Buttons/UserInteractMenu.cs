@@ -301,7 +301,7 @@ namespace WengaPort.Buttons
                 CameraHandler.UserCamAnnoy = false;
             }, "Play Annoying Camera Sounds for this Player");
 
-             new QMSingleButton(ThisMenu, 5, 1, "Item \nCrash", () =>
+             new QMSingleButton(ThisMenu, 5, 1, "Item \nLag", () =>
             {
                 MelonCoroutines.Start(ItemHandler.ItemLag(Utils.QuickMenu.SelectedVRCPlayer()));
             }, "Crash the Player with Items");

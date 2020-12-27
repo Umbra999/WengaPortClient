@@ -61,7 +61,7 @@ namespace WengaPort.Buttons
                 PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
             }, "Be a Mini hide Roboter");
 
-            new QMToggleButton(ThisMenu, 0, 1, "Antiblock", () =>
+            new QMToggleButton(ThisMenu, 2, 1, "Antiblock", () =>
             {
                 PatchManager.AntiBlock = true;
             }, "Disabled", () =>
@@ -177,14 +177,6 @@ namespace WengaPort.Buttons
                 PatchManager.AntiMasterDC = false;
             }, "Advanced Anti Master Disconnect (will disable Health in Maps)");
 
-            new QMToggleButton(ThisMenu, 2, 1, "Anti \nFreefall", () =>
-            {
-                PatchManager.AntiFreefall = true;
-            }, "Disabled", () =>
-            {
-                PatchManager.AntiFreefall = false;
-            }, "Prevents you from Falling (will disable Pens)");
-
             new QMToggleButton(ThisMenu, 3, 1, "Anti \nVideoplayer", () =>
             {
                 PatchManager.BlockPlayer = true;
@@ -207,7 +199,7 @@ namespace WengaPort.Buttons
             }, "Disabled", () =>
             {
                 PatchManager.AntiUdon = false;
-            }, "Prevents you from Udon Exploits (will disable Events)");
+            }, "Prevents you from Udon Exploits/Events");
         }
     }
 }

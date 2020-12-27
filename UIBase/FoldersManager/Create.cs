@@ -15,7 +15,7 @@ namespace WengaPort.FoldersManager
 {
     class Create
     {
-        public static IniFile Ini = new IniFile("WengaPort\\Config.ini");
+        public static IniFile Ini;
         private static long GetDirectorySize(string folderPath)
         {
             DirectoryInfo di = new DirectoryInfo(folderPath);
@@ -33,6 +33,11 @@ namespace WengaPort.FoldersManager
             if (!File.Exists("WengaPort\\Config.ini"))
             {
                 File.Create("WengaPort\\Config.ini");
+                Ini = new IniFile("WengaPort\\Config.ini");
+            }
+            else
+            {
+                Ini = new IniFile("WengaPort\\Config.ini");
             }
             if (!Directory.Exists("WengaPort\\VRCA"))
             {

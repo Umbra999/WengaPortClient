@@ -318,7 +318,6 @@ namespace WengaPort.Extensions
 
         public static bool WorldTrigger = false;
         public static bool AntiWorldTrigger = false;
-        public static bool AntiFreefall = false;
         public static bool AntiUdon = false;
         public static bool AntiMasterDC = false;
         public static bool OfflineMode = false;
@@ -347,32 +346,9 @@ namespace WengaPort.Extensions
                 {
                     __1 = 0;
                 }
-                if (__1 == VrcBroadcastType.Always || __1 == VrcBroadcastType.AlwaysUnbuffered || __1 == VrcBroadcastType.AlwaysBufferOne)
-                {
-                    if (AntiWorldTrigger)
-                    {
-                        __1 = (VrcBroadcastType)2;
-                    }
-                    if (__0.EventType == VrcEventType.AnimationBool || __0.EventType == VrcEventType.SetComponentActive || __0.EventType == VrcEventType.ActivateCustomTrigger)
-                    {
-                        if (__0.ParameterString == "UnityEngine.Animator" && AntiFreefall)
-                        {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented AnimationBool Event on [{__0.ParameterObject}]");
-                            VRConsole.Log(VRConsole.LogsType.Protection, "Prevented AnimationBool Event");
-                            return false;
-                        }
-                    }
-                }
-                if (AntiUdon && (__0.EventType == (VrcEventType)34))
-                {
-                    Logger.WengaLogger("[Room] [Protection] Prevented Udon Event");
-                    VRConsole.Log(VRConsole.LogsType.Protection, "Prevented Udon Event");
-                    return false;
-                }
             }
-            catch (System.Exception)
-            {
-            }
+            catch
+            { }
             return true;
         }
 
