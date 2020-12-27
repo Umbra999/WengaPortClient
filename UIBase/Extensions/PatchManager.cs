@@ -255,14 +255,6 @@ namespace WengaPort.Extensions
                 {
                     return !Modules.Photon.LockInstance;
                 }
-                //var Dict = __1.TryCast<Il2CppSystem.Collections.Generic.Dictionary<byte, Il2CppSystem.Object>>();
-                //if (Dict != null && __0 == 33 && DictLog)
-                //{
-                //    foreach (var Item in Dict)
-                //    {
-                //        Logger.WengaLogger($"\nEvent Code: {__0}\nInside Key: {Item.Key}\nInside Value: {Item.Value.GetIl2CppType().Name} / {Item.Value.ToString()}");
-                //    }
-                //}
             }
             catch
             { }
@@ -470,23 +462,32 @@ namespace WengaPort.Extensions
                         {
                             Logger.WengaLogger("Someone unblocked you");
                             VRConsole.Log(VRConsole.LogsType.Block, $"[?] --> Unblocked You");
+                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
+                            {
+                                Logger.WengaLogger("Someone unmuted you");
+                                VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Unmuted You");
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
+                            {
+                                Logger.WengaLogger("Someone muted you");
+                                VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Muted You");
+                            }
                         }
                         else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"10\": true,"))
                         {
                             Logger.WengaLogger("Someone blocked you");
                             VRConsole.Log(VRConsole.LogsType.Block, $"[?] --> Blocked You");
+                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
+                            {
+                                Logger.WengaLogger("Someone unmuted you");
+                                VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Unmuted You");
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
+                            {
+                                Logger.WengaLogger("Someone muted you");
+                                VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Muted You");
+                            }
                             return !AntiBlock;
-                        }
-                        if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
-                        {
-                            Logger.WengaLogger("Someone unmuted you");
-                            VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Unmuted You");
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
-                        {
-                            Logger.WengaLogger("Someone muted you");
-                            VRConsole.Log(VRConsole.LogsType.Voice, $"[?] --> Muted You");
-                            return false;
                         }
                         else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("You have been warned"))
                         {
@@ -503,7 +504,7 @@ namespace WengaPort.Extensions
                         else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("A vote kick"))
                         {
                             Logger.WengaLogger("Someone votekick Someone");
-                            VRConsole.Log(VRConsole.LogsType.Votekick, $"[?] -> [?]");
+                            VRConsole.Log(VRConsole.LogsType.Votekick, $"[?] --> [?]");
                         }
                         break;
                     case 2:
@@ -738,21 +739,13 @@ namespace WengaPort.Extensions
                         return a == APIUser.CurrentUser.id;
                     }
                 }
-                if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive)
+                if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
                 {
-                    if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered)
+                    if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered || vrcBroadcastType == VrcBroadcastType.AlwaysBufferOne)
                     {
-                        if (AntiWorldTrigger)
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> World Trigger");
-                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Worldtrigger");
-                            return false;
-                        }
-                        else
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Trigger");
-                            Logger.WengaLogger($"[Room] [Info] {text} used a Trigger");
-                        }
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> WorldTrigger");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Worldtrigger");
+                        return false;
                     }
                 }
             }

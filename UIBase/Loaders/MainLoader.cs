@@ -211,7 +211,7 @@ namespace WengaPort.MainLoader
                     if (Modules.Photon.DisconnectToggle)
                     {
                         DCDelay += Time.deltaTime;
-                        if (DCDelay >= 0.12f)
+                        if (DCDelay >= 0.2f)
                         {
                             Modules.Photon.DisconnectLobby();
                             DCDelay = 0f;

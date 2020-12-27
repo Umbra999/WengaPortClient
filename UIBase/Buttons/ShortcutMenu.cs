@@ -149,10 +149,9 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton("ShortcutMenu", 5, 0.75f, "Forcejoin", () =>
             {
-                string ID = Clipboard.GetText();
-                if (ID.Contains("wrld_"))
+                if (Clipboard.GetText().Contains("wrld_"))
                 {
-                    Networking.GoToRoom(ID);
+                    Networking.GoToRoom(Clipboard.GetText());
                 }
             }, "Join World by Clipboard ID");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);

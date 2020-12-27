@@ -27,9 +27,14 @@ namespace WengaPort.Buttons
         {
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Teleport", 585f, -280f, new Action(() =>
             {
-                APIUser apiuser = Utils.VRCUiManager.SelectedAPIUser();
-                Player p = Utils.PlayerManager.GetPlayer(apiuser.UserID());
-                Utils.CurrentUser.transform.position = p.transform.position;
+                try
+                {
+                    APIUser apiuser = Utils.VRCUiManager.SelectedAPIUser();
+                    Player p = Utils.PlayerManager.GetPlayer(apiuser.UserID());
+                    Utils.CurrentUser.transform.position = p.transform.position;
+                }
+                catch
+                { }
             }));
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Drop Portal", -100f, -280f, new Action(() =>
