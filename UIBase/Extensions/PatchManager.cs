@@ -493,20 +493,17 @@ namespace WengaPort.Extensions
                         }
                         break;
                     case 1:
-                        if (!Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
+                        Il2CppStructArray<byte> il2CppStructArray2 = new Il2CppStructArray<byte>(__0.CustomData.Pointer);
+                        bool flag4 = il2CppStructArray2.Length > 1750;
+                        if (flag4)
                         {
-                            Il2CppStructArray<byte> il2CppStructArray2 = new Il2CppStructArray<byte>(__0.CustomData.Pointer);
-                            bool flag4 = il2CppStructArray2.Length > 1750;
-                            if (flag4)
-                            {
-                                Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event");
-                                VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented Malicious USpeak");
-                                return false;
-                            }
+                            Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event");
+                            VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented Malicious USpeak");
+                            return false;
                         }
                         break;
                     case 209:
-                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot() && Utils.PlayerManager.GetPlayer(__0.Sender).UserID() != APIUser.CurrentUser.UserID())
+                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
                         {
                             Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
                             VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event");
@@ -514,7 +511,7 @@ namespace WengaPort.Extensions
                         }
                         break;
                     case 210:
-                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot() && Utils.PlayerManager.GetPlayer(__0.Sender).UserID() != APIUser.CurrentUser.UserID())
+                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
                         {
                             Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
                             VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event");
@@ -588,7 +585,7 @@ namespace WengaPort.Extensions
                         MelonConsole.SetColor(System.ConsoleColor.White);
                     }
                 }
-                bool flag = instance.GetVRCPlayer().GetIsBot() && APIUser.CurrentUser.id != Utils.CurrentUser.UserID() || RPCAndEventBlock.Check(instance.UserID());
+                bool flag = instance.GetVRCPlayer().GetIsBot() || RPCAndEventBlock.Check(instance.UserID());
                 if (flag)
                 {
                     System.Console.ForegroundColor = System.ConsoleColor.Red;
@@ -601,8 +598,7 @@ namespace WengaPort.Extensions
                     return false;
                 }
 
-                bool flag2 = __1.ParameterObject == null;
-                if (!flag2)
+                if (__1.ParameterObject != null)
                 {
                     bool flag3 = __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && IsNaN(__1.ParameterObject.transform.position);
                     if (flag3)
@@ -625,8 +621,7 @@ namespace WengaPort.Extensions
                     }
                 }
 
-                bool Check2 = __1.ParameterString != null;
-                if (Check2)
+                if (__1.ParameterString != null)
                 {
                     switch (__1.ParameterString)
                     {

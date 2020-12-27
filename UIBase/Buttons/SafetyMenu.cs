@@ -175,7 +175,7 @@ namespace WengaPort.Buttons
             }, "Disabled", () =>
             {
                 PatchManager.AntiMasterDC = false;
-            }, "Advanced Anti Master Disconnect (will disable Health in Maps)");
+            }, "Advanced Anti Master Disconnect (will disable some Events)");
 
             new QMToggleButton(ThisMenu, 3, 1, "Anti \nVideoplayer", () =>
             {

@@ -11,6 +11,7 @@ using VRC.SDKBase;
 using RootMotion.FinalIK;
 using RealisticEyeMovements;
 using System.Linq;
+using System.Collections;
 
 namespace WengaPort.Modules
 {
@@ -50,6 +51,32 @@ namespace WengaPort.Modules
 			{
 			}
 		}
+		private static void OpRaiseEvent(byte code, object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
+		{
+			Il2CppSystem.Object Object = Utils.Serialization.FromManagedToIL2CPP(customObject);
+			PhotonHandler.field_Internal_Static_PhotonHandler_0.prop_ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique_0.Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_1(code,Object,RaiseEventOptions,sendOptions);
+		}
+
+		public static IEnumerator PhotonDesyncWorld()
+		{
+			for (; ; )
+			{
+				if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+				{
+					yield break;
+				}
+				OpRaiseEvent(210, new int[] { new System.Random().Next(0, short.MaxValue), Networking.LocalPlayer.playerId }, new ObjectPublicObByObInByObObUnique()
+				{
+					field_Public_EnumPublicSealedvaOtAlMa4vUnique_0 = EnumPublicSealedvaOtAlMa4vUnique.Others,
+				}, SendOptions.SendReliable);
+				OpRaiseEvent(209, new int[] { new System.Random().Next(0, short.MaxValue), Networking.LocalPlayer.playerId }, new ObjectPublicObByObInByObObUnique()
+				{
+					field_Public_EnumPublicSealedvaOtAlMa4vUnique_0 = EnumPublicSealedvaOtAlMa4vUnique.Others,
+				}, SendOptions.SendReliable);
+				yield return new WaitForEndOfFrame();
+			}
+			yield break;
+		}
 
 		public static GameObject Capsule = new GameObject();
 		public static bool Serialize = false;
@@ -81,7 +108,7 @@ namespace WengaPort.Modules
 					Capsule.transform.position = Utils.CurrentUser.transform.position;
 					Capsule.transform.rotation = Utils.CurrentUser.transform.rotation;
 				}
-				if (!Toggle)
+				else
 				{
 					UnityEngine.Object.Destroy(Capsule);
 					Serialize = false;

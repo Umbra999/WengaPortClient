@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace WengaPort.Modules
 {
-	class ItemHandler : MelonMod
+	class ItemHandler
 	{
 		public static void BringPickups()
 		{
@@ -88,14 +88,18 @@ namespace WengaPort.Modules
             {
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
                 vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
-                if (Player.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).transform.position != null)
-                {
-                    vrc_ObjectSync.transform.position = Player.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).transform.position;
-                }
-                else
-                {
-                    vrc_ObjectSync.transform.position = Player.transform.position;
-                }
+                vrc_ObjectSync.transform.position = Player.transform.position;
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
+            }
+        }
+
+        public static void ItemsToPlayerHead(VRCPlayer Player)
+        {
+            foreach (VRC_ObjectSync vrc_ObjectSync in World_ObjectSyncs)
+            {
+                Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
+                vrc_ObjectSync.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                vrc_ObjectSync.transform.position = Player.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).transform.position;
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_ObjectSync.gameObject);
             }
         }
@@ -121,9 +125,9 @@ namespace WengaPort.Modules
                         int num;
                         for (int i = 0; i < 30; i = num + 1)
                         {
-                            pickup.transform.position = Vector3.zero;
+                            pickup.transform.position = new Vector3(int.MinValue,int.MinValue,int.MinValue);
                             yield return new WaitForSeconds(0.01f);
-                            pickup.transform.position = Vector3.negativeInfinity;
+                            pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
                             num = i;
                         }
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "PenUp", new Il2CppSystem.Object[0]);
@@ -145,11 +149,11 @@ namespace WengaPort.Modules
                     {
                         for (int j = 0; j < 30; j++)
                         {
-                            pickup.transform.position = Vector3.zero;
+                            pickup.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue);
                             Thread.Sleep(10);
                             pickup.transform.position = Utils.CurrentUser.transform.position + Utils.CurrentUser.transform.up * -10f;
                             Thread.Sleep(10);
-                            pickup.transform.position = Vector3.negativeInfinityVector;
+                            pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
                         }
                     }).Start();
                 }
@@ -242,7 +246,7 @@ namespace WengaPort.Modules
                 {
                 }
                 UnityEngine.Object.Destroy(gameObject);
-                yield return new WaitForSeconds(0.15f);
+                yield return new WaitForSeconds(0.035f);
             }
             yield break;
         }
