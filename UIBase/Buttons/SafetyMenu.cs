@@ -54,9 +54,11 @@ namespace WengaPort.Buttons
             new QMToggleButton(ThisMenu, 0, 0, "Mini \nHide", () =>
             {
                 PatchManager.MiniHide = true;
+                PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
             }, "Disabled", () =>
             {
                 PatchManager.MiniHide = false;
+                PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
             }, "Be a Mini hide Roboter");
 
             new QMToggleButton(ThisMenu, 0, 1, "Antiblock", () =>

@@ -52,14 +52,15 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(), prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
                 MethodInfo SteamPatch = typeof(PhotonPeer).Assembly.GetType("ExitGames.Client.Photon.EnetPeer").GetMethod("EnqueueOperation", (BindingFlags)(-1));
                 Instance.Patch(SteamPatch, GetPatch("EnqueueOperationPatched"), null, null);
-                Logger.WengaLogger("[Patches] World Triggers");
-                Logger.WengaLogger("[Patches] NoSteam");
-                Logger.WengaLogger("[Patches] FakePing");
-                Logger.WengaLogger("[Patches] Moderations/Events");
-                Logger.WengaLogger("[Patches] Serialize");
-                Logger.WengaLogger("[Patches] Photon");
-                Logger.WengaLogger("[Patches] Avatars");
+                Logger.WengaLogger("[Patches] Trigger");
+                Logger.WengaLogger("[Patches] PingSpoof");
+                Logger.WengaLogger("[Patches] Events");
+                Logger.WengaLogger("[Patches] Moderations");
+                Logger.WengaLogger("[Patches] Notification");
                 Logger.WengaLogger("[Patches] Portals");
+                Logger.WengaLogger("[Patches] FrameSpoof");
+                Logger.WengaLogger("[Patches] Udon");
+                Logger.WengaLogger("[Patches] Safety");
             }
             catch (System.Exception arg)
             {
@@ -300,7 +301,7 @@ namespace WengaPort.Extensions
                 if (LoginDelay)
                 {
                     LoginDelay = false;
-                    QuestSpoof = false;
+                    MelonCoroutines.Start(QuestSpoofer());
                     ExploitMenu.ButtonToggles();
                     Api.ApiExtension.Start();
                 }
@@ -308,6 +309,12 @@ namespace WengaPort.Extensions
             catch
             {
             }
+        }
+
+        public static System.Collections.IEnumerator QuestSpoofer()
+        {
+            yield return new WaitForSeconds(6);
+            QuestSpoof = false;
         }
 
         private static bool RequestPatch(ref string __0, ref System.Collections.Generic.Dictionary<string, object> __2)
@@ -401,10 +408,10 @@ namespace WengaPort.Extensions
             try
             {
                 Hashtable hashtable = param[propertyIndex].Cast<Hashtable>();
-                ////if (hashtable.ContainsKey("steamUserID"))
-                ////{
-                ////    hashtable["steamUserID"] = "666";
-                ////}
+                //if (hashtable.ContainsKey("steamUserID"))
+                //{
+                //    hashtable["steamUserID"] = "666";
+                //}
                 if (hashtable.ContainsKey("inVRMode"))
                 {
                     hashtable["inVRMode"] = new Il2CppSystem.Boolean()
@@ -431,7 +438,6 @@ namespace WengaPort.Extensions
             {
                 Logger.WengaLogger(value);
             }
-
         }
 
         public static bool BlockPlayer = false;
@@ -733,7 +739,7 @@ namespace WengaPort.Extensions
                 }
                 if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive)
                 {
-                    if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysBufferOne || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered)
+                    if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered)
                     {
                         if (AntiWorldTrigger)
                         {
@@ -743,7 +749,7 @@ namespace WengaPort.Extensions
                         }
                         else
                         {
-                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> World Trigger");
+                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Trigger");
                             Logger.WengaLogger($"[Room] [Info] {text} used a Trigger");
                         }
                     }
