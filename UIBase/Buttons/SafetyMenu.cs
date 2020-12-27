@@ -59,6 +59,14 @@ namespace WengaPort.Buttons
                 PatchManager.MiniHide = false;
             }, "Be a Mini hide Roboter");
 
+            new QMToggleButton(ThisMenu, 0, 1, "Antiblock", () =>
+            {
+                PatchManager.AntiBlock = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.AntiBlock = false;
+            }, "See blocked People", Color.cyan, Color.white, false, true);
+
             VRToggle = new QMToggleButton(ThisMenu, 5, 0, "VR", () =>
             {
                 PatchManager.VRMode = true;

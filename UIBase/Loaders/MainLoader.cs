@@ -334,9 +334,9 @@ namespace WengaPort.MainLoader
         {
             ButtonsLoader.Initialize();
             ModulesLoader.Initialize();
+            DiscordManager.Init();
             PatchManager.JoinInitialize();
             PatchManager.InitPatch();
-            DiscordManager.Init();
             VRCPlayer.field_Internal_Static_Color_0 = new Color(255, 0, 0);
             VRCPlayer.field_Internal_Static_Color_1 = new Color(255, 255, 0);
             VRCPlayer.field_Internal_Static_Color_2 = new Color(0, 0, 0);
