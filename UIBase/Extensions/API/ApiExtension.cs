@@ -66,7 +66,6 @@ namespace WengaPort.Api
 		{
             try
             {
-
 				if (!ApiNotify)
                 {
 					return;

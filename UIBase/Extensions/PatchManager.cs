@@ -5,6 +5,7 @@ using Il2CppSystem.Collections;
 using MelonLoader;
 using RootMotion.FinalIK;
 using System;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Transmtn;
