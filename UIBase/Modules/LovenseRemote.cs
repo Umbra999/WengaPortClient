@@ -218,7 +218,7 @@ namespace WengaPort.Modules
             this.token = token;
             this.id = id;
             this.name = name;
-            button = new QMSingleButton(LovenseRemote.menu, x++, 1, name + "\nNo\nHand", delegate () {
+            button = new QMSingleButton(LovenseRemote.menu, x++, 1, $"[name] \nNo\nHand", delegate () {
                 changeHand();
             }, "Change Hand for Trigger Control", null, null);
             Buttons.Add(button.getGameObject());
@@ -261,7 +261,7 @@ namespace WengaPort.Modules
                     break;
                 case "slider":
                     hand = "none";
-                    button.setButtonText($"[{name}]\nSlider");
+                    button.setButtonText($"[{name}]\nNone");
                     break;
             }
         }
