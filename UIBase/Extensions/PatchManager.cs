@@ -105,20 +105,20 @@ namespace WengaPort.Extensions
             try
             {
                 var portalInternal = __instance.field_Private_PortalInternal_0;
-                if (Vector3.Distance(Utils.CurrentUser.transform.position, __instance.transform.position) > 0.7f)
+                if (Vector3.Distance(Utils.CurrentUser.transform.position, __instance.transform.position) > 0.8f)
                 {
                     return false;
                 }
                 {
                     var Dropper = Utils.PlayerManager.GetPlayerWithPlayerID(portalInternal.field_Private_Int32_0);
-                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name} by\n {(Dropper != null ? $"{Dropper.DisplayName()}" : "No Owner")}", "Yes", new System.Action(() =>
-                     {
-                         Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
-                         Utils.VRCUiPopupManager.HideCurrentPopUp();
-                     }), "No", new System.Action(() =>
-                     {
-                         Utils.VRCUiPopupManager.HideCurrentPopUp();
-                     }));
+                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name}", "Yes", new System.Action(() =>
+                    {
+                        Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
+                        Utils.VRCUiPopupManager.HideCurrentPopUp();
+                    }), "No", new System.Action(() =>
+                    {
+                        Utils.VRCUiPopupManager.HideCurrentPopUp();
+                    }));
                     return false;
                 }
             }
@@ -518,7 +518,6 @@ namespace WengaPort.Extensions
                             return false;
                         }
                         break;
-
                 }
             }
             catch
@@ -570,20 +569,17 @@ namespace WengaPort.Extensions
                 {
                     text4 = text4 + "[" + Il2CppSystem.Convert.ToString(value) + "]";
                 }
-                if (!(__1.ParameterObject.name == "USpeak") && !(__1.ParameterString == "SetTimerRPC"))
+                if (!(__1.ParameterObject.name == "USpeak") && !(__1.ParameterString == "SetTimerRPC") && RPCLog)
                 {
-                    if (RPCLog)
-                    {
-                        System.Console.ForegroundColor = System.ConsoleColor.Magenta;
-                        MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
+                    System.Console.ForegroundColor = System.ConsoleColor.Magenta;
+                    MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
 
-                        System.Console.WriteLine(string.Format("\n[RPC] \nPLAYER: {0} \nOBJECT: {1}  \nEXECUTED: {2} \nFOR: {3} \nType: {4} [{5}] L: {6}", new object[]
-                            {
+                    System.Console.WriteLine(string.Format("\n[RPC] \nPLAYER: {0} \nOBJECT: {1}  \nEXECUTED: {2} \nFOR: {3} \nType: {4} [{5}] L: {6}", new object[]
+                        {
                                     text,__1.ParameterObject.name,__1.ParameterString,(player == null) ? text4 : text3,__1.EventType,__2,array.Length
-                            }));
-                        System.Console.ResetColor();
-                        MelonConsole.SetColor(System.ConsoleColor.White);
-                    }
+                        }));
+                    System.Console.ResetColor();
+                    MelonConsole.SetColor(System.ConsoleColor.White);
                 }
                 bool flag = instance.GetVRCPlayer().GetIsBot() || RPCAndEventBlock.Check(instance.UserID());
                 if (flag)
@@ -600,8 +596,7 @@ namespace WengaPort.Extensions
 
                 if (__1.ParameterObject != null)
                 {
-                    bool flag3 = __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && IsNaN(__1.ParameterObject.transform.position);
-                    if (flag3)
+                    if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && IsNaN(__1.ParameterObject.transform.position))
                     {
                         VRConsole.Log(VRConsole.LogsType.Protection, text + " --> used Infinity-Events");
                         Logger.WengaLogger("[Room] [Protection] Prevented " + text + " from using Infinity-Events");
@@ -698,17 +693,14 @@ namespace WengaPort.Extensions
                 }
                 VrcEventType eventType = __1.EventType;
                 VrcEventType vrcEventType = eventType;
-                if (vrcBroadcastType == 0)
+                if (vrcBroadcastType == 0 && AntiMasterDC)
                 {
-                    if (AntiMasterDC)
+                    if (a != APIUser.CurrentUser.id)
                     {
-                        if (a != APIUser.CurrentUser.id)
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
-                        }
-                        return a == APIUser.CurrentUser.id;
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
                     }
+                    return a == APIUser.CurrentUser.id;
                 }
                 if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
                 {
