@@ -266,11 +266,14 @@ namespace WengaPort.MainLoader
                     if (Delay > 4f)
                     {
                         DiscordManager.Update();
-                        foreach (Player player in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray())
+                        if (PortalHandler.kosstrings.Count > 0)
                         {
-                            if (PortalHandler.kosstrings.Contains(player.UserID()))
+                            foreach (Player player in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray())
                             {
-                                PortalHandler.DropInfinitePortal(player.GetVRCPlayer());
+                                if (PortalHandler.kosstrings.Contains(player.UserID()))
+                                {
+                                    PortalHandler.DropInfinitePortal(player.GetVRCPlayer());
+                                }
                             }
                         }
                         Delay = 0f;

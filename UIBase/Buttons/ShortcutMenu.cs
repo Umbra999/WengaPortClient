@@ -98,8 +98,10 @@ namespace WengaPort.Buttons
             });
 
             QMNestedButton UdonExploits = new QMNestedButton(PrefabsPage, 3.5f, 1f, "Udon", "Udon Trigger/Event Menu");
-            ScrollMenu UdonEvents = new ScrollMenu(new QMNestedButton(UdonExploits, -5, -5, "", ""));
+            QMNestedButton UdonTriggers = new QMNestedButton(UdonExploits, -5, -5, "", "");
+            ScrollMenu UdonEvents = new ScrollMenu(UdonTriggers);
             ScrollMenu UdonObjects = new ScrollMenu(UdonExploits);
+            UdonTriggers.getMainButton().setActive(false);
             UdonObjects.SetAction(delegate
             {
                 foreach (var Udon in UnityEngine.Object.FindObjectsOfType<UdonBehaviour>())
@@ -210,18 +212,14 @@ namespace WengaPort.Buttons
                 {
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
-                        InteractMenu.HearOffPlayers.Remove(instance.GetVRCPlayer().UserID());
-                        instance.field_Internal_VRCPlayer_0.field_Internal_Boolean_1 = true;
                         if (!instance.IsFriend())
                         {
                             InteractMenu.HearOffPlayers.Add(instance.GetVRCPlayer().UserID());
-                            instance.field_Internal_VRCPlayer_0.field_Internal_Boolean_1 = false;
                         }
                     }
                 }
-                catch (Exception)
-                {
-                }
+                catch
+                { }
             }, "Off", () =>
             {
                 try
@@ -229,12 +227,10 @@ namespace WengaPort.Buttons
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         InteractMenu.HearOffPlayers.Remove(instance.GetVRCPlayer().UserID());
-                        instance.field_Internal_VRCPlayer_0.field_Internal_Boolean_1 = true;
                     }
                 }
-                catch (Exception)
-                {
-                }
+                catch
+                { }
             }, "Forcemute non Friends");
             HalfToggleButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(2, 1.75f); 
             HalfToggleButton.btnOn.gameObject.GetComponent<RectTransform>().sizeDelta /= new Vector2(2.7f, 1.75f);  

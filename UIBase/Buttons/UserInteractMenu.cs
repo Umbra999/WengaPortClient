@@ -138,11 +138,9 @@ namespace WengaPort.Buttons
             HearToggle = new QMToggleButton("UserInteractMenu", 4, 1, "Hear", () =>
             {
                 HearOffPlayers.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
-                Utils.QuickMenu.SelectedVRCPlayer().field_Private_Boolean_3 = true;
             }, "Off", () =>
             {
                 HearOffPlayers.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
-                Utils.QuickMenu.SelectedVRCPlayer().field_Private_Boolean_3 = false;
             }, "Mute yourself for this User", Color.cyan, Color.white, false, true);
 
             HalfButton = new QMSingleButton(ThisMenu, 1, 0.25f, "Spawn \nPrefab", () =>

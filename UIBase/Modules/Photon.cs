@@ -82,6 +82,7 @@ namespace WengaPort.Modules
 		public static bool Serialize = false;
 		public static bool Invisible = false;
 		public static bool LockInstance = false;
+		public static bool Forcemute = false;
 		public static void CustomSerialize(bool Toggle)
 		{
 			try

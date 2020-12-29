@@ -255,6 +255,10 @@ namespace WengaPort.Extensions
                 {
                     return !Modules.Photon.LockInstance;
                 }
+                if (__0 == 1)
+                {
+                    return !Modules.Photon.Forcemute;
+                }
             }
             catch
             { }

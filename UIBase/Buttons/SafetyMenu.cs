@@ -27,28 +27,27 @@ namespace WengaPort.Buttons
             {
                 try
                 {
+                    Modules.Photon.Forcemute = true;
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         InteractMenu.HearOffPlayers.Add(instance.GetVRCPlayer().UserID());
-                        instance.field_Internal_VRCPlayer_0.field_Internal_Boolean_1 = false;
                     }
                 }
-                catch (Exception)
+                catch
                 {
                 }
             }, "Disabled", () =>
             {
                 try
                 {
+                    Modules.Photon.Forcemute = false;
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         InteractMenu.HearOffPlayers.Remove(instance.GetVRCPlayer().UserID());
-                        instance.field_Internal_VRCPlayer_0.field_Internal_Boolean_1 = true;
                     }
                 }
-                catch (Exception)
-                {
-                }
+                catch
+                { }
             }, "Forcemute Everyone");
 
             new QMToggleButton(ThisMenu, 0, 0, "Mini \nHide", () =>
