@@ -57,11 +57,12 @@ namespace WengaPort.Modules
 			PhotonHandler.field_Internal_Static_PhotonHandler_0.prop_ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique_0.Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_1(code,Object,RaiseEventOptions,sendOptions);
 		}
 
+		public static bool Desync = false;
 		public static IEnumerator PhotonDesyncWorld()
 		{
 			for (; ; )
 			{
-				if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
+				if (RoomManager.field_Internal_Static_ApiWorld_0 == null || !Desync)
 				{
 					yield break;
 				}
@@ -73,7 +74,7 @@ namespace WengaPort.Modules
 				{
 					field_Public_EnumPublicSealedvaOtAlMa4vUnique_0 = EnumPublicSealedvaOtAlMa4vUnique.Others,
 				}, SendOptions.SendReliable);
-				yield return new WaitForEndOfFrame();
+				yield return new WaitForSeconds(0.01f);
 			}
 			yield break;
 		}
@@ -171,25 +172,18 @@ namespace WengaPort.Modules
 
 		public static void DebugSpam()
 		{
-			if (handler == null)
+			for (int i = 0; i < 5; i++)
 			{
-				handler = Resources.FindObjectsOfTypeAll<VRC_EventHandler>()[0];
+				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
 			}
-			VRC_EventHandler.VrcEvent vrcEvent = new VRC_EventHandler.VrcEvent
+		}
+
+		public static void RPCDesync()
+		{
+			for (int i = 0; i < int.MaxValue; i++)
 			{
-				EventType = (VRC_EventHandler.VrcEventType)16,
-				ParameterObject = handler.gameObject,
-				ParameterInt = 1,
-				ParameterFloat = 0f,
-				ParameterString = "Fuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \nFuck your Debug?, UwU <3 WengaPort <3 \n",
-				ParameterBoolOp = (VRC_EventHandler.VrcBooleanOp)(-1),
-				ParameterBytes = new Il2CppStructArray<byte>(0L)
-			};
-			int Type = 4;
-			Player player = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VRC_EventHandler.VrcBroadcastType)Type, player.gameObject, 0f);
-			Player player2 = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VRC_EventHandler.VrcBroadcastType)Type, player2.gameObject, 0f);
+				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
+			}
 		}
 	}
 }

@@ -166,10 +166,50 @@ namespace WengaPort.Buttons
                 }
             }, "Toggle Dynamic bones for Friends Only", Color.cyan, Color.white, false, true);
 
-            new QMSingleButton(ThisMenu, 5, 1, "Reload \nAvatar", () =>
+            new QMToggleButton(ThisMenu, 0, 0, "No \nPickup", () =>
+            {
+                ItemHandler.PickupToggle = true;
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
+                {
+                    if (item.gameObject.active && item.pickupable)
+                    {
+                        item.pickupable = false;
+                        ItemHandler.World_Pickups.Add(item);
+                    }
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.PickupToggle = false;
+                foreach (VRCSDK2.VRC_Pickup pickup in ItemHandler.World_Pickups)
+                {
+                    pickup.pickupable = true;
+                }
+            }, "Toggle Item Pickup");
+
+            HalfButton = new QMSingleButton(ThisMenu, 5, 0.75f, "Reload \nAvatar", () =>
             {
                 PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
             }, "Reload your Avatar");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            HalfButton = new QMSingleButton(ThisMenu, 5, 1.25f, "Infinit \nTimer", () =>
+            {
+                foreach (PortalInternal portalInternal in UnityEngine.Object.FindObjectsOfType<PortalInternal>())
+                {
+                    portalInternal.SetTimerRPC(float.NegativeInfinity, Utils.CurrentUser.GetPlayer());
+                }
+            }, "Reset the Portal Timer");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            HalfButton = new QMSingleButton(ThisMenu, 5, 1.75f, "Interact \nAll", () =>
+            {
+                foreach (VRC.SDKBase.VRC_Trigger vrc_Trigger in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Trigger>())
+                {
+                    vrc_Trigger.TakesOwnershipIfNecessary.ToString();
+                    vrc_Trigger.Interact();
+                }
+            }, "Interact with all Triggers");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
         }
     }
 }

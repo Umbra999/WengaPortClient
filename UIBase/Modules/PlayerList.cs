@@ -39,7 +39,7 @@ namespace WengaPort.Modules
                 foreach (Player Player in Utils.PlayerManager.GetAllPlayers().ToArray())
                 {
                     string Text;
-                    Text = (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
+                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
                     Players.Insert(0, Text);
                     UpdateText();
                     PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
@@ -123,21 +123,6 @@ namespace WengaPort.Modules
 
         public static float posy = -400f;
 
-        public static float PlateDelay = 0;
-
-        public static IEnumerator AdminPlateChanger(Player player)
-        {
-            for (; ; )
-            {
-                while (RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
-                while (player.field_Internal_VRCPlayer_0 == null) yield break;
-                Color Rainbow = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
-                NameplateHandler.giveAdminText(player, Rainbow, "Cat Dealer");
-                yield return new WaitForEndOfFrame();
-            }
-            yield break;
-        }
-
         public static void DynBoneAdder(Player player)
         {
             if (player.IsFriend() && player.UserID() != Utils.CurrentUser.UserID() && !GlobalDynamicBones.FriendOnlyBones.Contains(player.UserID()))
@@ -147,125 +132,8 @@ namespace WengaPort.Modules
             }
         }
 
-        public void Update()
-        {
-            PlateDelay -= Time.deltaTime;
-            if (PlateDelay < 0)
-            {
-                PlateDelay = 2f;
-                try
-                {
-                    foreach (Player player in Utils.PlayerManager.GetAllPlayers().ToArray())
-                    {
-                        bool WengaCheck = CheckWenga(player.UserID());
-                        bool TrialCheck = CheckTrial(player.UserID());
-                        bool ClientCheck = CheckClient(player.UserID());
-                        if (WengaCheck)
-                        {
-
-                        }
-                        else if (TrialCheck)
-                        {
-                            Color color = new Color(0.333f, 0.153f, 0.667f);
-                            if (player.GetVRCPlayer().nameplate.uiName.color != color)
-                            {
-                                NameplateHandler.givePlateText(player, color, "ღ Wenga's Egirl ღ");
-                            }
-                        }
-                        else if (ClientCheck)
-                        {
-                            Color color = new Color(0.63f, 0.24f, 0.16f);
-                            if (player.GetVRCPlayer().nameplate.uiName.color != color)
-                            {
-                                NameplateHandler.givePlateText(player, color, "WengaPort");
-                            }
-                        }
-                        else
-                        {
-                            var nameplate = player.GetVRCPlayer().nameplate;
-                            string text4 = player.GetAPIUser().GetRank().ToLower();
-                            switch (text4.ToString())
-                            {
-                                case "user":
-                                    {
-                                        Color color = new Color(0f, 1f, 0f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "User");
-                                        }
-                                        break;
-                                    }
-                                case "legend":
-                                    {
-                                        Color color = new Color(0.95f, 0.95f, 0.95f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Legend");
-                                        }
-                                        break;
-                                    }
-                                case "known":
-                                    {
-                                        Color color = new Color(0.92f, 0.37f, 0f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Known");
-                                        }
-                                        break;
-                                    }
-                                case "new user":
-                                    {
-                                        Color color = new Color(0, 1f, 1f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "New");
-                                        }
-                                        break;
-                                    }
-                                case "visitor":
-                                    {
-                                        Color color = new Color(0.09f, 0.09f, 0.09f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Visitor");
-                                        }
-                                        break;
-                                    }
-                                case "trusted":
-                                    {
-                                        Color color = new Color(0.87f, 0f, 0.5f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Trusted");
-                                        }
-                                        break;
-                                    }
-                                case "veteran":
-                                    {
-                                        Color color = new Color(1f, 0.81f, 0.03f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Veteran");
-                                        }
-                                        break;
-                                    }
-                                case "negativetrust":
-                                    {
-                                        Color color = new Color(0.44f, 0.01f, 0.01f);
-                                        if (nameplate.uiName.color != color)
-                                        {
-                                            NameplateHandler.givePlateText(player, color, "Nuisance");
-                                        }
-                                        break;
-                                    }
-                            }
-                        }
-
-                    }
-                }
-                catch { }
-            }
-        }
+        public static List<string> BlockList = new List<string>();
+        
         public PlayerList(IntPtr ptr) : base(ptr)
         {
         }

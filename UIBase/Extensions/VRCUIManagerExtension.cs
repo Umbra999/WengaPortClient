@@ -14,7 +14,6 @@ namespace WengaPort.Extensions
 {
 	public static class VRCUiManagerExtension
 	{
-
 		public static APIUser SelectedAPIUser(this VRCUiManager Instance)
 		{
 			return Instance.menuContent.GetComponentInChildren<PageUserInfo>().user;

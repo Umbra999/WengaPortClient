@@ -26,6 +26,54 @@ namespace WengaPort.Modules
             }
         }
 
+        public static bool ItemCrashToggle = false;
+        public static IEnumerator ItemCrash(Player p)
+        {
+            for (; ;)
+            {
+                if (!ItemCrashToggle)
+                {
+                    yield break;
+                }
+                foreach (VRC.SDKBase.VRC_Trigger vrc_Trigger in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Trigger>())
+                {
+                    bool hasPickupTriggers = vrc_Trigger.HasPickupTriggers;
+                    if (hasPickupTriggers)
+                    {
+                        vrc_Trigger.TakesOwnershipIfNecessary.ToString();
+                        vrc_Trigger.Interact();
+                    }
+                }
+                foreach (VRC.SDKBase.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Pickup>())
+                {
+                    bool flag = vrc_Pickup.GetComponent<Collider>() && !vrc_Pickup.GetComponent<VRC.SDKBase.VRC_SpecialLayer>() && !vrc_Pickup.IsHeld;
+                    if (flag)
+                    {
+                        TakeOwnershipIfNecessary(vrc_Pickup.gameObject);
+                        vrc_Pickup.pickupable = true;
+                        vrc_Pickup.ThrowVelocityBoostMinSpeed = int.MaxValue;
+                        vrc_Pickup.ThrowVelocityBoostScale = int.MaxValue;
+                        vrc_Pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+                    }
+                }
+                yield return new WaitForSeconds(10f);
+                foreach (VRC.SDKBase.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Pickup>())
+                {
+                    bool flag = vrc_Pickup.GetComponent<Collider>() && !vrc_Pickup.GetComponent<VRC.SDKBase.VRC_SpecialLayer>() && !vrc_Pickup.IsHeld;
+                    if (flag)
+                    {
+                        TakeOwnershipIfNecessary(vrc_Pickup.gameObject);
+                        vrc_Pickup.pickupable = true;
+                        vrc_Pickup.ThrowVelocityBoostMinSpeed = int.MaxValue;
+                        vrc_Pickup.ThrowVelocityBoostScale = int.MaxValue;
+                        vrc_Pickup.transform.position = p.transform.position;
+                    }
+                }
+                yield return new WaitForSeconds(10f);
+            }
+            yield break;
+        }
+
 		public static List<VRCSDK2.VRC_Pickup> World_Pickups = new List<VRCSDK2.VRC_Pickup>();
 
 		public static List<VRC_ObjectSync> World_ObjectSyncs = new List<VRC_ObjectSync>();
@@ -39,6 +87,7 @@ namespace WengaPort.Modules
         public static bool ChairToggle = true;
         public static bool MirrorToggle = false;
         public static bool ItemToggle = false;
+        public static bool PickupToggle = false;
 
         public static void TakeOwnershipIfNecessary(GameObject gameObject)
         {
@@ -163,7 +212,7 @@ namespace WengaPort.Modules
 
         public static void DropItems()
         {
-            foreach (VRC.SDKBase.VRC_Pickup vrc_Pickup in World_Pickups)
+            foreach (VRCSDK2.VRC_Pickup vrc_Pickup in World_Pickups)
             {
                 if (vrc_Pickup.IsHeld)
                 {

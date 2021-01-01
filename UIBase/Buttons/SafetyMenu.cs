@@ -95,8 +95,7 @@ namespace WengaPort.Buttons
             new QMToggleButton(ThisMenu, 1, 2, "Disable \nChairs", () =>
             {
                 ItemHandler.ChairToggle = true;
-                var objects = Resources.FindObjectsOfTypeAll<VRCStation>();
-                foreach (var item in objects)
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCStation>())
                 {
                     if (item.gameObject.active)
                     {

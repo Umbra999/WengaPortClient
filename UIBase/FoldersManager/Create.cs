@@ -39,6 +39,29 @@ namespace WengaPort.FoldersManager
             {
                 Ini = new IniFile("WengaPort\\Config.ini");
             }
+            if (!File.Exists("WengaPort\\WengaPort.nmasset"))
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/794314592930496542/WengaPort.nmasset", Path.Combine(System.Environment.CurrentDirectory, "WengaPort/WengaPort.nmasset"));
+                }
+            }
+            if (!Directory.Exists(Path.Combine(System.Environment.CurrentDirectory, "Dependencies")))
+                Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "Dependencies"));
+            if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "Dependencies/discord-rpc.dll")))
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/discord-rpc.dll", Path.Combine(System.Environment.CurrentDirectory, "Dependencies/discord-rpc.dll"));
+                }
+            }
+            if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "websocket-sharp.dll")))
+            {
+                using (WebClient webClient = new WebClient())
+                {
+                    webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/781565586424987688/websocket-sharp.dll", Path.Combine(System.Environment.CurrentDirectory, "websocket-sharp.dll"));
+                }
+            }
             if (!Directory.Exists("WengaPort\\VRCA"))
             {
                 Directory.CreateDirectory("WengaPort\\VRCA");

@@ -31,22 +31,6 @@ namespace WengaPort.MainLoader
             FoldersManager.Create.Initialize();
             OnStart();
             Console.Title = $"WengaPort";
-            if (!Directory.Exists(Path.Combine(Environment.CurrentDirectory, "Dependencies")))
-                Directory.CreateDirectory(Path.Combine(Environment.CurrentDirectory, "Dependencies"));
-            if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "Dependencies/discord-rpc.dll")))
-            {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/discord-rpc.dll", Path.Combine(Environment.CurrentDirectory, "Dependencies/discord-rpc.dll"));
-                }
-            }
-            if (!File.Exists(Path.Combine(Environment.CurrentDirectory, "websocket-sharp.dll")))
-            {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/781565586424987688/websocket-sharp.dll", Path.Combine(Environment.CurrentDirectory, "websocket-sharp.dll"));
-                }
-            }
             PatchManager.QuestIni();
             ClassInjector.RegisterTypeInIl2Cpp<Movement>();
             ClassInjector.RegisterTypeInIl2Cpp<LovenseRemote>();
@@ -54,6 +38,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<ThirdPerson>();
             ClassInjector.RegisterTypeInIl2Cpp<AvatarFavs>();
             ClassInjector.RegisterTypeInIl2Cpp<AttachmentManager>();
+            ClassInjector.RegisterTypeInIl2Cpp<NameplateHelper>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -67,6 +52,7 @@ namespace WengaPort.MainLoader
             VRConsole.AllLogsText.Clear();
             GlobalDynamicBones.currentWorldDynamicBoneColliders.Clear();
             GlobalDynamicBones.currentWorldDynamicBones.Clear();
+            PlayerList.BlockList.Clear();
             new Thread(delegate ()
             {
                 PatchManager.EventDelay = true;
@@ -105,8 +91,7 @@ namespace WengaPort.MainLoader
             
             if (ItemHandler.ChairToggle)
             {
-                var objects = Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRCStation>();
-                foreach (var item in objects)
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRCStation>())
                 {
                     if (item.gameObject.active)
                     {
@@ -117,8 +102,7 @@ namespace WengaPort.MainLoader
             }
             if (ItemHandler.MirrorToggle)
             {
-                var objects = Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_MirrorReflection>();
-                foreach (var item in objects)
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_MirrorReflection>())
                 {
                     if (item.gameObject.active)
                     {
@@ -129,11 +113,21 @@ namespace WengaPort.MainLoader
             }
             if (ItemHandler.ItemToggle)
             {
-                var objects = Resources.FindObjectsOfTypeAll<VRC_Pickup>();
-                foreach (VRC_Pickup item in objects)
+                foreach (VRC_Pickup item in Resources.FindObjectsOfTypeAll<VRC_Pickup>())
                 {
                     item.gameObject.SetActive(false);
                     ItemHandler.World_Pickups.Add(item);
+                }
+            }
+            if (ItemHandler.PickupToggle)
+            {
+                foreach (VRC_Pickup item in Resources.FindObjectsOfTypeAll<VRC_Pickup>())
+                {
+                    if (item.pickupable)
+                    {
+                        item.pickupable = false;
+                        ItemHandler.World_Pickups.Add(item);
+                    }
                 }
             }
         }
@@ -194,8 +188,6 @@ namespace WengaPort.MainLoader
 
                 try
                 {
-                    var inviteDot = GameObject.Find("/UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/InviteDot");
-                    var reqDot = GameObject.Find("/UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/InviteRequestDot");
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     PlayerDelay += Time.deltaTime;
@@ -256,7 +248,7 @@ namespace WengaPort.MainLoader
                     if (ItemHandler.AutoDropItems)
                     {
                         DropDelay += Time.deltaTime;
-                        if (DropDelay > 1.5f)
+                        if (DropDelay > 1f)
                         {
                             ItemHandler.DropItems();
                             DropDelay = 0f;
@@ -352,6 +344,8 @@ namespace WengaPort.MainLoader
             VRCPlayer.field_Internal_Static_Color_9 = new Color(255, 255, 255);
             menu = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend");
             button = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend/Actions/Invite").GetComponent<Button>();
+            inviteDot = GameObject.Find("/UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/InviteDot");
+            reqDot = GameObject.Find("/UserInterface/UnscaledUI/HudContent/Hud/NotificationDotParent/InviteRequestDot");
             var Client = new GameObject();
             UnityEngine.Object.DontDestroyOnLoad(Client);
             Client.AddComponent<Movement>();
@@ -360,8 +354,11 @@ namespace WengaPort.MainLoader
             Client.AddComponent<ThirdPerson>();
             Client.AddComponent<AvatarFavs>();
             Client.AddComponent<AttachmentManager>();
+            Client.AddComponent<NameplateHelper>();
         }
         GameObject menu;
+        GameObject inviteDot;
+        GameObject reqDot;
         Button button;
     }
 }

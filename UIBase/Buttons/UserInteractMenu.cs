@@ -299,9 +299,18 @@ namespace WengaPort.Buttons
                 CameraHandler.UserCamAnnoy = false;
             }, "Play Annoying Camera Sounds for this Player");
 
-             new QMSingleButton(ThisMenu, 5, 1, "Item \nLag", () =>
+            new QMSingleButton(ThisMenu, 5, 1, "Item \nLag", () =>
             {
                 MelonCoroutines.Start(ItemHandler.ItemLag(Utils.QuickMenu.SelectedVRCPlayer()));
+            }, "Crash the Player with Items");
+
+            new QMToggleButton(ThisMenu, 5, 0, "Ram \nCrash", () =>
+            {
+                ItemHandler.ItemCrashToggle = true;
+                MelonCoroutines.Start(ItemHandler.ItemCrash(Utils.QuickMenu.SelectedPlayer()));
+            }, "Disabled", () =>
+            {
+                ItemHandler.ItemCrashToggle = false;
             }, "Crash the Player with Items");
         }
         public static List<string> HearOffPlayers = new List<string>();

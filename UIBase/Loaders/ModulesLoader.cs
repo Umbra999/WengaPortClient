@@ -12,6 +12,7 @@ namespace WengaPort.Loaders
             ButtonsMainColor.Initialize();
             ButtonsMainColor.Initialize2();
             ButtonsMainColor.Initialize3();
+            Nameplates.OnUI();
             if (!UnityEngine.XR.XRDevice.isPresent)
             {
                 PatchManager.VRMode = false;

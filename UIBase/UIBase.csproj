@@ -483,6 +483,10 @@
     <Compile Include="Modules\ItemHandler.cs" />
     <Compile Include="Modules\MenuText.cs" />
     <Compile Include="Modules\NameplateHandler.cs" />
+    <Compile Include="Modules\Nameplates\BTKSANameplateMod.cs" />
+    <Compile Include="Modules\Nameplates\GDBUser.cs" />
+    <Compile Include="Modules\Nameplates\NameplateHelper.cs" />
+    <Compile Include="Modules\Nameplates\XrefScannerUtils.cs" />
     <Compile Include="Modules\NoClipping.cs" />
     <Compile Include="Modules\OnGui.cs" />
     <Compile Include="Modules\PedestalHandler.cs" />

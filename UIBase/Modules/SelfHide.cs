@@ -40,5 +40,17 @@ namespace WengaPort.Modules
 		}
 		private static GameObject ForwardObject;
 		private static bool isActive;
+
+		public static void Invisible()
+		{
+			for (int i = 0; i < 20; i++)
+			{
+				VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(999999999999 * 2, 999999999999 * 2, 999999999999 * 2);
+				VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(999999999999 * 2, 999999999999 * 2, 999999999999 * 2);
+				VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(999999999999 * 2, 999999999999 * 2, 999999999999 * 2);
+				VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(999999999999 * 2, 999999999999 * 2, 999999999999 * 2);
+				VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = new Vector3(999999999999 * 2, 999999999999 * 2, 999999999999 * 2);
+			}
+		}
 	}
 }

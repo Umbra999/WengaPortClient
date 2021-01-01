@@ -171,7 +171,6 @@ C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\Mono.Posix.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\Photon-DotNet.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\UnhollowerBaseLib.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\UnhollowerRuntimeLib.dll
-C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\websocket-sharp.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\DOTween.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\Rug.Osc.dll
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\Oculus.VR.dll
@@ -306,3 +305,4 @@ C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\Output\TestMod
 C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\Output\TestMod\Il2CppSystem.Memory.dll
 C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\Output\TestMod\Il2CppSystem.Drawing.dll
 C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\obj\Release\UIBase.csproj.CopyComplete
+C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\websocket-sharp.dll
