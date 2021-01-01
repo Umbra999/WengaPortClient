@@ -108,7 +108,6 @@ namespace WengaPort.Modules
             }
             return null;
         }
-
         public static IEnumerator ItemLag(VRCPlayer P)
         {
             foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
@@ -117,16 +116,16 @@ namespace WengaPort.Modules
                 vrc_Pickup.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue);
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
             }
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(13f);
             ItemsToPlayer(P);
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(13f);
             foreach (VRCSDK2.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
             {
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
                 vrc_Pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
                 Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, vrc_Pickup.gameObject);
             }
-            yield return new WaitForSeconds(15f);
+            yield return new WaitForSeconds(13f);
             ItemsToPlayer(P);
             yield break;
         }

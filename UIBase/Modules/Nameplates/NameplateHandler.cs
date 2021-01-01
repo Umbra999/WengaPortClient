@@ -49,6 +49,13 @@ namespace WengaPort.Modules
             MelonCoroutines.Start(loadAssets());
         }
 
+        public static string ConvertRGBtoHEX(Color color)
+        {
+            byte byteR = (byte)(color.r * 255);
+            byte byteG = (byte)(color.g * 255);
+            byte byteB = (byte)(color.b * 255);
+            return byteR.ToString("X2") + byteG.ToString("X2") + byteB.ToString("X2");
+        }
 
         public static Color PlateUser = new Color(0f, 1f, 0f);
         public static Color PlateLegend = new Color(1f, 1f, 1f);
@@ -95,9 +102,7 @@ namespace WengaPort.Modules
 
                 if (PlayerList.CheckWenga(player.UserID()))
                 {
-                    textColor = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
-                    plateColor = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
-                    ApplyNameplateColour(nameplate, plateColor, plateColor, textColor, null, resetMaterials);
+                    ApplyNameplateColour(nameplate, Color.red, Color.red, textColor, null, resetMaterials);
                     return;
                 }
                 else if (PlayerList.CheckTrial(player.UserID()))
@@ -118,92 +123,44 @@ namespace WengaPort.Modules
                     ApplyNameplateColour(nameplate, plateColor, plateColor, textColor, null, resetMaterials);
                     return;
                 }
-                else if (PlayerList.BlockList.Contains(player.UserID()))
-                {
-                    Color Purple;
-                    Color Red;
-                    ColorUtility.TryParseHtmlString("#c70300", out Purple);
-                    ColorUtility.TryParseHtmlString("#c70300", out Red);
-                    textColor = Purple;
-                    plateColor = Red;
-                    ApplyNameplateColour(nameplate, plateColor, plateColor, textColor, null, resetMaterials);
-                    return;
-                }
-
                 var Rank = player.field_Private_APIUser_0.GetRank().ToLower();
                 switch (Rank)
                 {
                     case "user":
                         plateColor = PlateUser;
                         textColor = PlateUser;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "legend":
                         plateColor = PlateLegend;
                         textColor = PlateLegend;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "known":
                         plateColor = PlateKnown;
                         textColor = PlateKnown;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "negativetrust":
                         plateColor = PlateNegative;
                         textColor = PlateNegative;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "new user":
                         plateColor = PlateNewUser;
                         textColor = PlateNewUser;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "verynegativetrust":
                         plateColor = PlateNegative;
                         textColor = PlateNegative;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "visitor":
                         plateColor = PlateVisitor;
                         textColor = PlateVisitor;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "trusted":
                         plateColor = PlateTrusted;
                         textColor = PlateTrusted;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     case "veteran":
                         plateColor = PlateVeteran;
                         textColor = PlateVeteran;
-                        if (APIUser.IsFriendsWith(player.UserID()))
-                        {
-                            textColor = PlateFriend;
-                        }
                         break;
                     default:
                         break;

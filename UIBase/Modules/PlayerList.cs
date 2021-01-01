@@ -12,6 +12,7 @@ using WengaPort.Extensions;
 using System.Diagnostics;
 using System.Collections.Specialized;
 using System.Collections;
+using TMPro;
 
 namespace WengaPort.Modules
 {
@@ -48,6 +49,90 @@ namespace WengaPort.Modules
             catch
             { }
         }
+        public float PlayerDelay = 0f;
+        public void Update()
+        {
+            PlayerDelay += Time.deltaTime;
+            if (PlayerDelay > 3f)
+            {
+                var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
+                if (Shortcut.gameObject.active == true)
+                {
+                    AddPlayerToList();
+                }
+                PlayerDelay = 0f;
+            }
+        }
+
+        public static void CustomTag(Player player)
+        {
+            Transform contents = player.transform.Find("Player Nameplate/Canvas/Nameplate/Contents");
+            Transform stats = contents.Find("Quick Stats");
+            int stack = 0;
+            if (CheckWenga(player.UserID()))
+            {
+                SetTag(ref stack, stats, contents, Color.red, "⸸ Cat Dealer ⸸");
+                return;
+            }
+            else if (CheckTrial(player.UserID()))
+            {
+                SetTag(ref stack, stats, contents, new Color(0.6f, 0f, 0.9f), "ღ Wenga's Egirl ღ");
+                return;
+            }
+            else if (CheckClient(player.UserID()))
+            {
+                SetTag(ref stack, stats, contents, new Color(0.63f, 0.24f, 0.16f), "WengaPort");
+                return;
+            }
+            var Rank = player.field_Private_APIUser_0.GetRank().ToLower();
+            switch (Rank)
+            {
+                case "user":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateUser, "User");
+                    break;
+                case "legend":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateLegend, "Legend");
+                    break;
+                case "known":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateKnown, "Known");
+                    break;
+                case "negativetrust":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Nuisance");
+                    break;
+                case "new user":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateNewUser, "New");
+                    break;
+                case "verynegativetrust":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Very Nuisance");
+                    break;
+                case "visitor":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateVisitor, "Visitor");
+                    break;
+                case "trusted":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateTrusted, "Trusted");
+                    break;
+                case "veteran":
+                    SetTag(ref stack, stats, contents, Nameplates.PlateVeteran, "Veteran");
+                    break;
+                default:
+                    break;
+            }
+            if (BlockList.Contains(player.UserID())) SetTag(ref stack, stats, contents, Color.red, "Block");
+            if (player.IsFriend()) SetTag(ref stack, stats, contents, Color.yellow, "Friend");
+            stats.localPosition = new Vector3(0, (stack + 1) * 30, 0);
+        }
+
+        public static IEnumerator AdminPlateChanger(Player player)
+        {
+            for (; ; )
+            {
+                while (RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
+                while (player.field_Internal_VRCPlayer_0 == null) yield break;
+                player.transform.Find("Player Nameplate/Canvas/Nameplate/Contents/Main/Text Container/Name").GetComponent<TextMeshProUGUI>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
+                yield return new WaitForEndOfFrame();
+            }
+            yield break;
+        }
 
         public static void UpdateText()
         {
@@ -71,6 +156,42 @@ namespace WengaPort.Modules
             catch
             {
             }
+        }
+
+        private static Transform MakeTag(Transform stats, int index)
+        {
+            Transform rank = Instantiate(stats, stats.parent, false);
+            rank.name = $"WengaPortTag{index}";
+            rank.localPosition = new Vector3(0, 30 * (index + 1), 0);
+            rank.gameObject.active = true;
+            Transform textGO = null;
+            for (int i = rank.childCount; i > 0; i--)
+            {
+                Transform child = rank.GetChild(i - 1);
+                if (child.name == "Trust Text")
+                {
+                    textGO = child;
+                    continue;
+                }
+                Destroy(child.gameObject);
+            }
+            return textGO;
+        }
+        private static void SetTag(ref int stack, Transform stats, Transform contents, Color color, string content)
+        {
+            Transform tag = contents.Find($"WengaPortTag{stack}");
+            Transform label = null;
+            if (tag == null)
+                label = MakeTag(stats, stack);
+            else
+            {
+                tag.gameObject.SetActive(true);
+                label = tag.Find("Trust Text");
+            }
+            var text = label.GetComponent<TextMeshProUGUI>();
+            text.color = color;
+            text.text = content;
+            stack++;
         }
 
         private static string Wenga;

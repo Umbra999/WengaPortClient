@@ -9,7 +9,6 @@ namespace WengaPort.Modules
 {
     class AttachmentManager : MonoBehaviour 
     {
-
         public void Update()
         {
             if (RoomManager.field_Internal_Static_ApiWorld_0 == null || TransformParent == null) return;

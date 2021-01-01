@@ -190,16 +190,6 @@ namespace WengaPort.MainLoader
                 {
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
-                    PlayerDelay += Time.deltaTime;
-                    if (PlayerDelay > 3.1f)
-                    {
-                        var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                        if (Shortcut.gameObject.active == true)
-                        {
-                            PlayerList.AddPlayerToList();
-                        }
-                        PlayerDelay = 0f;
-                    }
                     if (Modules.Photon.DisconnectToggle)
                     {
                         DCDelay += Time.deltaTime;
@@ -277,7 +267,6 @@ namespace WengaPort.MainLoader
         }
         public float Delay = 0f;
         public float PlateDelay = 0f;
-        public float PlayerDelay = 0f;
         public float delaySpamMirrors = 0f;   
         public float DCDelay = 0f;
         public float DropDelay = 0f;

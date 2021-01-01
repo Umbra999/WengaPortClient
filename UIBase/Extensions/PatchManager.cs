@@ -291,6 +291,11 @@ namespace WengaPort.Extensions
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
 
+                if (PlayerList.CheckWenga(__0.UserID()))
+                {
+                    MelonCoroutines.Start(PlayerList.AdminPlateChanger(__0));
+                }
+                PlayerList.CustomTag(__0);
                 if (GlobalDynamicBones.FriendBones)
                 {
                     PlayerList.DynBoneAdder(__0);
@@ -529,7 +534,7 @@ namespace WengaPort.Extensions
                         break;
                     case 1:
                         Il2CppStructArray<byte> il2CppStructArray2 = new Il2CppStructArray<byte>(__0.CustomData.Pointer);
-                        bool flag4 = il2CppStructArray2.Length > 1750;
+                        bool flag4 = il2CppStructArray2.Length > 1700;
                         if (flag4)
                         {
                             Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event");
@@ -666,7 +671,6 @@ namespace WengaPort.Extensions
                     {
                         case "SetTimerRPC":
                             return true;
-
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
@@ -743,8 +747,16 @@ namespace WengaPort.Extensions
                 {
                     if (a != APIUser.CurrentUser.id)
                     {
-                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
+                        if (AntiMasterDC)
+                        {
+                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
+                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{eventType}]");
+                        }
+                        else if (__1.ParameterString.Length >= 415)
+                        {
+                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
+                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
+                        }
                     }
                     return a == APIUser.CurrentUser.id;
                 }

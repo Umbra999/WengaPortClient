@@ -10,7 +10,6 @@ namespace WengaPort.Modules
     class OnGui
     {
 		public static float APIDelay = 0f;
-		private static int count = 0;
 
         public static void GuiInit()
         {
@@ -18,7 +17,7 @@ namespace WengaPort.Modules
 			if (flag)
 			{
 				Color Rainbow = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
-				var RainbowHandler = NameplateHandler.ConvertRGBtoHEX(Rainbow);
+				var RainbowHandler = Nameplates.ConvertRGBtoHEX(Rainbow);
 				bool flag2 = GUI.Button(new Rect(Screen.width - 200, 30f, 100f, 25f), $"<color=#{RainbowHandler}>Close Game</color>", GUI.skin.box);
 				if (flag2)
 				{
@@ -44,7 +43,7 @@ namespace WengaPort.Modules
 				try
 				{
 					Color Rainbow = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2, 1), 1, 1));
-					var RainbowHandler = NameplateHandler.ConvertRGBtoHEX(Rainbow);
+					var RainbowHandler = Nameplates.ConvertRGBtoHEX(Rainbow);
 					GUI.Label(new Rect(Screen.width - 130f, 10f, 500f, 500f), string.Concat(new object[]
 					{
 						string.Format($"<b><color=#{RainbowHandler}>WengaPort</color></b>"),

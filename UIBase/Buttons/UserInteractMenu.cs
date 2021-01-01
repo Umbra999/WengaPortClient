@@ -19,6 +19,7 @@ using Logger = WengaPort.Extensions.Logger;
 using static VRC.SDKBase.VRC_EventHandler;
 using WengaPort.ConsoleUtils;
 using WengaPort.FoldersManager;
+using VRC.Udon;
 
 namespace WengaPort.Buttons
 {
