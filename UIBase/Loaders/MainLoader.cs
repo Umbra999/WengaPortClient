@@ -143,7 +143,6 @@ namespace WengaPort.MainLoader
             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) ButtonsMainColor.Initialize3(); //Really scuffed but this is to disable the blue loading screen
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                Movement.JumpInit();
                 RoomTime += Time.deltaTime;
                 if (UnityEngine.XR.XRDevice.isPresent)
                 {

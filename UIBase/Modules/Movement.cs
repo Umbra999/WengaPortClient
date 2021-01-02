@@ -68,6 +68,7 @@ namespace WengaPort.Modules
 
         public static bool FlyToggle = false;
         public static bool InfJump = true;
+        public static bool DoubleJump = false;
         public static bool Attachment = false;
         public static bool NoClipToggle = false;
         public static bool ShortcutActive = false;
@@ -95,19 +96,6 @@ namespace WengaPort.Modules
             isInVR = GeneralWrappers.IsInVr();
         }
 
-        public static void JumpInit()
-        {
-            if (InfJump && !FlyToggle)
-            {
-                if (Input.GetAxis("Jump") == 1)
-                {
-                    var Jump = Networking.LocalPlayer.GetVelocity();
-                    Jump.y = Networking.LocalPlayer.GetJumpImpulse();
-                    Networking.LocalPlayer.SetVelocity(Jump);
-                }
-            }
-        }
-
         public void Update()
         {
             if (Input.GetKeyDown(KeyCode.F) & Input.GetKey(KeyCode.LeftControl))
@@ -124,7 +112,7 @@ namespace WengaPort.Modules
                     MainMenu.FlyButton.setToggleState(true, false);
                 }
             }
-            if (Input.GetKeyDown(KeyCode.G) & Input.GetKey(KeyCode.LeftControl))
+            else if (Input.GetKeyDown(KeyCode.G) & Input.GetKey(KeyCode.LeftControl))
             {
                 if (NoClipToggle)
                 {
@@ -155,72 +143,58 @@ namespace WengaPort.Modules
                 }
                 try
                 {
-                    bool keyDown = Input.GetKeyDown((KeyCode)304);
-                    if (keyDown)
+                    if (Input.GetKeyDown((KeyCode)304))
                     {
                         FlySpeed *= 2f;
                     }
-                    bool keyUp = Input.GetKeyUp((KeyCode)304);
-                    if (keyUp)
+                    if (Input.GetKeyUp((KeyCode)304))
                     {
                         FlySpeed /= 2f;
                     }
-                    bool vrflyToggle = VRFlyToggle;
-                    if (vrflyToggle)
+                    if (VRFlyToggle)
                     {
-                        bool flag3 = isInVR;
-                        if (flag3)
+                        if (isInVR)
                         {
-                            bool flag4 = Math.Abs(Input.GetAxis("Vertical")) != 0f;
-                            if (flag4)
+                            if (Math.Abs(Input.GetAxis("Vertical")) != 0f)
                             {
                                 currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime * Input.GetAxis("Vertical");
                             }
-                            bool flag5 = Math.Abs(Input.GetAxis("Horizontal")) != 0f;
-                            if (flag5)
+                            if (Math.Abs(Input.GetAxis("Horizontal")) != 0f)
                             {
                                 currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime * Input.GetAxis("Horizontal");
                             }
-                            bool flag6 = Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f;
-                            if (flag6)
+                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f)
                             {
                                 currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
                             }
-                            bool flag7 = Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f;
-                            if (flag7)
+                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f)
                             {
                                 currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
                             }
                         }
                         else
                         {
-                            bool key = Input.GetKey((KeyCode)101);
-                            if (key)
+                            if (Input.GetKey((KeyCode)101))
                             {
                                 currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime;
                             }
-                            bool key2 = Input.GetKey((KeyCode)113);
-                            if (key2)
+                            if (Input.GetKey((KeyCode)113))
                             {
                                 currentPlayer.transform.position += transform.transform.up * -1f * FlySpeed * Time.deltaTime;
                             }
-                            bool key3 = Input.GetKey((KeyCode)119);
-                            if (key3)
+                            if (Input.GetKey((KeyCode)119))
                             {
                                 currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime;
                             }
-                            bool key4 = Input.GetKey((KeyCode)97);
-                            if (key4)
+                            if (Input.GetKey((KeyCode)97))
                             {
                                 currentPlayer.transform.position += transform.transform.right * -1f * FlySpeed * Time.deltaTime;
                             }
-                            bool key5 = Input.GetKey((KeyCode)100);
-                            if (key5)
+                            if (Input.GetKey((KeyCode)100))
                             {
                                 currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime;
                             }
-                            bool key6 = Input.GetKey((KeyCode)115);
-                            if (key6)
+                            if (Input.GetKey((KeyCode)115))
                             {
                                 currentPlayer.transform.position += transform.transform.forward * -1f * FlySpeed * Time.deltaTime;
                             }
@@ -228,59 +202,48 @@ namespace WengaPort.Modules
                     }
                     else
                     {
-                        bool flag8 = isInVR;
-                        if (flag8)
+                        if (isInVR)
                         {
-                            bool flag9 = Math.Abs(Input.GetAxis("Vertical")) != 0f;
-                            if (flag9)
+                            if (Math.Abs(Input.GetAxis("Vertical")) != 0f)
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.forward * FlySpeed * Time.deltaTime * Input.GetAxis("Vertical");
                             }
-                            bool flag10 = Math.Abs(Input.GetAxis("Horizontal")) != 0f;
-                            if (flag10)
+                            if (Math.Abs(Input.GetAxis("Horizontal")) != 0f)
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.right * FlySpeed * Time.deltaTime * Input.GetAxis("Horizontal");
                             }
-                            bool flag11 = Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f;
-                            if (flag11)
+                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f)
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
                             }
-                            bool flag12 = Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f;
-                            if (flag12)
+                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f)
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
                             }
                         }
                         else
                         {
-                            bool key7 = Input.GetKey((KeyCode)101);
-                            if (key7)
+                            if (Input.GetKey((KeyCode)101))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime;
                             }
-                            bool key8 = Input.GetKey((KeyCode)113);
-                            if (key8)
+                            if (Input.GetKey((KeyCode)113))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.up * -1f * FlySpeed * Time.deltaTime;
                             }
-                            bool key9 = Input.GetKey((KeyCode)119);
-                            if (key9)
+                            if (Input.GetKey((KeyCode)119))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.forward * FlySpeed * Time.deltaTime;
                             }
-                            bool key10 = Input.GetKey((KeyCode)97);
-                            if (key10)
+                            if (Input.GetKey((KeyCode)97))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.right * -1f * FlySpeed * Time.deltaTime;
                             }
-                            bool key11 = Input.GetKey((KeyCode)100);
-                            if (key11)
+                            if (Input.GetKey((KeyCode)100))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.right * FlySpeed * Time.deltaTime;
                             }
-                            bool key12 = Input.GetKey((KeyCode)115);
-                            if (key12)
+                            if (Input.GetKey((KeyCode)115))
                             {
                                 currentPlayer.transform.position += currentPlayer.transform.forward * -1f * FlySpeed * Time.deltaTime;
                             }
@@ -290,6 +253,23 @@ namespace WengaPort.Modules
                 }
                 catch
                 {
+                }
+            }
+
+            else if (InfJump)
+            {
+                try
+                {
+                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 && !Utils.CurrentUser.GetVRCPlayerApi().IsPlayerGrounded())
+                    {
+                        Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
+                        velocity.y = JumpPower;
+                        Utils.CurrentUser.GetVRCPlayerApi().SetVelocity(velocity);
+                    }
+                }
+                catch (Exception)
+                {
+                    throw;
                 }
             }
 
@@ -336,6 +316,32 @@ namespace WengaPort.Modules
                     Attachment = false;
                     AttachmentManager.Reset();
                 }
+            }
+        }
+
+        public static float JumpPower
+        {
+            get
+            {
+                float result;
+                try
+                {
+                    result = Utils.CurrentUser.GetPlayer().GetComponent<PlayerModComponentJump>().field_Private_Single_0;
+                }
+                catch (Exception)
+                {
+                    result = -1f;
+                }
+                return result;
+            }
+            set
+            {
+                try
+                {
+                    Utils.CurrentUser.GetPlayer().GetComponent<PlayerModComponentJump>().field_Private_Single_0 = value;
+                }
+                catch
+                { }
             }
         }
 

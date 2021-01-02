@@ -60,6 +60,24 @@ namespace WengaPort.Buttons
                 PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
             }, "Be a Mini hide Roboter");
 
+            new QMToggleButton(ThisMenu, 0, 1, "Optimize \nDynbones", () =>
+            {
+                GlobalDynamicBones.OptimizeBones = true;
+                foreach (string player in GlobalDynamicBones.FriendOnlyBones)
+                {
+                    var P = Utils.PlayerManager.GetPlayer(player);
+                    PlayerExtensions.ReloadAvatar(P);
+                }
+            }, "Disabled", () =>
+            {
+                GlobalDynamicBones.OptimizeBones = false;
+                foreach (string player in GlobalDynamicBones.FriendOnlyBones)
+                {
+                    var P = Utils.PlayerManager.GetPlayer(player);
+                    PlayerExtensions.ReloadAvatar(P);
+                }
+            }, "Optimize Dynbones instead smooth Bones");
+
             new QMToggleButton(ThisMenu, 2, 1, "Antiblock", () =>
             {
                 PatchManager.AntiBlock = true;

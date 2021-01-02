@@ -48,25 +48,27 @@ namespace WengaPort.Buttons
         public static MenuText InfoText12;
         public static MenuText InfoText13;
         public static MenuText InfoText14;
+        public static MenuText InfoText15;
 
         public static void Initialize()
         {
             ThisMenu = new QMNestedButton("UserInteractMenu", 4, 0, "UserMenu", "ToolTip", Color.cyan, Color.magenta, Color.black, Color.yellow);
             Panels.TextMenu(ThisMenu, -1.7f, 0.5f, "\nInfo \nList", 3f, 4f, "All Informations about the Player");
-            InfoText1 = new MenuText(ThisMenu, -1200f, 350f, "1");
-            InfoText2 = new MenuText(ThisMenu, -1200f, 450f, "2");
-            InfoText3 = new MenuText(ThisMenu, -1200f, 560f, "3");
-            InfoText4 = new MenuText(ThisMenu, -1200f, 650f, "4");
-            InfoText5 = new MenuText(ThisMenu, -1200f, 750f, "5");
-            InfoText6 = new MenuText(ThisMenu, -1200f, 850f, "6");
-            InfoText7 = new MenuText(ThisMenu, -1200f, 950f, "7");
-            InfoText8 = new MenuText(ThisMenu, -1200f, 1050f, "8");
-            InfoText9 = new MenuText(ThisMenu, -1200f, 1150f, "9");
-            InfoText10 = new MenuText(ThisMenu, -1200f, 1250f, "10");
-            InfoText11 = new MenuText(ThisMenu, -1200f, 1350f, "11");
-            InfoText12 = new MenuText(ThisMenu, -1200f, 1450f, "12");
-            InfoText13 = new MenuText(ThisMenu, -1200f, 1550f, "13");
-            InfoText14 = new MenuText(ThisMenu, -1200f, 1635f, "14");
+            InfoText1 = new MenuText(ThisMenu, -1200f, 250f, "1");
+            InfoText2 = new MenuText(ThisMenu, -1200f, 350f, "2");
+            InfoText3 = new MenuText(ThisMenu, -1200f, 460f, "3");
+            InfoText4 = new MenuText(ThisMenu, -1200f, 550f, "4");
+            InfoText5 = new MenuText(ThisMenu, -1200f, 650f, "5");
+            InfoText6 = new MenuText(ThisMenu, -1200f, 750f, "6");
+            InfoText7 = new MenuText(ThisMenu, -1200f, 850f, "7");
+            InfoText8 = new MenuText(ThisMenu, -1200f, 950f, "8");
+            InfoText9 = new MenuText(ThisMenu, -1200f, 1050f, "9");
+            InfoText10 = new MenuText(ThisMenu, -1200f, 1150f, "10");
+            InfoText11 = new MenuText(ThisMenu, -1200f, 1250f, "11");
+            InfoText12 = new MenuText(ThisMenu, -1200f, 1350f, "12");
+            InfoText13 = new MenuText(ThisMenu, -1200f, 1450f, "13");
+            InfoText14 = new MenuText(ThisMenu, -1200f, 1550f, "14");
+            InfoText15 = new MenuText(ThisMenu, -1200f, 1635f, "15");
             ThisMenu.getMainButton().setActive(false); 
 
             MelonCoroutines.Start(ReworkedButtonAPI.CreateButton(MenuType.UserInteract, ButtonType.Single, "", 4, 0, delegate ()
@@ -78,17 +80,18 @@ namespace WengaPort.Buttons
                     InfoText1.SetText("<color=grey>Name:</color> " + vrcplayer.DisplayName());
                     InfoText2.SetText("<color=yellow>FPS:</color> " + vrcplayer.GetFrames());
                     InfoText3.SetText("<color=yellow>Ping:</color> " + vrcplayer.GetPing());
-                    InfoText4.SetText("<color=white>Steam:</color> " + vrcplayer.field_Private_UInt64_0.ToString());
+                    InfoText4.SetText("<color=white>VRC+:</color> " + vrcplayer.GetAPIUser().isSupporter);
                     InfoText5.SetText("<color=purple>Bot:</color> " + vrcplayer.GetIsBot());
                     InfoText6.SetText("<color=lime>Avatar:</color> " + vrcplayer.GetAPIAvatar().name);
                     InfoText7.SetText("<color=yellow>Friend:</color> " + vrcplayer.GetAPIUser().isFriend);
-                    InfoText8.SetText("<color=green>LastPlatform:</color> " + vrcplayer.GetAPIUser().last_platform);
-                    InfoText9.SetText("<color=red>Moderator:</color> " + vrcplayer.GetAPIUser().hasModerationPowers);
-                    InfoText10.SetText("<color=blue>Rank:</color> " + vrcplayer.GetAPIUser().GetRank());
-                    InfoText11.SetText("<color=#FC0065>AvatarAuthor:</color> " + vrcplayer.GetAPIAvatar().authorName);
-                    InfoText12.SetText("<color=magenta>Avatar Status:</color> " + vrcplayer.GetAPIAvatar().releaseStatus);
-                    InfoText13.SetText("<color=grey>Actor Number:</color> " + vrcplayer.GetVRCPlayerApi().playerId);
-                    InfoText14.SetText("<color=brown>Status:</color> " + vrcplayer.GetAPIUser().statusDescription);
+                    InfoText8.SetText("<color=red>Block:</color> " + PlayerList.BlockList.Contains(vrcplayer.UserID()));
+                    InfoText9.SetText("<color=green>LastPlatform:</color> " + vrcplayer.GetAPIUser().last_platform);
+                    InfoText10.SetText("<color=red>Moderator:</color> " + vrcplayer.GetAPIUser().hasModerationPowers);
+                    InfoText11.SetText("<color=blue>Rank:</color> " + vrcplayer.GetAPIUser().GetRank());
+                    InfoText12.SetText("<color=#FC0065>AvatarAuthor:</color> " + vrcplayer.GetAPIAvatar().authorName);
+                    InfoText13.SetText("<color=magenta>Avatar Status:</color> " + vrcplayer.GetAPIAvatar().releaseStatus);
+                    InfoText14.SetText("<color=grey>Actor Number:</color> " + vrcplayer.GetVRCPlayerApi().playerId);
+                    InfoText15.SetText("<color=brown>Status:</color> " + vrcplayer.GetAPIUser().statusDescription);
 
                     if (!HearOffPlayers.Contains(Utils.QuickMenu.SelectedVRCPlayer().UserID()))
                     {
@@ -246,7 +249,19 @@ namespace WengaPort.Buttons
             HalfButton = new QMSingleButton(ThisMenu, 3, 2.25f, "Material \nCrash", () =>
             {
                 MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab"));
+            }, "Crash the Player with a Materialcrash Avatar");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            HalfButton = new QMSingleButton(ThisMenu, 4, 2.25f, "IK \nCrash", () =>
+            {
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_118b95c4-dfa2-423a-86cf-c97a40b9a70d"));
             }, "Crash the Player with a Stack overflow Avatar");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            HalfButton = new QMSingleButton(ThisMenu, 4, 1.75f, "Item \nLag", () =>
+            {
+                MelonCoroutines.Start(ItemHandler.ItemLag(Utils.QuickMenu.SelectedVRCPlayer()));
+            }, "Crash the Player with Items");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             AttachmentToggle = new QMToggleButton(ThisMenu, 2, 2, "Attach", () =>
@@ -292,18 +307,13 @@ namespace WengaPort.Buttons
                 ItemHandler.ItemOrbitEnabled = false;
             }, "Orbit Items around the Player");
 
-            new QMToggleButton(ThisMenu, 4, 2, "Annoying \nSound", () =>
+            new QMToggleButton(ThisMenu, 5, 1, "Annoying \nSound", () =>
             {
                 MelonCoroutines.Start(CameraHandler.AnnoyingCamera(Utils.QuickMenu.SelectedPlayer()));
             }, "Disabled", () =>
             {
                 CameraHandler.UserCamAnnoy = false;
             }, "Play Annoying Camera Sounds for this Player");
-
-            new QMSingleButton(ThisMenu, 5, 1, "Item \nLag", () =>
-            {
-                MelonCoroutines.Start(ItemHandler.ItemLag(Utils.QuickMenu.SelectedVRCPlayer()));
-            }, "Crash the Player with Items");
 
             new QMToggleButton(ThisMenu, 5, 0, "Ram \nCrash", () =>
             {

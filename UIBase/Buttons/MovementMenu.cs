@@ -35,7 +35,15 @@ namespace WengaPort.Buttons
                 Movement.InfJump = false;
             }, "Jump infinite High", Color.cyan, Color.white, false, true);
 
-            RotateToggle = new QMToggleButton(ThisMenu, 3, 0, "Rotate", () =>
+            new QMToggleButton(ThisMenu, 3, 0, "Double \nJump", () =>
+            {
+                Movement.DoubleJump = true;
+            }, "Disabled", () =>
+            {
+                Movement.DoubleJump = false;
+            }, "Jump in the Air");
+
+            RotateToggle = new QMToggleButton(ThisMenu, 4, 0, "Rotate", () =>
             {
                 Movement.ToggleRotate(true);
             }, "Disabled", () =>

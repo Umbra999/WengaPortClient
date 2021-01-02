@@ -40,7 +40,7 @@ namespace WengaPort.Modules
                 foreach (Player Player in Utils.PlayerManager.GetAllPlayers().ToArray())
                 {
                     string Text;
-                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
+                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().isSupporter ? "<color=#b66b25>[V+]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
                     Players.Insert(0, Text);
                     UpdateText();
                     PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
@@ -72,53 +72,55 @@ namespace WengaPort.Modules
             if (CheckWenga(player.UserID()))
             {
                 SetTag(ref stack, stats, contents, Color.red, "⸸ Cat Dealer ⸸");
-                return;
             }
             else if (CheckTrial(player.UserID()))
             {
                 SetTag(ref stack, stats, contents, new Color(0.6f, 0f, 0.9f), "ღ Wenga's Egirl ღ");
-                return;
             }
             else if (CheckClient(player.UserID()))
             {
                 SetTag(ref stack, stats, contents, new Color(0.63f, 0.24f, 0.16f), "WengaPort");
-                return;
             }
-            var Rank = player.field_Private_APIUser_0.GetRank().ToLower();
-            switch (Rank)
+            else
             {
-                case "user":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateUser, "User");
-                    break;
-                case "legend":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateLegend, "Legend");
-                    break;
-                case "known":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateKnown, "Known");
-                    break;
-                case "negativetrust":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Nuisance");
-                    break;
-                case "new user":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateNewUser, "New");
-                    break;
-                case "verynegativetrust":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Very Nuisance");
-                    break;
-                case "visitor":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateVisitor, "Visitor");
-                    break;
-                case "trusted":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateTrusted, "Trusted");
-                    break;
-                case "veteran":
-                    SetTag(ref stack, stats, contents, Nameplates.PlateVeteran, "Veteran");
-                    break;
-                default:
-                    break;
+                var Rank = player.field_Private_APIUser_0.GetRank().ToLower();
+                switch (Rank)
+                {
+                    case "user":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateUser, "User");
+                        break;
+                    case "legend":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateLegend, "Legend");
+                        break;
+                    case "known":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateKnown, "Known");
+                        break;
+                    case "negativetrust":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Nuisance");
+                        break;
+                    case "new user":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateNewUser, "New");
+                        break;
+                    case "verynegativetrust":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateNegative, "Very Nuisance");
+                        break;
+                    case "visitor":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateVisitor, "Visitor");
+                        break;
+                    case "trusted":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateTrusted, "Trusted");
+                        break;
+                    case "veteran":
+                        SetTag(ref stack, stats, contents, Nameplates.PlateVeteran, "Veteran");
+                        break;
+                    default:
+                        break;
+                }
             }
-            if (BlockList.Contains(player.UserID())) SetTag(ref stack, stats, contents, Color.red, "Block");
+
             if (player.IsFriend()) SetTag(ref stack, stats, contents, Color.yellow, "Friend");
+            if (player.GetAPIUser().IsOnMobile) SetTag(ref stack, stats, contents, Color.green, "Quest");
+            if (BlockList.Contains(player.UserID())) SetTag(ref stack, stats, contents, Color.red, "Block");            
             stats.localPosition = new Vector3(0, (stack + 1) * 30, 0);
         }
 

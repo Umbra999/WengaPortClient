@@ -6,6 +6,7 @@ using MelonLoader;
 using Newtonsoft.Json.Linq;
 using RootMotion.FinalIK;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -94,7 +95,7 @@ namespace WengaPort.Extensions
             if (__instance.maxIterations > 64)
             {
                 __result = false;
-                Logger.WengaLogger("[Room] [Protection] Prevented Malicious IK Interaction");
+                Logger.WengaLogger($"[Room] [Protection] Prevented Malicious IK Interaction");
                 VRConsole.Log(VRConsole.LogsType.Protection, "Prevented Malicious IK Interaction");
                 return false;
             }
@@ -236,10 +237,7 @@ namespace WengaPort.Extensions
                 Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> {Avatar.name} [{Avatar.releaseStatus}]");
                 VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                 GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
-                foreach (DynamicBone item2 in AvatarGameobject.GetComponentInChildren<Animator>().GetComponentsInChildren<DynamicBone>())
-                {
-                    item2.m_DistantDisable = true;
-                }
+                GlobalDynamicBones.OptimizeBone(AvatarGameobject);
             }
             catch
             { }
@@ -319,12 +317,11 @@ namespace WengaPort.Extensions
             }
         }
 
-        private static bool RequestPatch(ref string __0, ref System.Collections.Generic.Dictionary<string, object> __2)
+        private static bool RequestPatch(ref string __0, ref Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> __2)
         {
             if (__2 != null && WorldSpoof)
             {
-                bool flag2 = (__0 == "visits" || __0 == "joins");
-                if (flag2)
+                if (__0 == "visits" || __0 == "joins")
                 {
                     __2.Clear();
                     __2.Add("userId", APIUser.CurrentUser.id);

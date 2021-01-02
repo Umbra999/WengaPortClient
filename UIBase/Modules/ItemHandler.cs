@@ -211,7 +211,7 @@ namespace WengaPort.Modules
 
         public static void DropItems()
         {
-            foreach (VRCSDK2.VRC_Pickup vrc_Pickup in World_Pickups)
+            foreach (var vrc_Pickup in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
             {
                 if (vrc_Pickup.IsHeld)
                 {

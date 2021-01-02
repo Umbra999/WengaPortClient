@@ -5,6 +5,7 @@ using WengaPort.Utility;
 using UnityEngine;
 using VRC.SDKBase;
 using VRC;
+using WengaPort.Wrappers;
 
 namespace WengaPort.Modules
 {
@@ -100,8 +101,25 @@ namespace WengaPort.Modules
 
         public static List<DynamicBone> currentWorldDynamicBones = new List<DynamicBone>();
         public static List<DynamicBoneCollider> currentWorldDynamicBoneColliders = new List<DynamicBoneCollider>();
-        
+
         public static bool GlobalBones = false;
         public static bool FriendBones = true;
+        public static bool OptimizeBones = false;
+
+        public static void OptimizeBone(GameObject AvatarGameobject)
+        {
+            foreach (DynamicBone item2 in AvatarGameobject.GetComponentInChildren<Animator>().GetComponentsInChildren<DynamicBone>())
+            {
+                item2.m_DistantDisable = true;
+                if (OptimizeBones && item2.m_UpdateRate >= 45)
+                {
+                    item2.m_UpdateRate = 25;
+                }
+                else if (item2.m_UpdateRate >= 60)
+                {
+                    item2.m_UpdateRate = 45;
+                }
+            }
+        }
     }
 }
