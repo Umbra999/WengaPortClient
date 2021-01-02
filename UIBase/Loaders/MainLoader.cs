@@ -190,6 +190,11 @@ namespace WengaPort.MainLoader
                 {
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
+                    if (menu != null && menu.active && !button.interactable)
+                    {
+                        button.interactable = true;
+                        button.m_Interactable = true;
+                    }
                     if (Modules.Photon.DisconnectToggle)
                     {
                         DCDelay += Time.deltaTime;
@@ -294,11 +299,6 @@ namespace WengaPort.MainLoader
             {
                 OnGui.GuiInit();
             }
-            if (menu == null) return;
-            else if (!menu.active) return;
-            else if (button.interactable) return;
-            button.interactable = true;
-            button.m_Interactable = true;
         }
 
         public override void OnApplicationQuit() // Runs when the Game is told to Close.

@@ -186,6 +186,14 @@ namespace WengaPort.Buttons
                 }
             }, "Toggle Item Pickup");
 
+            new QMToggleButton(ThisMenu, 0, 1, "World \nSpoof", () =>
+            {
+                PatchManager.WorldSpoof = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.WorldSpoof = false;
+            }, "Spoof yourself to private World");
+
             HalfButton = new QMSingleButton(ThisMenu, 5, 0.75f, "Reload \nAvatar", () =>
             {
                 PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
@@ -198,7 +206,7 @@ namespace WengaPort.Buttons
                 {
                     portalInternal.SetTimerRPC(float.NegativeInfinity, Utils.CurrentUser.GetPlayer());
                 }
-            }, "Reset the Portal Timer");
+            }, "Reset the Portal Timer to Infinit");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 5, 1.75f, "Interact \nAll", () =>

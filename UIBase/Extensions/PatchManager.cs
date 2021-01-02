@@ -199,7 +199,10 @@ namespace WengaPort.Extensions
         {
             if (PingSpoof)
             {
-                __result = -69;
+                System.Random r = new System.Random();
+                var values = new[] { -69, -666 };
+                int result = values[r.Next(values.Length)];
+                __result = (short)result;
             }
         }
 
@@ -207,7 +210,10 @@ namespace WengaPort.Extensions
         {
             if (FrameSpoof)
             {
-                __result = (float)1 / 1000;
+                System.Random r = new System.Random();
+                var values = new[] { int.MinValue,int.MaxValue };
+                int result = values[r.Next(values.Length)];
+                __result = (float)1 / result;
                 return;
             }
         }
@@ -303,7 +309,7 @@ namespace WengaPort.Extensions
                 if (LoginDelay)
                 {
                     LoginDelay = false;
-                    MelonCoroutines.Start(QuestSpoofer());
+                    QuestSpoof = false;
                     ExploitMenu.ButtonToggles();
                     Api.ApiExtension.Start();
                 }
@@ -313,14 +319,18 @@ namespace WengaPort.Extensions
             }
         }
 
-        public static System.Collections.IEnumerator QuestSpoofer()
-        {
-            yield return new WaitForSeconds(6);
-            QuestSpoof = false;
-        }
-
         private static bool RequestPatch(ref string __0, ref System.Collections.Generic.Dictionary<string, object> __2)
         {
+            if (__2 != null && WorldSpoof)
+            {
+                bool flag2 = (__0 == "visits" || __0 == "joins");
+                if (flag2)
+                {
+                    __2.Clear();
+                    __2.Add("userId", APIUser.CurrentUser.id);
+                    __2.Add("worldId", $"wrld_ffe773ba-c31f-4f56-928b-0da8f256e435:666~private({APIUser.CurrentUser.id})~nonce(4825472E3261BA1D30C6FA4C375DC86FB67AA6627890F365286C67EFAF081D03)");
+                }
+            }
             bool flag3 = OfflineMode && (__0 == "visits" || __0 == "joins");
             return !flag3;
         }
@@ -330,6 +340,7 @@ namespace WengaPort.Extensions
         public static bool AntiUdon = false;
         public static bool AntiMasterDC = false;
         public static bool OfflineMode = false;
+        public static bool WorldSpoof = false;
         public static bool FrameSpoof = true;
         public static bool PingSpoof = true;
         public static bool EventLog = false;
@@ -752,7 +763,7 @@ namespace WengaPort.Extensions
                             VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
                             Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{eventType}]");
                         }
-                        else if (__1.ParameterString.Length >= 415)
+                        else if (__1.ParameterString.Length >= 250)
                         {
                             VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
                             Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
