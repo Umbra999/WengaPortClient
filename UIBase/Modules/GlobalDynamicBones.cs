@@ -13,6 +13,8 @@ namespace WengaPort.Modules
     {
         public static List<string> UsersBones = new List<string>();
         public static List<string> FriendOnlyBones = new List<string>();
+        public static List<string> DisabledShaders = new List<string>();
+        public static List<string> DisabledParticles = new List<string>();
 
         public static void ProcessDynamicBones(GameObject avatarObject, VRCPlayer player)
         {
@@ -118,6 +120,40 @@ namespace WengaPort.Modules
                 else if (item2.m_UpdateRate >= 60)
                 {
                     item2.m_UpdateRate = 45;
+                }
+            }
+        }
+
+        public static void AntiParticle(GameObject avatarObject, VRCPlayer player)
+        {
+            if (DisabledParticles.Contains(player.UserID()))
+            {
+                foreach (ParticleSystem renderer in avatarObject.GetComponentsInChildren<ParticleSystem>(true))
+                {
+                    if (renderer != null)
+                    {
+                        renderer.gameObject.SetActive(false);
+                    }
+                }
+            }
+        }
+
+        public static void AntiShader (GameObject avatarObject, VRCPlayer player)
+        {
+            if (DisabledShaders.Contains(player.UserID()))
+            {
+                foreach (Renderer renderer in avatarObject.GetComponentsInChildren<Renderer>(true))
+                {
+                    if (renderer != null)
+                    {
+                        foreach (Material material in renderer.materials)
+                        {
+                            if (material != null)
+                            {
+                                material.shader = Shader.Find("Diffuse");
+                            }
+                        }
+                    }
                 }
             }
         }

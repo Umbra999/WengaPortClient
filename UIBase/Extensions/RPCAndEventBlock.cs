@@ -24,5 +24,6 @@ namespace WengaPort.Extensions
 			}
 		}
 		public static List<string> Block = new List<string>();
+		public static List<string> EventBlock = new List<string>();
 	}
 }

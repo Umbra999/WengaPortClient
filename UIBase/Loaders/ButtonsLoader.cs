@@ -11,6 +11,7 @@ namespace WengaPort.Loaders
             UtilsMenu.Initialize();
             ExploitMenu.Initialize();
             InteractMenu.Initialize();
+            AvatarMenu.Initialize();
             ConsoleMenu.Initialize();
             SafetyMenu.Initialize();
             SocialMenu.Initialize();

@@ -30,8 +30,7 @@ namespace WengaPort.Buttons
         public static QMToggleButton HearToggle;
         public static QMToggleButton SpamToggle;
         public static QMToggleButton RpcToggle;
-        public static QMToggleButton BlockToggle;
-        public static QMToggleButton BonesToggle;
+        public static QMToggleButton EventToggle;
         public static QMToggleButton AttachmentToggle;
 
         public static MenuText InfoText1;
@@ -117,21 +116,45 @@ namespace WengaPort.Buttons
                     {
                         RpcToggle.setToggleState(false, false);
                     }
-                    if (PortalHandler.blockstrings.Contains(vrcplayer.UserID()))
+                    if (RPCAndEventBlock.EventBlock.Contains(vrcplayer.UserID()))
                     {
-                        BlockToggle.setToggleState(true, false);
+                        EventToggle.setToggleState(true, false);
                     }
                     else
                     {
-                        BlockToggle.setToggleState(false, false);
+                        EventToggle.setToggleState(false, false);
+                    }
+                    if (PortalHandler.blockstrings.Contains(vrcplayer.UserID()))
+                    {
+                        AvatarMenu.BlockToggle.setToggleState(true, false);
+                    }
+                    else
+                    {
+                        AvatarMenu.BlockToggle.setToggleState(false, false);
                     }
                     if (GlobalDynamicBones.UsersBones.Contains(vrcplayer.UserID()) || GlobalDynamicBones.FriendOnlyBones.Contains(vrcplayer.UserID()) && GlobalDynamicBones.FriendBones)
                     {
-                        BonesToggle.setToggleState(true, false);
+                        AvatarMenu.BonesToggle.setToggleState(true, false);
                     }
                     else
                     {
-                        BonesToggle.setToggleState(false, false);
+                        AvatarMenu.BonesToggle.setToggleState(false, false);
+                    }
+                    if (GlobalDynamicBones.DisabledShaders.Contains(vrcplayer.UserID()))
+                    {
+                        AvatarMenu.ShaderToggle.setToggleState(true, false);
+                    }
+                    else
+                    {
+                        AvatarMenu.ShaderToggle.setToggleState(false, false);
+                    }
+                    if (GlobalDynamicBones.DisabledParticles.Contains(vrcplayer.UserID()))
+                    {
+                        AvatarMenu.ParticleToggle.setToggleState(true, false);
+                    }
+                    else
+                    {
+                        AvatarMenu.ParticleToggle.setToggleState(false, false);
                     }
                 }
                 catch
@@ -195,17 +218,13 @@ namespace WengaPort.Buttons
                 }
             }, "Block incoming Events/RPCs");
 
-            BlockToggle = new QMToggleButton(ThisMenu, 4, 1, "Silent \nBlock", () =>
+            EventToggle = new QMToggleButton(ThisMenu, 4, 1, "Block \nEvents", () =>
             {
-                string id = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0.id;
-                Utils.QuickMenu.SelectedVRCPlayer().gameObject.SetActive(false);
-                PortalHandler.blockstrings.Remove(id);
+                RPCAndEventBlock.EventBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Disabled", () =>
             {
-                string id = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0.id;
-                Utils.QuickMenu.SelectedVRCPlayer().gameObject.SetActive(true);
-                PortalHandler.blockstrings.Remove(id);
-            }, "Block the Player local");
+                RPCAndEventBlock.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+            }, "Block the Player's Photonevents");
 
             HalfButton = new QMSingleButton(ThisMenu, 2, -0.25f, "RIP \nVRCA", () =>
             {
@@ -223,16 +242,6 @@ namespace WengaPort.Buttons
                 string id = QuickMenu.prop_QuickMenu_0.field_Private_APIUser_0.id;
                 PortalHandler.kosstrings.Remove(id);
             }, "Spam the Player with Portals");
-
-            BonesToggle = new QMToggleButton(ThisMenu, 1, 1, "Dynamic \nBones", () =>
-            {
-                GlobalDynamicBones.UsersBones.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
-                PlayerExtensions.ReloadAvatar(Utils.QuickMenu.SelectedVRCPlayer());
-            }, "Disabled", () =>
-            {
-                GlobalDynamicBones.UsersBones.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
-                PlayerExtensions.ReloadAvatar(Utils.QuickMenu.SelectedVRCPlayer());
-            }, "Enable Touch for this Player");
 
             HalfButton = new QMSingleButton(ThisMenu, 1, 2.25f, "Teleport \nItems", () =>
             {

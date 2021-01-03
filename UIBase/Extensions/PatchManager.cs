@@ -238,6 +238,8 @@ namespace WengaPort.Extensions
                 VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                 GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
                 GlobalDynamicBones.OptimizeBone(AvatarGameobject);
+                GlobalDynamicBones.AntiShader(AvatarGameobject, player);
+                GlobalDynamicBones.AntiParticle(AvatarGameobject, player);
             }
             catch
             { }
@@ -576,6 +578,10 @@ namespace WengaPort.Extensions
                         break;
                     default:
                         break;
+                }
+                if (RPCAndEventBlock.EventBlock.Contains(Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).UserID()))
+                {
+                    return false;
                 }
             }
             catch
