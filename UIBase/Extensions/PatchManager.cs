@@ -606,7 +606,7 @@ namespace WengaPort.Extensions
                 Player instance = __0;
                 string name = __1.ParameterObject.name;
                 string text = instance.DisplayName();
-                string a = instance.UserID();
+                string senderID = instance.UserID();
                 Il2CppSystem.Object[] array = Networking.DecodeParameters(__1.ParameterBytes);
                 if (array == null)
                 {
@@ -632,7 +632,7 @@ namespace WengaPort.Extensions
                 {
                     text4 = text4 + "[" + Il2CppSystem.Convert.ToString(value) + "]";
                 }
-                if (!(__1.ParameterObject.name == "USpeak") && !(__1.ParameterString == "SetTimerRPC") && RPCLog)
+                if (__1.ParameterObject.name != "USpeak" && __1.ParameterString != "SetTimerRPC" && RPCLog)
                 {
                     System.Console.ForegroundColor = System.ConsoleColor.Magenta;
                     MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
@@ -683,8 +683,6 @@ namespace WengaPort.Extensions
                 {
                     switch (__1.ParameterString)
                     {
-                        case "SetTimerRPC":
-                            return true;
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
@@ -749,30 +747,24 @@ namespace WengaPort.Extensions
                             break;
                     }
                 }
-                VrcBroadcastType vrcBroadcastType = __2;
-                VrcEventType eventType = __1.EventType;
-                if (vrcBroadcastType == VrcBroadcastType.Local)
-                {
-                    return true;
-                }
-                else if (vrcBroadcastType == 0 && a != APIUser.CurrentUser.id)
+                if (__2 == 0 && senderID != APIUser.CurrentUser.id)
                 {
                     if (AntiMasterDC)
                     {
-                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{eventType}]");
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{__1.EventType}]");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{__1.EventType}]");
                         return false;
                     }
                     else if (__1.ParameterString.Length >= 250)
                     {
-                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{__1.EventType}]");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{__1.EventType}]");
                         return false;
                     }
                 }
-                if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
+                if (senderID != APIUser.CurrentUser.id && __1.EventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
                 {
-                    if (vrcBroadcastType == 0 || vrcBroadcastType == VrcBroadcastType.AlwaysUnbuffered || vrcBroadcastType == VrcBroadcastType.AlwaysBufferOne)
+                    if (__2 == 0 || __2 == VrcBroadcastType.AlwaysUnbuffered || __2 == VrcBroadcastType.AlwaysBufferOne)
                     {
                         VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> WorldTrigger");
                         Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Worldtrigger");

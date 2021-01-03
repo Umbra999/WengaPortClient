@@ -255,12 +255,20 @@ namespace WengaPort.Modules
                 {
                 }
             }
-
             else if (InfJump)
+            {
+                if (Input.GetAxis("Jump") == 1)
+                {
+                    var Jump = Networking.LocalPlayer.GetVelocity();
+                    Jump.y = Networking.LocalPlayer.GetJumpImpulse();
+                    Networking.LocalPlayer.SetVelocity(Jump);
+                }
+            }
+            else if (DoubleJump)
             {
                 try
                 {
-                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2)
+                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 )
                     {
                         Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
                         velocity.y = JumpPower;

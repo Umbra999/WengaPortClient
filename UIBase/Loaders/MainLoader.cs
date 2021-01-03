@@ -189,11 +189,6 @@ namespace WengaPort.MainLoader
                 {
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
-                    if (menu != null && menu.active && !button.interactable)
-                    {
-                        button.interactable = true;
-                        button.m_Interactable = true;
-                    }
                     if (Modules.Photon.DisconnectToggle)
                     {
                         DCDelay += Time.deltaTime;
@@ -205,7 +200,6 @@ namespace WengaPort.MainLoader
                     }
                     if (Modules.Photon.DebugSpamToggle)
                     {
-                        //Modules.Photon.DebugSpam();
                         Modules.Photon.PortalDebugSpam();
                     }
 
@@ -248,6 +242,12 @@ namespace WengaPort.MainLoader
                             ItemHandler.DropItems();
                             DropDelay = 0f;
                         }
+                    }
+
+                    if (menu != null && menu.active && !button.interactable)
+                    {
+                        button.interactable = true;
+                        button.m_Interactable = true;
                     }
                     Delay += Time.deltaTime;
                     if (Delay > 4f)

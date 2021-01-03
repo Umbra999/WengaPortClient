@@ -157,21 +157,21 @@ namespace WengaPort.Modules
 			{
 				handler = Resources.FindObjectsOfTypeAll<VRC_EventHandler>()[0];
 			}
-            VRC_EventHandler.VrcEvent vrcEvent = new VRC_EventHandler.VrcEvent
-			{
-				EventType = (VRC_EventHandler.VrcEventType)20,
+            VrcEvent vrcEvent = new VrcEvent
+            {
+				EventType = (VrcEventType)14,
 				ParameterObject = handler.gameObject,
 				ParameterInt = 1,
 				ParameterFloat = 0f,
 				ParameterString = "<3 WengaPort <3 | " + RandomString(820) + " | <3 WengaPort <3",
-				ParameterBoolOp = (VRC_EventHandler.VrcBooleanOp)(-1),
+				ParameterBoolOp = (VrcBooleanOp)(-1),
 				ParameterBytes = new Il2CppStructArray<byte>(0L)
 			};
 			int Type = 0;
 			Player player = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VRC_EventHandler.VrcBroadcastType)Type, player.gameObject, 0f);
+			handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player.gameObject, 0f);
 			Player player2 = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VRC_EventHandler.VrcBroadcastType)Type, player2.gameObject, 0f);
+			handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player2.gameObject, 0f);
 		}
 
 		public static void PortalDebugSpam()
