@@ -63,18 +63,16 @@ namespace WengaPort.Buttons
             new QMToggleButton(ThisMenu, 0, 1, "Optimize \nDynbones", () =>
             {
                 GlobalDynamicBones.OptimizeBones = true;
-                foreach (string player in GlobalDynamicBones.FriendOnlyBones)
+                foreach (Player p in Utils.PlayerManager.GetAllPlayers())
                 {
-                    var P = Utils.PlayerManager.GetPlayer(player);
-                    PlayerExtensions.ReloadAvatar(P);
+                    PlayerExtensions.ReloadAvatar(p);
                 }
             }, "Disabled", () =>
             {
                 GlobalDynamicBones.OptimizeBones = false;
-                foreach (string player in GlobalDynamicBones.FriendOnlyBones)
+                foreach (Player p in Utils.PlayerManager.GetAllPlayers())
                 {
-                    var P = Utils.PlayerManager.GetPlayer(player);
-                    PlayerExtensions.ReloadAvatar(P);
+                    PlayerExtensions.ReloadAvatar(p);
                 }
             }, "Optimize Dynbones instead smooth Bones");
 
