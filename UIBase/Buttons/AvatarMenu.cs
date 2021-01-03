@@ -16,7 +16,7 @@ namespace WengaPort.Buttons
         public static QMSingleButton HalfButton;
         public static QMToggleButton BlockToggle;
         public static QMToggleButton BonesToggle;
-        public static QMToggleButton ShaderToggle;
+        public static QMToggleButton ShaderToggle;              
         public static QMToggleButton ParticleToggle;
         public static void Initialize()
         {

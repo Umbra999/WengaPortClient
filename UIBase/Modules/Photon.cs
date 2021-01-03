@@ -174,17 +174,13 @@ namespace WengaPort.Modules
 			handler.TriggerEvent(vrcEvent, (VRC_EventHandler.VrcBroadcastType)Type, player2.gameObject, 0f);
 		}
 
-		public static void DebugSpam()
+		public static void PortalDebugSpam()
 		{
-			for (int i = 0; i < 5; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
+				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "ConfigurePortal", new Il2CppSystem.Object[0]);
 			}
-		}
-
-		public static void RPCDesync()
-		{
-			for (int i = 0; i < int.MaxValue; i++)
+			for (int i = 0; i < 3; i++)
 			{
 				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
 			}

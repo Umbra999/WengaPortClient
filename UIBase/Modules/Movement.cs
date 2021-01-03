@@ -260,7 +260,7 @@ namespace WengaPort.Modules
             {
                 try
                 {
-                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 && !Utils.CurrentUser.GetVRCPlayerApi().IsPlayerGrounded())
+                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2)
                     {
                         Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
                         velocity.y = JumpPower;

@@ -750,29 +750,25 @@ namespace WengaPort.Extensions
                     }
                 }
                 VrcBroadcastType vrcBroadcastType = __2;
-                VrcBroadcastType vrcBroadcastType2 = vrcBroadcastType;
-                if (vrcBroadcastType2 == VrcBroadcastType.Local)
+                VrcEventType eventType = __1.EventType;
+                if (vrcBroadcastType == VrcBroadcastType.Local)
                 {
                     return true;
                 }
-                VrcEventType eventType = __1.EventType;
-                VrcEventType vrcEventType = eventType;
-                if (vrcBroadcastType == 0 && AntiMasterDC)
+                else if (vrcBroadcastType == 0 && a != APIUser.CurrentUser.id)
                 {
-                    if (a != APIUser.CurrentUser.id)
+                    if (AntiMasterDC)
                     {
-                        if (AntiMasterDC)
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{eventType}]");
-                        }
-                        else if (__1.ParameterString.Length >= 250)
-                        {
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
-                            Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
-                        }
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{eventType}]");
+                        return false;
                     }
-                    return a == APIUser.CurrentUser.id;
+                    else if (__1.ParameterString.Length >= 250)
+                    {
+                        VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{eventType}]");
+                        Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{eventType}]");
+                        return false;
+                    }
                 }
                 if (a != APIUser.CurrentUser.id && eventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
                 {

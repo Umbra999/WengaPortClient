@@ -205,7 +205,8 @@ namespace WengaPort.MainLoader
                     }
                     if (Modules.Photon.DebugSpamToggle)
                     {
-                        Modules.Photon.DebugSpam();
+                        //Modules.Photon.DebugSpam();
+                        Modules.Photon.PortalDebugSpam();
                     }
 
                     if (CameraHandler.AnnoyingCam)
