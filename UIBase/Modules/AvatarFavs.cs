@@ -41,6 +41,21 @@ namespace WengaPort.Modules
             AvatarList = new VRCList(PublicAvatarList.transform.parent, "WengaPort Favorites", 0);
             AvatarObjects = JsonConvert.DeserializeObject<List<AvatarObject>>(File.ReadAllText("WengaPort\\AvatarFavorites.json"));
             Extensions.Logger.WengaLogger("[AvatarFavs] Loaded");
+
+            new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Delete", 260f, 375, delegate
+            {
+                Reupload.NameChanger.DeleteAvatar();
+            });
+
+            new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Rename", 460f, 375, delegate
+            {
+                Reupload.NameChanger.ChangeAvatarName();
+            });
+
+            new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Discription", 660f, 375, delegate
+            {
+                Reupload.NameChanger.ChangeAvatarDescription();
+            });
         } 
 
         public void Update()

@@ -48,24 +48,6 @@ namespace WengaPort.Modules
             FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
         }
 
-        public static void QuickMenuFly()
-        {
-            try
-            {
-                var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                if (Shortcut.gameObject.active == false && !NoClipToggle)
-                {
-                    Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
-                }
-                else if (Shortcut.gameObject.active == true && !NoClipToggle)
-                {
-                    Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
-                }
-            }
-            catch
-            { }
-        }
-
         public static bool FlyToggle = false;
         public static bool InfJump = true;
         public static bool DoubleJump = false;
@@ -98,6 +80,23 @@ namespace WengaPort.Modules
 
         public void Update()
         {
+            try
+            {
+                if (isInVR && !NoClipToggle)
+                {
+                    var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
+                    if (Shortcut.gameObject.active == false && !Networking.LocalPlayer.IsPlayerGrounded())
+                    {
+                        Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
+                    }
+                    else if (Shortcut.gameObject.active == true && !NoClipToggle)
+                    {
+                        Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
+                    }
+                }
+            }
+            catch
+            { }
             if (Input.GetKeyDown(KeyCode.F) & Input.GetKey(KeyCode.LeftControl))
             {
                 if (FlyToggle)

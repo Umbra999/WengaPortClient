@@ -157,6 +157,18 @@ namespace WengaPort.MainLoader
                     }
                 }
             }
+
+            if (ItemHandler.AutoHoldToggle)
+            {
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
+                {
+                    if (item.gameObject.active && item.pickupable)
+                    {
+                        item.AutoHold = (VRC.SDKBase.VRC_Pickup.AutoHoldMode)1;
+                        ItemHandler.World_Pickups.Add(item);
+                    }
+                }
+            }
         }
 
         public override void OnUpdate() // Runs once per frame.
@@ -171,11 +183,7 @@ namespace WengaPort.MainLoader
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
                 RoomTime += Time.deltaTime;
-                if (UnityEngine.XR.XRDevice.isPresent)
-                {
-                    Movement.QuickMenuFly();
-                }
-                else
+                if (!UnityEngine.XR.XRDevice.isPresent)
                 {
                     CameraHandler.Zoom();
 

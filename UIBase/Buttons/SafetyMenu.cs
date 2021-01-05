@@ -59,6 +59,22 @@ namespace WengaPort.Buttons
                 AntiMenuOverrender.AntiOverrender(false);
             }, "Prevents your Menu from getting Overrendered");
 
+            new QMToggleButton(ThisMenu, 0, 0, "World \nSpoof", () =>
+            {
+                PatchManager.WorldSpoof = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.WorldSpoof = false;
+            }, "Spoof yourself to private World");
+
+            new QMToggleButton(ThisMenu, 0, 1, "Offline", () =>
+            {
+                PatchManager.OfflineMode = true;
+            }, "Online", () =>
+            {
+                PatchManager.OfflineMode = true;
+            }, "Spoof yourself Offline");
+
             new QMToggleButton(ThisMenu, 1, 2, "Optimize \nDynbones", () =>
             {
                 GlobalDynamicBones.OptimizeBones = true;

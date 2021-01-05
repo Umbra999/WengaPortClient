@@ -96,6 +96,8 @@ namespace WengaPort.Modules
         public static bool PostProcessToggle = false;
         public static bool PedestalToggle = false;
         public static bool NightmodeToggle = false;
+        public static bool AutoHoldToggle = false;
+        public static bool FastPickupToggle = false;
 
         public static void TakeOwnershipIfNecessary(GameObject gameObject)
         {

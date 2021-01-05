@@ -59,14 +59,6 @@ namespace WengaPort.Buttons
                 Modules.Photon.CustomSerialize(false);
             }, "Dont send any Movement");
 
-            new QMToggleButton(ThisMenu, 2, 1, "Offline", () =>
-            {
-                PatchManager.OfflineMode = true;
-            }, "Online", () =>
-            {
-                PatchManager.OfflineMode = true;
-            }, "Spoof yourself Offline");
-
             new QMToggleButton(ThisMenu, 3, 1, "Lock \nInstance", () =>
             {
                 Modules.Photon.LockInstance = true;
@@ -186,13 +178,46 @@ namespace WengaPort.Buttons
                 }
             }, "Toggle Item Pickup");
 
-            new QMToggleButton(ThisMenu, 0, 1, "World \nSpoof", () =>
+            new QMToggleButton(ThisMenu, 0, 1, "Auto Hold \nPickups", () =>
             {
-                PatchManager.WorldSpoof = true;
+                ItemHandler.AutoHoldToggle = true;
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
+                {
+                    if (item.gameObject.active && item.pickupable)
+                    {
+                        item.AutoHold = (VRC.SDKBase.VRC_Pickup.AutoHoldMode)1;
+                        ItemHandler.World_Pickups.Add(item);
+                    }
+                }
             }, "Disabled", () =>
             {
-                PatchManager.WorldSpoof = false;
-            }, "Spoof yourself to private World");
+                ItemHandler.AutoHoldToggle = false;
+                foreach (VRCSDK2.VRC_Pickup pickup in ItemHandler.World_Pickups)
+                {
+                    pickup.AutoHold = 0;
+                    pickup.pickupable = true;
+                }
+            }, "Auto Hold Pickups");
+
+            new QMToggleButton(ThisMenu, 2, 1, "Fast \nPickups", () =>
+            {
+                ItemHandler.FastPickupToggle = true;
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
+                {
+                    if (item.gameObject.active && item.pickupable)
+                    {
+                        item.ThrowVelocityBoostMinSpeed = int.MaxValue;
+                        ItemHandler.World_Pickups.Add(item);
+                    }
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.FastPickupToggle = false;
+                foreach (VRCSDK2.VRC_Pickup pickup in ItemHandler.World_Pickups)
+                {
+                    pickup.ThrowVelocityBoostMinSpeed = 1;
+                }
+            }, "Thrown Pickups are very Fast");
 
             HalfButton = new QMSingleButton(ThisMenu, 5, 0.75f, "Reload \nAvatar", () =>
             {
