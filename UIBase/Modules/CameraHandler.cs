@@ -447,5 +447,24 @@ namespace WengaPort.Modules
 				}
 			}
 		}
+		private static GameObject NightLayer = new GameObject();
+
+		public static void NightMode(bool state)
+		{
+			if (state)
+			{
+				ItemHandler.NightmodeToggle = true;
+				NightLayer = Object.Instantiate(new GameObject(), null,true);
+				NightLayer.layer = 8;
+				NightLayer.SetActive(true);
+				NightLayer.transform.position = Utils.CurrentUser.transform.position;
+				NightLayer.transform.rotation = Utils.CurrentUser.transform.rotation;
+			}
+			else
+			{
+				ItemHandler.NightmodeToggle = false;
+				Object.Destroy(NightLayer);
+			}
+		}
 	}
 }

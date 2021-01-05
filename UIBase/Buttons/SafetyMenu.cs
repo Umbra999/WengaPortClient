@@ -129,7 +129,7 @@ namespace WengaPort.Buttons
             }, "Disabled", () =>
             {
                 PatchManager.AntiMasterDC = false;
-            }, "Advanced Anti Master Disconnect (will disable some Events)");
+            }, "Advanced Anti Master Disconnect (Disable some Events)");
 
             new QMToggleButton(ThisMenu, 3, 1, "Anti \nVideoplayer", () =>
             {

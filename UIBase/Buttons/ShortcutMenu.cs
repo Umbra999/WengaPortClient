@@ -13,6 +13,7 @@ using WengaPort.Extensions;
 using static VRC.SDKBase.VRC_EventHandler;
 using UnityEngine.UI;
 using VRC.Udon;
+using WengaPort.ConsoleUtils;
 
 namespace WengaPort.Buttons
 {
@@ -45,10 +46,19 @@ namespace WengaPort.Buttons
             GameObject SelectedPrefab = null;
             QMNestedButton Options = new QMNestedButton(PrefabsPage, -1, -1, "", "Options about the prefabs");
             Options.getMainButton().setActive(false);
-            new QMSingleButton(PrefabsPage, 1, 1, "Delete \n Prefabs", delegate
+
+            QMNestedButton MaterialMenu = new QMNestedButton(PrefabsPage, 1, 1, "Material", "VRC Material Menu");
+            ScrollMenu MaterialObjects = new ScrollMenu(MaterialMenu);
+            MaterialObjects.SetAction(delegate
             {
-                // Add stuff here later 
-            }, "Delete the spawned Prefabs");
+                foreach (var Material in VRCUiManagerExtension.GetWorldMaterials())
+                {
+                    MaterialObjects.Add(new QMSingleButton(MaterialMenu, 0, 0, Material.name, delegate
+                    {
+                        
+                    }, ""));
+                }
+            });
 
             new QMSingleButton(Options, 1, 0, "Instatiate\nMe\nGlobal", delegate
             {
@@ -211,6 +221,14 @@ namespace WengaPort.Buttons
             {
                 CameraHandler.DisableAvatarPedestals(false);
             }, "Toggle Avatar Pedestals");
+
+            new QMToggleButton(PrefabsPage, 2, 2, "Nightmode", () =>
+            {
+                CameraHandler.NightMode(true);
+            }, "Disabled", () =>
+            {
+                CameraHandler.NightMode(false);
+            }, "Toggle Nightmode");
 
             HalfButton = new QMSingleButton("ShortcutMenu", 5, 1.25f, "Delete \nPortals", () =>
             {
