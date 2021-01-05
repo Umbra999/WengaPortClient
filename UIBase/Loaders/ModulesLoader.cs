@@ -1,4 +1,5 @@
-﻿using WengaPort.Buttons;
+﻿using UnityEngine;
+using WengaPort.Buttons;
 using WengaPort.Extensions;
 using WengaPort.Modules;
 
@@ -21,7 +22,7 @@ namespace WengaPort.Loaders
                 PatchManager.VRMode = false;
             } 
             PlayerList.Init();
-            ESP.Initialize();
+            ESP.HighlightColor(Color.green);
             Movement.UIInit();
             MelonLoader.MelonCoroutines.Start(UIChanges.Initialize());
             MelonLoader.MelonCoroutines.Start(UIChanges.UpdateClock());

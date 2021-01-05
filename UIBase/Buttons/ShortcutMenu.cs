@@ -40,15 +40,15 @@ namespace WengaPort.Buttons
             Panels.TextMenu(ThisMenu, 2.5f, 1, "\nMenu\nSelector", 4, 3, "Menu Selector");
 
             QMNestedButton PrefabsPage = new QMNestedButton(ThisMenu, 2.5f, 2f, "World", "World Menu");
-            QMNestedButton PrefabsSubPage = new QMNestedButton(PrefabsPage, 1.5f, 1f, "Prefab", "Prefab Menu");
+            QMNestedButton PrefabsSubPage = new QMNestedButton(PrefabsPage, 2, 1, "Prefab", "Prefab Menu");
             PrefabsPage.getMainButton().getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
             GameObject SelectedPrefab = null;
             QMNestedButton Options = new QMNestedButton(PrefabsPage, -1, -1, "", "Options about the prefabs");
             Options.getMainButton().setActive(false);
-            new QMSingleButton(PrefabsPage, 0, 0, "Delete \n Prefabs", delegate
+            new QMSingleButton(PrefabsPage, 1, 1, "Delete \n Prefabs", delegate
             {
                 // Add stuff here later 
-            }, "Delete all Prefabs in the World");
+            }, "Delete the spawned Prefabs");
 
             new QMSingleButton(Options, 1, 0, "Instatiate\nMe\nGlobal", delegate
             {
@@ -97,7 +97,7 @@ namespace WengaPort.Buttons
                 }
             });
 
-            QMNestedButton UdonExploits = new QMNestedButton(PrefabsPage, 3.5f, 1f, "Udon", "Udon Trigger/Event Menu");
+            QMNestedButton UdonExploits = new QMNestedButton(PrefabsPage, 4, 1, "Udon", "Udon Trigger/Event Menu");
             QMNestedButton UdonTriggers = new QMNestedButton(UdonExploits, -5, -5, "", "");
             ScrollMenu UdonEvents = new ScrollMenu(UdonTriggers);
             ScrollMenu UdonObjects = new ScrollMenu(UdonExploits);
@@ -123,7 +123,7 @@ namespace WengaPort.Buttons
                 }
             });
 
-            QMNestedButton TriggerMenu = new QMNestedButton(PrefabsPage, 2.5f, 1f, "Trigger", "VRC Trigger Menu");
+            QMNestedButton TriggerMenu = new QMNestedButton(PrefabsPage, 3, 1, "Trigger", "VRC Trigger Menu");
             ScrollMenu TriggerObjects = new ScrollMenu(TriggerMenu);
             TriggerObjects.SetAction(delegate
             {
@@ -135,6 +135,82 @@ namespace WengaPort.Buttons
                     }, Trigger.interactText));
                 }
             });
+
+            new QMToggleButton(PrefabsPage, 1, 0, "Disable \nPostProcess", () =>
+            {
+                ItemHandler.PostProcessToggle = true;
+                CameraHandler.DisablePostProcess(true);
+            }, "Disabled", () =>
+            {
+                ItemHandler.PostProcessToggle = true;
+                CameraHandler.DisablePostProcess(false);
+            }, "Toggle Post Processing");
+
+            new QMToggleButton(PrefabsPage, 2, 0, "Disable \nChairs", () =>
+            {
+                ItemHandler.ChairToggle = true;
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRCStation>())
+                {
+                    if (item.gameObject.active)
+                    {
+                        item.gameObject.SetActive(false);
+                        ItemHandler.World_Chairs.Add(item);
+                    }
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.ChairToggle = false;
+                foreach (var item in ItemHandler.World_Chairs)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }, "Toggle Chairs", Color.cyan, Color.white, false, true);
+
+            new QMToggleButton(PrefabsPage, 3, 0, "Disable \nMirror", () =>
+            {
+                ItemHandler.MirrorToggle = true;
+                var objects = Resources.FindObjectsOfTypeAll<VRC_MirrorReflection>();
+                foreach (var item in objects)
+                {
+                    if (item.gameObject.active)
+                    {
+                        item.gameObject.SetActive(false);
+                        ItemHandler.World_Mirrors.Add(item);
+                    }
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.MirrorToggle = false;
+                foreach (var item in ItemHandler.World_Mirrors)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }, "Toggle Mirrors");
+
+            new QMToggleButton(PrefabsPage, 4, 0, "Disable \nItems", () =>
+            {
+                ItemHandler.ItemToggle = true;
+                foreach (VRCSDK2.VRC_Pickup item in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
+                {
+                    ItemHandler.World_Pickups.Add(item);
+                    item.gameObject.SetActive(false);
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.ItemToggle = false;
+                foreach (VRC_Pickup item in ItemHandler.World_Pickups)
+                {
+                    item.gameObject.SetActive(true);
+                }
+            }, "Toggle Items");
+
+            new QMToggleButton(PrefabsPage, 1, 2, "Disable \nPedestals", () =>
+            {
+                CameraHandler.DisableAvatarPedestals(true);
+            }, "Disabled", () =>
+            {
+                CameraHandler.DisableAvatarPedestals(false);
+            }, "Toggle Avatar Pedestals");
 
             HalfButton = new QMSingleButton("ShortcutMenu", 5, 1.25f, "Delete \nPortals", () =>
             {

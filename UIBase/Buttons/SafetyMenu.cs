@@ -19,6 +19,7 @@ namespace WengaPort.Buttons
     {
         public static QMNestedButton ThisMenu;
         public static QMToggleButton VRToggle;
+        public static QMToggleButton AntiMenuToggle;
         public static void Initialize()
         {
             ThisMenu = new QMNestedButton(MainMenu.ThisMenu, 1.5f, 1f, "Safety", "Safety Utils", null, null, null, Color.yellow);
@@ -50,7 +51,7 @@ namespace WengaPort.Buttons
                 { }
             }, "Forcemute Everyone");
 
-            new QMToggleButton(ThisMenu, 0, 0, "Anti \nOverrender", () =>
+            AntiMenuToggle = new QMToggleButton(ThisMenu, 2, 0, "Anti \nOverrender", () =>
             {
                 AntiMenuOverrender.AntiOverrender(true);
             }, "Disabled", () =>
@@ -58,7 +59,7 @@ namespace WengaPort.Buttons
                 AntiMenuOverrender.AntiOverrender(false);
             }, "Prevents your Menu from getting Overrendered");
 
-            new QMToggleButton(ThisMenu, 0, 1, "Optimize \nDynbones", () =>
+            new QMToggleButton(ThisMenu, 1, 2, "Optimize \nDynbones", () =>
             {
                 GlobalDynamicBones.OptimizeBones = true;
                 foreach (Player p in Utils.PlayerManager.GetAllPlayers())
@@ -82,7 +83,7 @@ namespace WengaPort.Buttons
                 PatchManager.AntiBlock = false;
             }, "See blocked People", Color.cyan, Color.white, false, true);
 
-            VRToggle = new QMToggleButton(ThisMenu, 5, 0, "VR", () =>
+            VRToggle = new QMToggleButton(ThisMenu, 4, 1, "VR", () =>
             {
                 PatchManager.VRMode = true;
             }, "Desktop", () =>
@@ -106,65 +107,6 @@ namespace WengaPort.Buttons
                 PatchManager.PingSpoof = false;
             }, "Spoof your Ping", Color.cyan, Color.white, false, true);
 
-            new QMToggleButton(ThisMenu, 1, 2, "Disable \nChairs", () =>
-            {
-                ItemHandler.ChairToggle = true;
-                foreach (var item in Resources.FindObjectsOfTypeAll<VRCStation>())
-                {
-                    if (item.gameObject.active)
-                    {
-                        item.gameObject.SetActive(false);
-                        ItemHandler.World_Chairs.Add(item);
-                    }
-                }
-            }, "Disabled", () =>
-            {
-                ItemHandler.ChairToggle = false;
-                foreach (var item in ItemHandler.World_Chairs)
-                {
-                    item.gameObject.SetActive(true);
-                }
-            }, "Disable all Chairs", Color.cyan, Color.white, false, true);
-
-            List<VRC.SDKBase.VRC_MirrorReflection> WorldMirrors = new List<VRC.SDKBase.VRC_MirrorReflection>();
-            new QMToggleButton(ThisMenu, 5, 1, "Disable \nMirror", () =>
-            {
-                ItemHandler.MirrorToggle = true;
-                var objects = Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_MirrorReflection>();
-                foreach (var item in objects)
-                {
-                    if (item.gameObject.active)
-                    {
-                        item.gameObject.SetActive(false);
-                        ItemHandler.World_Mirrors.Add(item);
-                    }
-                }
-            }, "Disabled", () =>
-            {
-                ItemHandler.MirrorToggle = false;
-                foreach (var item in ItemHandler.World_Mirrors)
-                {
-                    item.gameObject.SetActive(true);
-                }
-            }, "Disable all Mirrors");
-
-            new QMToggleButton(ThisMenu, 2, 0, "Disable \nItems", () =>
-            {
-                ItemHandler.ItemToggle = true;
-                foreach (VRCSDK2.VRC_Pickup item in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
-                {
-                    ItemHandler.World_Pickups.Add(item);
-                    item.gameObject.SetActive(false);
-                }
-            }, "Disabled", () =>
-            {
-                ItemHandler.ItemToggle = false;
-                foreach (VRC.SDKBase.VRC_Pickup item in ItemHandler.World_Pickups)
-                {
-                    item.gameObject.SetActive(true);
-                }
-            }, "Disable all Items");
-
             new QMToggleButton(ThisMenu, 3, 0, "Anti \nPortal", () =>
             {
                 PortalHandler.AntiPortal = true;
@@ -181,7 +123,7 @@ namespace WengaPort.Buttons
                 PatchManager.AntiWorldTrigger = false;
             }, "Make all global Triggers local");
 
-            new QMToggleButton(ThisMenu, 1, 1, "Anti \nMaster", () =>
+            new QMToggleButton(ThisMenu, 1, 1, "Anti \nDisconnect", () =>
             {
                 PatchManager.AntiMasterDC = true;
             }, "Disabled", () =>
@@ -196,14 +138,6 @@ namespace WengaPort.Buttons
             {
                 PatchManager.BlockPlayer = false;
             }, "Prevents you from IP Logging via Players");
-
-            new QMToggleButton(ThisMenu, 4, 1, "Disable \nPedestals", () =>
-            {
-                PedestalHandler.Disable();
-            }, "Disabled", () =>
-            {
-                PedestalHandler.Revert();
-            }, "Disable all Avatar Pedestals");
 
             new QMToggleButton(ThisMenu, 2, 2, "Anti \nUdon", () =>
             {

@@ -7,6 +7,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using VRC;
+using WengaPort.Buttons;
 using WengaPort.Extensions;
 using WengaPort.Modules;
 
@@ -36,12 +37,14 @@ namespace WengaPort.Modules
                 AntiOverrenderToggle = true;
                 _menuCameraClone.SetActive(true);
                 _originalCamera.cullingMask = _newCullingMask;
+                SafetyMenu.AntiMenuToggle.setToggleState(true);
             }
             else
             {
                 AntiOverrenderToggle = false;
                 _menuCameraClone.SetActive(false);
                 _originalCamera.cullingMask = _originalCullingMask;
+                SafetyMenu.AntiMenuToggle.setToggleState(false);
             }
         }
         public static void UIInit()

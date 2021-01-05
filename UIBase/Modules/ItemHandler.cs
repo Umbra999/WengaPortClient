@@ -11,6 +11,7 @@ using VRC.SDKBase;
 using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace WengaPort.Modules
 {
@@ -84,10 +85,16 @@ namespace WengaPort.Modules
 
         public static List<VRCStation> World_Chairs = new List<VRCStation>();
 
+        public static List<PostProcessVolume> PostProcess = new List<PostProcessVolume>();
+
+        public static List<VRC.SDKBase.VRC_AvatarPedestal> Pedestals = new List<VRC.SDKBase.VRC_AvatarPedestal>();
+
         public static bool ChairToggle = true;
         public static bool MirrorToggle = false;
         public static bool ItemToggle = false;
         public static bool PickupToggle = false;
+        public static bool PostProcessToggle = false;
+        public static bool PedestalToggle = false;
 
         public static void TakeOwnershipIfNecessary(GameObject gameObject)
         {

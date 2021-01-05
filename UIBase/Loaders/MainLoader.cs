@@ -20,6 +20,7 @@ using UnityEngine.UI;
 using Logger = WengaPort.Extensions.Logger;
 using WengaPort.ConsoleUtils;
 using UnhollowerRuntimeLib;
+using UnityEngine.Rendering.PostProcessing;
 
 namespace WengaPort.MainLoader
 {
@@ -40,6 +41,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<AntiMenuOverrender>();
             ClassInjector.RegisterTypeInIl2Cpp<AttachmentManager>();
             ClassInjector.RegisterTypeInIl2Cpp<NameplateHelper>();
+            ClassInjector.RegisterTypeInIl2Cpp<ESP>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -84,11 +86,11 @@ namespace WengaPort.MainLoader
             ItemHandler.World_Triggers.Clear();
             ItemHandler.World_Mirrors.Clear();
             ItemHandler.World_Chairs.Clear();
+            ItemHandler.PostProcess.Clear();
+            ItemHandler.Pedestals.Clear();
 
             ItemHandler.World_ObjectSyncs = Resources.FindObjectsOfTypeAll<VRC_ObjectSync>().ToArray().ToList();
             ItemHandler.World_Triggers = UnityEngine.Object.FindObjectsOfType<VRC_Trigger>().ToArray().ToList();
-
-            PedestalHandler.FetchPedestals();
             
             if (ItemHandler.ChairToggle)
             {
@@ -128,6 +130,30 @@ namespace WengaPort.MainLoader
                     {
                         item.pickupable = false;
                         ItemHandler.World_Pickups.Add(item);
+                    }
+                }
+            }
+
+            if (ItemHandler.PostProcessToggle)
+            {
+                foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>())
+                {
+                    if (volume.isActiveAndEnabled)
+                    {
+                        volume.enabled = false;
+                        ItemHandler.PostProcess.Add(volume);
+                    }
+                }
+            }
+
+            if (ItemHandler.PedestalToggle)
+            {
+                foreach (VRC_AvatarPedestal vrc_AvatarPedestal in Resources.FindObjectsOfTypeAll<VRC_AvatarPedestal>())
+                {
+                    if (vrc_AvatarPedestal.enabled)
+                    {
+                        vrc_AvatarPedestal.enabled = false;
+                        ItemHandler.Pedestals.Add(vrc_AvatarPedestal);
                     }
                 }
             }
@@ -358,6 +384,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<AttachmentManager>();
             Client.AddComponent<NameplateHelper>();
             Client.AddComponent<AntiMenuOverrender>();
+            Client.AddComponent<ESP>();
         }
         GameObject menu;
         GameObject inviteDot;

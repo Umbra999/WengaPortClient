@@ -10,13 +10,8 @@ using WengaPort.Extensions;
 
 namespace WengaPort.Modules
 {
-    class ESP
+    class ESP : MonoBehaviour
     {
-		public static void Initialize()
-		{
-			MelonCoroutines.Start(Loop());
-			HighlightColor(Color.green);
-		}
 		public static void HighlightColor(Color highlightcolor)
 		{
 			bool flag = Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().Count != 0;
@@ -26,37 +21,35 @@ namespace WengaPort.Modules
 			}
 		}
 
-		private static IEnumerator Loop()
+		public void Update()
 		{
-			for (; ; )
+			if (ESPEnabled)
 			{
-				yield return new WaitForEndOfFrame();
-				if (ESPEnabled)
+				foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
 				{
-					foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Player"))
+					if (gameObject.transform.Find("SelectRegion"))
 					{
-						if (gameObject.transform.Find("SelectRegion"))
-						{
-							HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(gameObject.transform.Find("SelectRegion").GetComponent<Renderer>(), true);
-						}
+						HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(gameObject.transform.Find("SelectRegion").GetComponent<Renderer>(), true);
 					}
-					wasEnabled = true;
 				}
-				else if (!ESPEnabled && wasEnabled)
+				wasEnabled = true;
+			}
+			else if (!ESPEnabled && wasEnabled)
+			{
+				foreach (GameObject gameObject2 in GameObject.FindGameObjectsWithTag("Player"))
 				{
-					foreach (GameObject gameObject2 in GameObject.FindGameObjectsWithTag("Player"))
+					if (gameObject2.transform.Find("SelectRegion"))
 					{
-						if (gameObject2.transform.Find("SelectRegion"))
-						{
-							HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(gameObject2.transform.Find("SelectRegion").GetComponent<Renderer>(), false);
-						}
+						HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(gameObject2.transform.Find("SelectRegion").GetComponent<Renderer>(), false);
 					}
-                    wasEnabled = false;
 				}
+				wasEnabled = false;
 			}
 		}
 		public static bool ESPEnabled = false;
 		private static bool wasEnabled;
+
+		public ESP(IntPtr ptr) : base(ptr) { }
 	}
 }
 

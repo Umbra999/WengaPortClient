@@ -1,6 +1,7 @@
 ﻿using MelonLoader;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using VRC;
 using VRC.Core;
 using VRC.SDKBase;
@@ -395,6 +396,56 @@ namespace WengaPort.Modules
 				yield return new WaitForSeconds(4);
 			}
 			yield break;
+		}
+
+		public static void DisablePostProcess(bool state)
+		{
+			if (state)
+            {
+				ItemHandler.PostProcessToggle = true;
+				foreach (var volume in Resources.FindObjectsOfTypeAll<PostProcessVolume>())
+				{
+					if (volume.isActiveAndEnabled)
+					{
+						volume.enabled = false;
+						ItemHandler.PostProcess.Add(volume);
+					}
+				}
+			}
+			else
+            {
+				ItemHandler.PostProcessToggle = false;
+				foreach (var volume in ItemHandler.PostProcess)
+                {
+					volume.enabled = true;
+					ItemHandler.PostProcess.Remove(volume);
+				}
+            }
+		}
+
+		public static void DisableAvatarPedestals(bool state)
+		{
+			if (state)
+			{
+				ItemHandler.PedestalToggle = true;
+				foreach (var volume in Resources.FindObjectsOfTypeAll<VRC_AvatarPedestal>())
+				{
+					if (volume.isActiveAndEnabled)
+					{
+						volume.enabled = false;
+						ItemHandler.Pedestals.Add(volume);
+					}
+				}
+			}
+			else
+			{
+				ItemHandler.PedestalToggle = false;
+				foreach (var volume in ItemHandler.Pedestals)
+				{
+					volume.enabled = true;
+					ItemHandler.Pedestals.Remove(volume);
+				}
+			}
 		}
 	}
 }
