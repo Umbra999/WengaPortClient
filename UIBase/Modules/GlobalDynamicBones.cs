@@ -15,6 +15,7 @@ namespace WengaPort.Modules
         public static List<string> FriendOnlyBones = new List<string>();
         public static List<string> DisabledShaders = new List<string>();
         public static List<string> DisabledParticles = new List<string>();
+        public static List<string> DisabledAudios = new List<string>();
 
         public static void ProcessDynamicBones(GameObject avatarObject, VRCPlayer player)
         {
@@ -153,6 +154,20 @@ namespace WengaPort.Modules
                                 material.shader = Shader.Find("Diffuse");
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        public static void AntiAudio(GameObject avatarObject, VRCPlayer player)
+        {
+            if (DisabledAudios.Contains(player.UserID()))
+            {
+                foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
+                {
+                    if (renderer != null)
+                    {
+                        renderer.enabled = false;
                     }
                 }
             }

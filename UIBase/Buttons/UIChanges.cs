@@ -30,8 +30,7 @@ namespace WengaPort.Buttons
                 if (Shortcut.gameObject.active == true)
                 {
                     var InfoBar = GameObject.Find("/UserInterface/QuickMenu/QuickMenu_NewElements/_CONTEXT/QM_Context_User_Hover/_UserStatus/Text");
-                    float ts = MainLoader.MainLoader.RoomTime;
-                    TimeSpan span = TimeSpan.FromSeconds((double)new decimal(ts));
+                    TimeSpan span = TimeSpan.FromSeconds((double)new decimal(MainLoader.MainLoader.RoomTime));
                     string elapsedTime = string.Format("{0:00}:{1:00}:{2:00}", span.Hours, span.Minutes, span.Seconds);
                     InfoBar.GetComponent<Text>().text = $"{DateTime.Now.ToLongTimeString()} - Room: {elapsedTime} - FPS: {Mathf.Round(1f / Time.deltaTime)}";
                 }
@@ -55,8 +54,7 @@ namespace WengaPort.Buttons
         public static IEnumerator Initialize()
         {
             UnityEngine.Application.targetFrameRate = 144;
-            using (Process p = Process.GetCurrentProcess())
-            p.PriorityClass = ProcessPriorityClass.AboveNormal;
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
             while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null) yield return null;
             SetQuickMenuCollider(0f,0.5f);
             var FirstPanel = GameObject.Find("/UserInterface/QuickMenu/QuickMenu_NewElements/_Background/Panel");

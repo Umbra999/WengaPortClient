@@ -322,11 +322,15 @@ namespace WengaPort.Modules
             {
                 helper.OnRebuild();
             }
+            if (AntiMenuOverrender.AntiOverrenderToggle && __instance != null && __instance.gameObject.layer != AntiMenuOverrender._uiPlayerNameplateLayer)
+            {
+                AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiMenuLayer);
+                AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiLayer);
+            }
         }
 
         private static void OnVRCAMAwake(VRCAvatarManager __instance)
         {
-
             var d = __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_0;
             VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique converted = new Action<GameObject, VRC_AvatarDescriptor, bool>(OnAvatarInit);
             d = d == null ? converted : Il2CppSystem.Delegate.Combine(d, converted).Cast<VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique>();
@@ -341,7 +345,6 @@ namespace WengaPort.Modules
 
         public static void OnAvatarInit(GameObject go, VRC_AvatarDescriptor avatarDescriptor, bool state)
         {
-
             if (avatarDescriptor != null)
             {
                 foreach (Player player in Utils.PlayerManager.GetAllPlayers())

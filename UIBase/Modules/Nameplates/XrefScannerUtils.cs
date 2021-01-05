@@ -7,13 +7,7 @@ using MelonLoader;
 public static class XrefScannerUtils
 {
 
-    /// <summary>
-    ///     Scans global instances for the specific search-term
-    /// </summary>
-    /// <param name="methodBase">Method base to scan</param>
-    /// <param name="searchTerm">What string the value should contain</param>
-    /// <param name="ignoreCase">Ignore Casing?</param>
-    /// <returns>if any of the instances contains the search-them</returns>
+
     public static bool XRefScanForGlobal(this MethodBase methodBase, string searchTerm, bool ignoreCase = true)
     {
         if (!string.IsNullOrEmpty(searchTerm))
@@ -27,14 +21,6 @@ public static class XrefScannerUtils
         return false;
     }
 
-    /// <summary>
-    ///     Scans method instances for the specific method-name and/or parent-type
-    /// </summary>
-    /// <param name="methodBase">Method base to scan</param>
-    /// <param name="methodName">name of the method to scan for. can be null</param>
-    /// <param name="parentType">type of the parent to scan for. can be null</param>
-    /// <param name="ignoreCase">Ignore Casing?</param>
-    /// <returns>if any of the instances contains the specified method-name/parent-type</returns>
     public static bool XRefScanForMethod(this MethodBase methodBase, string methodName = null, string parentType = null, bool ignoreCase = true)
     {
         if (!string.IsNullOrEmpty(methodName)
@@ -104,5 +90,21 @@ public static class XrefScannerUtils
         MelonLogger.LogError($"XRefScanMethodCount \"{methodBase}\" has all null/empty parameters. Returning -1");
         return -1;
     }
+    public static bool checkXref(this MethodBase m, string match)
+    {
+        try
+        {
+            return XrefScanner.XrefScan(m).Any(
+                instance => instance.Type == XrefType.Global && instance.ReadAsObject() != null && instance.ReadAsObject().ToString()
+                               .Equals(match, StringComparison.OrdinalIgnoreCase));
+        }
+        catch { }
 
+        return false;
+    }
+
+    public static T Cast<T>(this object o)
+    {
+        return (T)o;
+    }
 }

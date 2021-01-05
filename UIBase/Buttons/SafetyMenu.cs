@@ -50,15 +50,13 @@ namespace WengaPort.Buttons
                 { }
             }, "Forcemute Everyone");
 
-            new QMToggleButton(ThisMenu, 0, 0, "Mini \nHide", () =>
+            new QMToggleButton(ThisMenu, 0, 0, "Anti \nOverrender", () =>
             {
-                PatchManager.MiniHide = true;
-                PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
+                AntiMenuOverrender.AntiOverrender(true);
             }, "Disabled", () =>
             {
-                PatchManager.MiniHide = false;
-                PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
-            }, "Be a Mini hide Roboter");
+                AntiMenuOverrender.AntiOverrender(false);
+            }, "Prevents your Menu from getting Overrendered");
 
             new QMToggleButton(ThisMenu, 0, 1, "Optimize \nDynbones", () =>
             {

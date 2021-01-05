@@ -12,6 +12,9 @@ namespace WengaPort.Loaders
             ButtonsMainColor.Initialize();
             ButtonsMainColor.Initialize2();
             ButtonsMainColor.Initialize3();
+            AntiMenuOverrender.UIInit();
+            WorldButton.Setup();
+            WorldDownloadStatus.Setup();
             Nameplates.OnUI();
             if (!UnityEngine.XR.XRDevice.isPresent)
             {

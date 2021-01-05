@@ -13,7 +13,7 @@ namespace WengaPort.Modules
 		public void Start()
 		{
 			GameObject gameObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-			UnityEngine.Object.Destroy(gameObject.GetComponent<MeshRenderer>());
+            Destroy(gameObject.GetComponent<MeshRenderer>());
 			referenceCamera = GameObject.Find("Camera (eye)");
 			if (referenceCamera != null)
 			{

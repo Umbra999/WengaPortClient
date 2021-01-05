@@ -37,6 +37,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<PlayerList>();
             ClassInjector.RegisterTypeInIl2Cpp<ThirdPerson>();
             ClassInjector.RegisterTypeInIl2Cpp<AvatarFavs>();
+            ClassInjector.RegisterTypeInIl2Cpp<AntiMenuOverrender>();
             ClassInjector.RegisterTypeInIl2Cpp<AttachmentManager>();
             ClassInjector.RegisterTypeInIl2Cpp<NameplateHelper>();
         }
@@ -182,6 +183,18 @@ namespace WengaPort.MainLoader
                     else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha0))
                     {
                         Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible = !Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible;
+                    }
+
+                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
+                    {
+                        if (AntiMenuOverrender.AntiOverrenderToggle)
+                        {
+                            AntiMenuOverrender.AntiOverrender(false);
+                        }
+                        else
+                        {
+                            AntiMenuOverrender.AntiOverrender(true);
+                        }
                     }
                 }
 
@@ -344,6 +357,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<AvatarFavs>();
             Client.AddComponent<AttachmentManager>();
             Client.AddComponent<NameplateHelper>();
+            Client.AddComponent<AntiMenuOverrender>();
         }
         GameObject menu;
         GameObject inviteDot;

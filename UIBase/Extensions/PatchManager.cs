@@ -233,13 +233,22 @@ namespace WengaPort.Extensions
                 var Avatar = __instance.field_Private_ApiAvatar_0;
                 var AvatarID = __instance.field_Private_ApiAvatar_0.id;
                 var AvatarGameobject = __0;
-                if (player.GetAPIAvatar() == Avatar)
-                Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> {Avatar.name} [{Avatar.releaseStatus}]");
-                VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
-                GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
-                GlobalDynamicBones.OptimizeBone(AvatarGameobject);
-                GlobalDynamicBones.AntiShader(AvatarGameobject, player);
-                GlobalDynamicBones.AntiParticle(AvatarGameobject, player);
+                if (CrashAvatars.Contains(AvatarID) && player.UserID() != Utils.CurrentUser.UserID())
+                {
+                    player.gameObject.SetActive(false);
+                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
+                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
+                }
+                else
+                {
+                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> {Avatar.name} [{Avatar.releaseStatus}]");
+                    VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
+                    GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
+                    GlobalDynamicBones.OptimizeBone(AvatarGameobject);
+                    GlobalDynamicBones.AntiShader(AvatarGameobject, player);
+                    GlobalDynamicBones.AntiParticle(AvatarGameobject, player);
+                    GlobalDynamicBones.AntiAudio(AvatarGameobject, player);
+                }
             }
             catch
             { }
@@ -437,6 +446,17 @@ namespace WengaPort.Extensions
         private static byte[] IgnoreCodes = new byte[]
         {
             1,7,8,9,206,201,226
+        };
+
+        private static List<string> CrashAvatars = new List<string>()
+        {
+            "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab",
+            "avtr_90da2bda-d2c9-4a17-954c-7bd66cf0b9e6",
+            "avtr_f9f09b3c-98ef-4329-8046-e5f2e284390f",
+            "avtr_ce9c4c0a-f646-48c6-8856-a53b8d7b9bf4",
+            "avtr_6862b583-c4f7-4f62-af2b-9eb299990f0c",
+            "avtr_479a8b49-1b9d-46f7-9741-66a00f0cba4b",
+            "avtr_89c9fef0-5881-4f07-8eec-c49be1e0a0c1"
         };
 
         private static bool OnEvent(ref EventData __0)
