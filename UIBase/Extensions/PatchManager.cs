@@ -4,6 +4,7 @@ using Il2CppSystem;
 using Il2CppSystem.Collections;
 using MelonLoader;
 using Newtonsoft.Json.Linq;
+using Photon.Pun;
 using RootMotion.FinalIK;
 using System;
 using System.Collections.Generic;

@@ -106,8 +106,7 @@ namespace WengaPort.Modules
 		private static float _zoomMultiplier = 6f;
 		public static void Zoom()
         {
-			bool flag5 = Input.GetKey(KeyCode.LeftAlt) && _enableZoom && !_isZoomed;
-			if (flag5)
+			if (Input.GetKey(KeyCode.LeftAlt) && _enableZoom && !_isZoomed)
 			{
 				_isZoomed = true;
 				_beforeZoomFOV = 60f;
@@ -116,8 +115,7 @@ namespace WengaPort.Modules
 			}
 			else
 			{
-				bool flag6 = Input.GetKeyUp(KeyCode.LeftAlt) && _enableZoom && _isZoomed;
-				if (flag6)
+				if (Input.GetKeyUp(KeyCode.LeftAlt) && _enableZoom && _isZoomed)
 				{
 					_isZoomed = false;
 					_FOV = _beforeZoomFOV;

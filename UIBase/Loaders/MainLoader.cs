@@ -186,7 +186,6 @@ namespace WengaPort.MainLoader
                 if (!UnityEngine.XR.XRDevice.isPresent)
                 {
                     CameraHandler.Zoom();
-
                     if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
                     {
                         if (!CameraHandler.DesktopCam)

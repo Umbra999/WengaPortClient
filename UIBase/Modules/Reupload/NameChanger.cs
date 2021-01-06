@@ -121,32 +121,7 @@ namespace WengaPort.Modules.Reupload
                 Extensions.Logger.WengaLogger("Avatar deleted");
             }, (Action<ApiContainer>)delegate
             {
-                while (true)
-                {
-                    int num = -1146411568;
-                    while (true)
-                    {
-                        int num2 = num;
-                        uint num3;
-                        switch ((num3 = (uint)(~(-(~num2) - 465534149))) % 3u)
-                        {
-                            case 1u:
-                                goto IL_0003;
-                            default:
-                                return;
-
-                            case 0u:
-                                break;
-
-                            case 2u:
-                                return;
-                        }
-                        break;
-                    IL_0003:
-                        Extensions.Logger.WengaLogger("Failed to Delete Avatar");
-                        num = (int)((num3 * 2064907121) ^ 0x4695662A);
-                    }
-                }
+                Extensions.Logger.WengaLogger("Failed to delete Avatar");
             });
         }
     }
