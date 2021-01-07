@@ -55,8 +55,8 @@ namespace WengaPort.Buttons
                 {
                     MaterialObjects.Add(new QMSingleButton(MaterialMenu, 0, 0, Material.name, delegate
                     {
-                        
-                    }, ""));
+                        Material.shader = Shader.Find("Diffuse");
+                    }, $"{Material.name}"));
                 }
             });
 

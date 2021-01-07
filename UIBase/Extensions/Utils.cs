@@ -91,6 +91,9 @@ namespace WengaPort.Modules
 			}
 		}
 
+		public static GameObject GetAvatarObject(this Player p) => p.prop_VRCPlayer_0.prop_VRCAvatarManager_0.prop_GameObject_0;
+		public static GameObject GetAvatarObject(this VRCPlayer p) => p.prop_VRCAvatarManager_0.prop_GameObject_0;
+
 		public static Camera Camera
 		{
 			get

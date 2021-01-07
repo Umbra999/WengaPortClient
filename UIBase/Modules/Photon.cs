@@ -16,6 +16,8 @@ using WengaPort.Api;
 using System.Threading;
 using WengaPort.Wrappers;
 using static VRC.SDKBase.VRC_EventHandler;
+using VRC.Udon;
+using VRC.Udon.Common.Interfaces;
 
 namespace WengaPort.Modules
 {

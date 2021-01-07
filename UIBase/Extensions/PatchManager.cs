@@ -236,7 +236,7 @@ namespace WengaPort.Extensions
                 var AvatarGameobject = __0;
                 if (CrashAvatars.Contains(AvatarID) && player.UserID() != Utils.CurrentUser.UserID())
                 {
-                    player.gameObject.SetActive(false);
+                    player.GetAvatarObject().SetActive(false);
                     Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
                     VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
                 }

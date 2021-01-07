@@ -42,6 +42,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<AttachmentManager>();
             ClassInjector.RegisterTypeInIl2Cpp<NameplateHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<ESP>();
+            ClassInjector.RegisterTypeInIl2Cpp<AvatarHider>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -392,6 +393,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<NameplateHelper>();
             Client.AddComponent<AntiMenuOverrender>();
             Client.AddComponent<ESP>();
+            Client.AddComponent<AvatarHider>();
         }
         GameObject menu;
         GameObject inviteDot;
