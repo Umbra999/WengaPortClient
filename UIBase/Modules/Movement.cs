@@ -85,11 +85,11 @@ namespace WengaPort.Modules
                 if (isInVR && !NoClipToggle)
                 {
                     var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                    if (Shortcut.gameObject.active == false && !Networking.LocalPlayer.IsPlayerGrounded())
+                    if (Shortcut.gameObject.active == false)
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
                     }
-                    else if (Shortcut.gameObject.active == true && !NoClipToggle)
+                    else if (Shortcut.gameObject.active == true && !NoClipToggle && !Networking.LocalPlayer.IsPlayerGrounded())
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
                     }
