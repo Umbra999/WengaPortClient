@@ -125,22 +125,18 @@ namespace WengaPort.Modules
             }
         }
 
-        public static void AntiParticle(GameObject avatarObject, VRCPlayer player)
+        public static void DisableAvatarFeatures(GameObject avatarObject, VRCPlayer player)
         {
-            if (DisabledParticles.Contains(player.UserID()))
+            if (DisabledAudios.Contains(player.UserID()))
             {
-                foreach (ParticleSystem renderer in avatarObject.GetComponentsInChildren<ParticleSystem>(true))
+                foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
                 {
                     if (renderer != null)
                     {
-                        renderer.gameObject.SetActive(false);
+                        renderer.enabled = false;
                     }
                 }
             }
-        }
-
-        public static void AntiShader (GameObject avatarObject, VRCPlayer player)
-        {
             if (DisabledShaders.Contains(player.UserID()))
             {
                 foreach (Renderer renderer in avatarObject.GetComponentsInChildren<Renderer>(true))
@@ -157,17 +153,13 @@ namespace WengaPort.Modules
                     }
                 }
             }
-        }
-
-        public static void AntiAudio(GameObject avatarObject, VRCPlayer player)
-        {
-            if (DisabledAudios.Contains(player.UserID()))
+            if (DisabledParticles.Contains(player.UserID()))
             {
-                foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
+                foreach (ParticleSystem renderer in avatarObject.GetComponentsInChildren<ParticleSystem>(true))
                 {
                     if (renderer != null)
                     {
-                        renderer.enabled = false;
+                        renderer.gameObject.SetActive(false);
                     }
                 }
             }

@@ -220,11 +220,6 @@ namespace WengaPort.Extensions
             }
         }
 
-        private static bool returnFalse()
-        {
-            return false;
-        }
-
         private static void OnAvatarInstantiate(ref GameObject __0, ref VRCAvatarManager __instance)
         {
             try
@@ -246,9 +241,7 @@ namespace WengaPort.Extensions
                     VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                     GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
                     GlobalDynamicBones.OptimizeBone(AvatarGameobject);
-                    GlobalDynamicBones.AntiShader(AvatarGameobject, player);
-                    GlobalDynamicBones.AntiParticle(AvatarGameobject, player);
-                    GlobalDynamicBones.AntiAudio(AvatarGameobject, player);
+                    GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
                 }
             }
             catch
@@ -311,7 +304,7 @@ namespace WengaPort.Extensions
                 {
                     MelonCoroutines.Start(PlayerList.AdminPlateChanger(__0));
                 }
-                PlayerList.CustomTag(__0);
+                MelonCoroutines.Start(PlayerList.CustomTag(__0));
                 if (GlobalDynamicBones.FriendBones)
                 {
                     PlayerList.DynBoneAdder(__0);

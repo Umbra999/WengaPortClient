@@ -16,7 +16,7 @@ namespace WengaPort.Modules
         public void Update()
         {
             HideDelay += Time.deltaTime;
-            if (HideDelay > 1.5f)
+            if (HideDelay > 2f)
             {
                 try
                 {

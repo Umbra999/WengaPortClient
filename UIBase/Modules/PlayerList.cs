@@ -64,8 +64,9 @@ namespace WengaPort.Modules
             }
         }
 
-        public static void CustomTag(Player player)
+        public static IEnumerator CustomTag(Player player)
         {
+            yield return new WaitForSeconds(1);
             Transform contents = player.transform.Find("Player Nameplate/Canvas/Nameplate/Contents");
             Transform stats = contents.Find("Quick Stats");
             int stack = 0;
@@ -119,9 +120,10 @@ namespace WengaPort.Modules
             }
 
             if (player.IsFriend()) SetTag(ref stack, stats, contents, Color.yellow, "Friend");
-            if (player.GetAPIUser().IsOnMobile) SetTag(ref stack, stats, contents, Color.green, "Quest");
+            if (player.GetAPIUser().IsOnMobile) SetTag(ref stack, stats, contents, new Color(0.1f, 0.4f, 0.17f), "Quest");
             if (BlockList.Contains(player.UserID())) SetTag(ref stack, stats, contents, Color.red, "Block");            
             stats.localPosition = new Vector3(0, (stack + 1) * 30, 0);
+            yield break;
         }
 
         public static IEnumerator AdminPlateChanger(Player player)
@@ -182,7 +184,7 @@ namespace WengaPort.Modules
         private static void SetTag(ref int stack, Transform stats, Transform contents, Color color, string content)
         {
             Transform tag = contents.Find($"WengaPortTag{stack}");
-            Transform label = null;
+            Transform label;
             if (tag == null)
                 label = MakeTag(stats, stack);
             else

@@ -270,11 +270,6 @@ namespace WengaPort.MainLoader
                         }
                     }
 
-                    if (CameraHandler.CameraLag)
-                    {
-                        CameraHandler.DesyncV3();
-                    }
-
                     if (Modules.Photon.EmojiSpam)
                     {
                         int i = 29;
