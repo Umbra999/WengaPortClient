@@ -306,3 +306,6 @@ C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\Output\TestMod
 C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\Output\TestMod\Il2CppSystem.Drawing.dll
 C:\Users\Dayof\Documents\GitHub\CatDealers\WengaPortClient\UIBase\obj\Release\UIBase.csproj.CopyComplete
 C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\websocket-sharp.dll
+C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\DotZLib.dll
+C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\librsync.net.dll
+C:\Users\Meiner\Documents\GitHub\WengaPort\UIBase\Output\TestMod\Blake2Sharp.dll
