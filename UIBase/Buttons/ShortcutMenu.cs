@@ -70,27 +70,27 @@ namespace WengaPort.Buttons
                 Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, Utils.CurrentUser.transform.position + Utils.CurrentUser.transform.forward * 2f, Utils.CurrentUser.transform.rotation);
             }, "Instatiate Prefab at yourself Local");
 
-            new QMSingleButton(Options, 3, 0, "Instatiate\nPos-Infinity\nGlobal", delegate
+            new QMSingleButton(Options, 3, 0, "Instatiate\nMax-ValuenGlobal", delegate
             {
-                GameObject Item = Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, Vector3.positiveInfinity, Utils.CurrentUser.transform.rotation);
+                GameObject Item = Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, new Vector3(int.MaxValue, int.MaxValue, int.MaxValue), Utils.CurrentUser.transform.rotation);
                 Item.SetActive(false);
             }, "Instatiate Prefab at Positive-Infinity Global");
 
-            new QMSingleButton(Options, 4, 0, "Instatiate\nPos-Infinity\nLocal", delegate
+            new QMSingleButton(Options, 4, 0, "Instatiate\nMax-Value\nLocal", delegate
             {
-                GameObject Item = Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, Vector3.positiveInfinity, Utils.CurrentUser.transform.rotation);
+                GameObject Item = Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, new Vector3(int.MaxValue, int.MaxValue, int.MaxValue), Utils.CurrentUser.transform.rotation);
                 Item.SetActive(false);
             }, "Instatiate Prefab at Positive-Infinity Local");
 
-            new QMSingleButton(Options, 3, 1, "Instatiate\nNeg-Infinity\nGlobal", delegate
+            new QMSingleButton(Options, 3, 1, "Instatiate\nMin-Value\nGlobal", delegate
             {
-                GameObject Item = Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, Vector3.negativeInfinity, Utils.CurrentUser.transform.rotation);
+                GameObject Item = Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, new Vector3(int.MinValue, int.MinValue, int.MinValue), Utils.CurrentUser.transform.rotation);
                 Item.SetActive(false);
             }, "Instatiate Prefab at Negative-Infinity Global");
 
-            new QMSingleButton(Options, 4, 1, "Instatiate\nNeg-Infinity\nLocal", delegate
+            new QMSingleButton(Options, 4, 1, "Instatiate\nMin-Value\nLocal", delegate
             {
-                GameObject Item = Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, Vector3.negativeInfinity, Utils.CurrentUser.transform.rotation);
+                GameObject Item = Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, new Vector3(int.MinValue, int.MinValue, int.MinValue), Utils.CurrentUser.transform.rotation);
                 Item.SetActive(false);
             }, "Instatiate Prefab at Negative-Infinity Global");
             

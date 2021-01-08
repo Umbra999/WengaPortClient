@@ -67,7 +67,7 @@ namespace WengaPort.Buttons
             new QMSingleButton(ThisMenu, 1, 1, "Reload \nAvatar", () =>
             {
                 PlayerExtensions.ReloadAvatar(Utils.QuickMenu.SelectedVRCPlayer());
-            }, "Crash the Player with a Stack overflow Avatar");
+            }, "Reload the Player's Avatar Avatar");
 
             new QMToggleButton(ThisMenu, 2, 1, "Disable \nAudio", () =>
             {
@@ -78,6 +78,11 @@ namespace WengaPort.Buttons
                 GlobalDynamicBones.DisabledAudios.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
                 PlayerExtensions.ReloadAvatar(Utils.QuickMenu.SelectedVRCPlayer());
             }, "Disable the Player's Audio Sources");
+
+            new QMSingleButton(ThisMenu, 3, 1, "Reupload \nAvatar", () =>
+            {
+                Modules.Reupload.ReuploaderButtons.ReuploadSelectedAvatar();
+            }, "Reupload the Player's Avatar");
         }
     }
 }

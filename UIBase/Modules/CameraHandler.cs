@@ -341,7 +341,7 @@ namespace WengaPort.Modules
                 {
 					yield break;
                 }
-				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", Vector3.positiveInfinity, Quaternion.identity);
+				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MaxValue, int.MaxValue, int.MaxValue), Quaternion.identity);
 				InfPortal2.transform.position = Vector3.positiveInfinity;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal2, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
@@ -354,7 +354,7 @@ namespace WengaPort.Modules
 				});
 				InfPortal2.SetActive(false);
 				yield return new WaitForSeconds(4);
-				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", Vector3.negativeInfinity, Quaternion.identity);
+				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MinValue, int.MinValue, int.MinValue), Quaternion.identity);
 				InfPortal3.transform.position = Vector3.negativeInfinity;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal3, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
@@ -366,31 +366,6 @@ namespace WengaPort.Modules
 					}.BoxIl2CppObject()
 				});
 				InfPortal3.SetActive(false);
-				yield return new WaitForSeconds(4);
-			}
-			yield break;
-		}
-
-		internal static IEnumerator PortalMenuRemover()
-		{
-			for (; ; )
-			{
-				if (!MenuRemover)
-				{
-					yield break;
-				}
-				GameObject InfPortal = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", Vector3.negativeInfinity, Quaternion.identity);
-				InfPortal.transform.position = Vector3.negativeInfinity;
-				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal, "ConfigurePortal", new Il2CppSystem.Object[]
-				{
-				(Il2CppSystem.String)"wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc",
-				(Il2CppSystem.String)Photon.RandomNumberString(4),
-				new Il2CppSystem.Int32
-				{
-				   m_value = new System.Random().Next(0,5)
-				}.BoxIl2CppObject()
-				});
-				InfPortal.SetActive(false);
 				yield return new WaitForSeconds(4);
 			}
 			yield break;
