@@ -81,10 +81,6 @@ namespace WengaPort.Modules.Reupload
 
         private static string VrcaStorePath = Path.Combine(AssetBundlePath, "VrcaStore");
 
-        private static string UBPUPProgram = "UBPU.exe";
-
-        private static string UBUPPath = Path.Combine(AssetBundlePath, UBPUPProgram);
-
         private static string ReuploaderModDataPath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "ReuploaderModData");
 
         private static string NameTxtFile = "name.txt";
@@ -498,6 +494,7 @@ namespace WengaPort.Modules.Reupload
                                         {
                                             ApiVersion = "4";
                                         }
+                                        string_8 = apiAvatar_0.name;
                                         string_20 = "Avatar - " + string_8 + " - Image - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
                                         string_19 = "Avatar - " + string_8 + " - Asset bundle - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
                                         MelonLogger.Log("AvatarNames generated!");
@@ -956,12 +953,15 @@ namespace WengaPort.Modules.Reupload
                 if (File.Exists(newpath))
                 {
                     File.Delete(downloadedpath);
+                    Process.Start($"{AssetBundlePath}\\UBPU.exe", newpath.ToString());
+                    MelonLogger.Log("UBPU 1 done");
+
                     //UBPU.Program.Main(new string[] { newpath });
                     ReuploadFilePath = newpath;
 
                     MelonLogger.Log("Decompressing assetbundle..");
                     
-                    await Task.Delay(1000);
+                    await Task.Delay(200000);
                     MelonLogger.Log("Finished decompressing!");
                     ReuploadFilePath = newpath;
                     
@@ -986,12 +986,18 @@ namespace WengaPort.Modules.Reupload
                 MelonLogger.Log("Compressing assetbundle..");
                 string directoryName = Path.GetDirectoryName(Application.dataPath);
                 Directory.SetCurrentDirectory(AssetBundlePath);
+                Process.Start("UBPU.exe", new string[2]
+                {
+                    text,
+                    "lz4hc"
+                }.ToString());
+                MelonLogger.Log("UBPU 2 done");
                 //UBPU.Program.Main(new string[2]
                 //{
                 //    text,
                 //    "lz4hc"
                 //});
-                await Task.Delay(1000);
+                await Task.Delay(200000);
                 Directory.SetCurrentDirectory(directoryName);
                 MelonLogger.Log("Finished compressing!");
                 ReuploadFilePath = GetLZ4HCFile();
@@ -1056,9 +1062,9 @@ namespace WengaPort.Modules.Reupload
             return result;
         }
 
-        object RunUBFU(object obj, object[] parameters)
+        static object RunUBFU(object obj, object[] parameters)
         {
-            return System.Reflection.MethodBase.GetCurrentMethod().Invoke(obj, parameters);
+            return MethodBase.GetCurrentMethod().Invoke(obj, parameters);
         }
     }
 }
