@@ -28,8 +28,6 @@ namespace WengaPort.Modules.Reupload
 
         public static  Il2CppSystem.Collections.Generic.List<MonoBehaviour> AntiGcList;
 
-        public static bool isPrivate = true;
-
         public static volatile bool ActionsBool;
 
         public static  System.Collections.Generic.List<Action> Actions = new System.Collections.Generic.List<Action>(10);
@@ -132,27 +130,13 @@ namespace WengaPort.Modules.Reupload
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string string_21, string string_22);
-
-        private void FocusConsole()
-        {
-            SetForegroundWindow(GetConsoleWindow());
-        }
-
-        private void ForceConsolefocus()
-        {
-            IntPtr intPtr = FindWindow(null, "VRChat");
-            if (intPtr != IntPtr.Zero)
-            {
-                SetForegroundWindow(intPtr);
-            }
-        }
         
         public void Start()
         {
             if (Directory.Exists(AssetBundlePath))
 	        {
-		Directory.EnumerateDirectories(AssetBundlePath).ToList().ForEach(delegate(string string_0)
-		{
+		        Directory.EnumerateDirectories(AssetBundlePath).ToList().ForEach(delegate(string string_0)
+		    {
 			try
 			{
 				if (string_0.EndsWith("_dump"))
@@ -160,37 +144,31 @@ namespace WengaPort.Modules.Reupload
 					Directory.Delete(string_0, recursive: true);
 				}
 			}
-			catch (Exception)
-			{
-			}
-		});
-		Directory.EnumerateFiles(AssetBundlePath).ToList().ForEach(delegate(string string_0)
-		{
+			catch {}
+		    });
+		    Directory.EnumerateFiles(AssetBundlePath).ToList().ForEach(delegate(string string_0)
+		    {
+			    try
+			    {
+				    File.Delete(string_0);
+			    }
+			    catch { }
+		    });
+		    Directory.EnumerateFiles(VrcaStorePath).ToList().ForEach(delegate(string string_0)
+		    {
 			try
 			{
 				File.Delete(string_0);
 			}
-			catch (Exception)
-			{
-			}
-		});
-		Directory.EnumerateFiles(VrcaStorePath).ToList().ForEach(delegate(string string_0)
-		{
-			try
-			{
-				File.Delete(string_0);
-			}
-			catch (Exception)
-			{
-			}
-		});
-	}
-	else
-	{
-		Directory.CreateDirectory(AssetBundlePath);
-		Directory.CreateDirectory(VrcaStorePath);
-	}
-}
+			catch { }
+		    });
+	        }
+	        else
+	        {
+		        Directory.CreateDirectory(AssetBundlePath);
+		        Directory.CreateDirectory(VrcaStorePath);
+	        }
+        }
         public void Update()
         {
             if (ActionsBool)
@@ -207,33 +185,6 @@ namespace WengaPort.Modules.Reupload
                     item();
                 }
                 list_2.Clear();
-            }
-            if (!Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift))
-            {
-                if (Input.GetKeyDown(KeyCode.Alpha0))
-                {
-                    ReuploadSelectedAvatar();
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha9))
-                {
-                    FocusConsole();
-                    MelonLogger.Log("Input avatarId:");
-                    string string_ = Console.ReadLine();
-                    ForceConsolefocus();
-                    ReuploadAvatar(string_);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha8))
-                {
-                    ReuploadWorld(RoomManager.field_Internal_Static_ApiWorld_0.id);
-                }
-                if (Input.GetKeyDown(KeyCode.Alpha7))
-                {
-                    FocusConsole();
-                    MelonLogger.Log("Input worldId:");
-                    string string_2 = Console.ReadLine();
-                    ForceConsolefocus();
-                    ReuploadWorld(string_2);
-                }
             }
         }
 
@@ -270,181 +221,6 @@ namespace WengaPort.Modules.Reupload
                 {
                     MelonLogger.LogError("Couldn't fetch APIWorld");
                 }
-            }
-        }
-
-        private void GetApiAvatar()
-        {
-            VRCUiManager vRCUiManager = VRCUiManager.prop_VRCUiManager_0;
-            if (!vRCUiManager)
-            {
-                return;
-            }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/UserInfo").gameObject;
-            if (!gameObject)
-            {
-                return;
-            }
-            PageUserInfo component = gameObject.GetComponent<PageUserInfo>();
-            if (!component)
-            {
-                return;
-            }
-            APIUser apiuser_0 = component.user;
-            if (apiuser_0 == null)
-            {
-                return;
-            }
-            player_0 = PlayerManager.prop_PlayerManager_0.prop_ArrayOf_Player_0.ToList().FirstOrDefault((Player player_0) => (player_0.prop_APIUser_0 != null && player_0.prop_APIUser_0.id.Equals(apiuser_0.id)) ? true : false);
-            if (!player_0)
-            {
-                MelonLogger.LogError("Couldn't fetch Player");
-                return;
-            }
-            apiuser_0 = player_0.prop_APIUser_0;
-            if (apiuser_0 != null)
-            {
-                vrcplayer_0 = player_0.prop_VRCPlayer_0;
-                if (!vrcplayer_0)
-                {
-                    MelonLogger.LogError("Couldn't fetch VRCPlayer");
-                    return;
-                }
-                vrcavatarManager_0 = vrcplayer_0.prop_VRCAvatarManager_0;
-                if (!vrcavatarManager_0)
-                {
-                    MelonLogger.LogError("Couldn't fetch AvatarManager");
-                    return;
-                }
-                apiAvatar_0 = vrcavatarManager_0.prop_ApiAvatar_0;
-                if (apiAvatar_0 != null)
-                {
-                    ReuploadAvatar(apiAvatar_0.id);
-                }
-                else
-                {
-                    MelonLogger.LogError("Couldn't fetch ApiAvatar");
-                }
-            }
-            else
-            {
-                MelonLogger.LogError("Couldn't fetch APIUser");
-            }
-        }
-
-        public static void ReuploadSelectedAvatar()
-        {
-            player_0 = QuickMenu.prop_QuickMenu_0.field_Private_Player_0;
-            if (!player_0)
-            {
-                player_0 = Player.prop_Player_0;
-                if (!player_0)
-                {
-                    MelonLogger.LogError("Couldn't fetch player");
-                    return;
-                }
-            }
-            apiuser_0 = player_0.prop_APIUser_0;
-            if (apiuser_0 == null)
-            {
-                MelonLogger.LogError("Couldn't fetch APIUser");
-                return;
-            }
-            vrcplayer_0 = player_0.prop_VRCPlayer_0;
-            if (!vrcplayer_0)
-            {
-                MelonLogger.LogError("Couldn't fetch VRCPlayer");
-                return;
-            }
-            vrcavatarManager_0 = vrcplayer_0.prop_VRCAvatarManager_0;
-            if (!vrcavatarManager_0)
-            {
-                MelonLogger.LogError("Couldn't fetch AvatarManager");
-                return;
-            }
-            apiAvatar_0 = vrcavatarManager_0.prop_ApiAvatar_0;
-            if (apiAvatar_0 != null)
-            {
-                ReuploadAvatar(apiAvatar_0.id);
-            }
-            else
-            {
-                MelonLogger.LogError("Couldn't fetch ApiAvatar");
-            }
-        }
-
-        private void ChangeAvatarImage()
-        {
-            VRCUiManager vRCUiManager = VRCUiManager.prop_VRCUiManager_0;
-            if (!vRCUiManager)
-            {
-                return;
-            }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/Avatar").gameObject;
-            if (!gameObject)
-            {
-                return;
-            }
-            PageAvatar component = gameObject.GetComponent<PageAvatar>();
-            if (!component)
-            {
-                return;
-            }
-            SimpleAvatarPedestal avatar = component.avatar;
-            if (!avatar)
-            {
-                return;
-            }
-            ApiAvatar apiAvatar_0 = avatar.field_Internal_ApiAvatar_0;
-            if (apiAvatar_0 == null || apiAvatar_0.authorId != APIUser.CurrentUser.id)
-            {
-                return;
-            }
-            CursorLockMode lockState = Cursor.lockState;
-            bool visible = Cursor.visible;
-            MelonLogger.Log("Select new image:");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-            string text = OpenFileWindows.OpenfileDialog();
-            if (!string.IsNullOrEmpty(text))
-            {
-                Cursor.lockState = lockState;
-                Cursor.visible = visible;
-                MelonLogger.Log(text);
-                string name = apiAvatar_0.name;
-                string text2 = apiAvatar_0.unityVersion.ToLower();
-                string text3 = apiAvatar_0.platform.ToLower();
-                string text4 = ApiWorld.VERSION.ApiVersion.ToString().ToLower();
-                if (string.IsNullOrEmpty(text4))
-                {
-                    text4 = "4";
-                }
-                string text5 = "Avatar - " + name + " - Image - " + text2 + "_" + text4 + "_" + text3 + "_Release";
-                string value = ApiFile.ParseFileIdFromFileAPIUrl(apiAvatar_0.imageUrl);
-                if (string.IsNullOrEmpty(value))
-                {
-                    return;
-                }
-                ReuploaderComponent.smethod_0(text, value, text5, delegate (ApiFile apiFile_0, string string_0)
-                {
-                    apiAvatar_0.imageUrl = apiFile_0.GetFileURL();
-                    apiAvatar_0.Save((Action<ApiContainer>)delegate
-                    {
-                        MelonLogger.Log("Successfully changed avatar image");
-                    }, (Action<ApiContainer>)delegate
-                    {
-                        MelonLogger.LogError("Couldn't change avatar image (POST)");
-                    });
-                }, delegate (ApiFile apiFile_0, string string_0)
-                {
-                    MelonLogger.LogError("Couldn't change avatar image (UPLOAD), " + string_0);
-                }, delegate
-                {
-                }, (ApiFile apiFile_0) => false);
-            }
-            else
-            {
-                MelonLogger.LogError("Couldn't open filedialog or path was null");
             }
         }
         
@@ -584,7 +360,7 @@ namespace WengaPort.Modules.Reupload
                     imageUrl = apiFile_1.GetFileURL(),
                     assetUrl = apiFile_0.GetFileURL(),
                     description = apiAvatar_0.description,
-                    releaseStatus = (isPrivate ? "private" : "public")
+                    releaseStatus = "private"
                 };
                 apiAvatar_1.Post((Action<ApiContainer>)OnApiAvatarPostSuccess, (Action<ApiContainer>)OnApiAvatarPostFailure);
             });
@@ -753,7 +529,7 @@ namespace WengaPort.Modules.Reupload
                     imageUrl = apiFile_1.GetFileURL(),
                     assetUrl = apiFile_0.GetFileURL(),
                     description = apiWorld_1.description,
-                    releaseStatus = (isPrivate ? "private" : "public")
+                    releaseStatus = "private"
                 };
                 apiWorld_0.Post((Action<ApiContainer>)OnApiWorldPostSuccess, (Action<ApiContainer>)OnApiWorldPostFailure);
             });
@@ -787,9 +563,7 @@ namespace WengaPort.Modules.Reupload
                     {
                         File.Delete(item);
                     }
-                    catch (Exception)
-                    {
-                    }
+                    catch { }
                 }
             }
             foreach (string item2 in Directory.EnumerateDirectories(AssetBundlePath))
@@ -821,8 +595,6 @@ namespace WengaPort.Modules.Reupload
         {
             return "wrld_" + Guid.NewGuid().ToString();
         }
-
-
 
         private static int Dunnowtfisdis(byte[] byte_0, byte[] byte_1)
         {
@@ -943,7 +715,6 @@ namespace WengaPort.Modules.Reupload
             return enumerable.ElementAt(0);
         }
 
-
         private static async Task GenerateAssetBundle(string downloadedpath)
         {
             if (File.Exists(downloadedpath))
@@ -953,7 +724,11 @@ namespace WengaPort.Modules.Reupload
                 if (File.Exists(newpath))
                 {
                     File.Delete(downloadedpath);
-                    Process.Start($"{AssetBundlePath}\\UBPU.exe", newpath.ToString());
+                    Process p = new Process();
+                    p.StartInfo.FileName = $"{AssetBundlePath}\\UBPU.exe";
+                    p.StartInfo.Arguments = newpath;
+                    p.Start();
+                    p.WaitForExit();
                     MelonLogger.Log("UBPU 1 done");
 
                     //UBPU.Program.Main(new string[] { newpath });
@@ -961,7 +736,7 @@ namespace WengaPort.Modules.Reupload
 
                     MelonLogger.Log("Decompressing assetbundle..");
                     
-                    await Task.Delay(200000);
+                    await Task.Delay(10000);
                     MelonLogger.Log("Finished decompressing!");
                     ReuploadFilePath = newpath;
                     
@@ -972,7 +747,6 @@ namespace WengaPort.Modules.Reupload
                 }
             }
         }
-
 
         private static async Task<bool> CompressAssetBundle()
         {
@@ -986,18 +760,19 @@ namespace WengaPort.Modules.Reupload
                 MelonLogger.Log("Compressing assetbundle..");
                 string directoryName = Path.GetDirectoryName(Application.dataPath);
                 Directory.SetCurrentDirectory(AssetBundlePath);
-                Process.Start("UBPU.exe", new string[2]
-                {
-                    text,
-                    "lz4hc"
-                }.ToString());
+                Process p = new Process();
+                p.StartInfo.FileName = "UBPU.exe";
+                p.StartInfo.Arguments = text + " lz4hc";
+                p.Start();
+                p.WaitForExit();
+
                 MelonLogger.Log("UBPU 2 done");
                 //UBPU.Program.Main(new string[2]
                 //{
                 //    text,
                 //    "lz4hc"
                 //});
-                await Task.Delay(200000);
+                await Task.Delay(10000);
                 Directory.SetCurrentDirectory(directoryName);
                 MelonLogger.Log("Finished compressing!");
                 ReuploadFilePath = GetLZ4HCFile();

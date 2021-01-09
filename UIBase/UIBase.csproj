@@ -522,8 +522,5 @@
     <Compile Include="Wrappers\GeneralWrappers.cs" />
     <Compile Include="Wrappers\PlayerWrappers.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="UBPU.exe" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

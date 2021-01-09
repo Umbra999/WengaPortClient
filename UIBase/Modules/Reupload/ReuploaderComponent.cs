@@ -77,14 +77,6 @@ namespace WengaPort.Modules.Reupload
             }
         }
 
-        public bool Boolean_0
-        {
-            get
-            {
-                return true;
-            }
-        }
-
         public ReuploaderComponent(System.IntPtr intptr_1)
             : base(intptr_1)
         {
@@ -92,8 +84,7 @@ namespace WengaPort.Modules.Reupload
             AntiGcList.Add(this);
         }
 
-        public ReuploaderComponent(System.Delegate delegate_1, System.IntPtr intptr_1)
-            : base(ClassInjector.DerivedConstructorPointer<ReuploaderComponent>())
+        public ReuploaderComponent(System.Delegate delegate_1, System.IntPtr intptr_1) : base(ClassInjector.DerivedConstructorPointer<ReuploaderComponent>())
         {
             ClassInjector.DerivedConstructorBody(this);
             ReferencedDelegate = delegate_1;
@@ -188,7 +179,7 @@ namespace WengaPort.Modules.Reupload
                     yield break;
                 }
             }
-            ReuploaderComponent.bool_0 = remoteConfig_0.GetBool("sdkEnableDeltaCompression");
+            bool_0 = remoteConfig_0.GetBool("sdkEnableDeltaCompression");
             smethod_6(gdelegate2_0, null, "Checking file...");
             string whyNot;
             if (string.IsNullOrEmpty(string_0))
@@ -764,14 +755,14 @@ namespace WengaPort.Modules.Reupload
                                             while (apiFile_2.HasQueuedOperation(flag2))
                                             {
                                                 smethod_6(gdelegate2_0, apiFile_2, "Processing upload...", "Checking status in " + Mathf.CeilToInt(num) + " seconds");
-                                                while ((double)Time.realtimeSinceStartup - num4 < (double)num)
+                                                while (Time.realtimeSinceStartup - num4 < num)
                                                 {
                                                     if (smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
                                                     {
                                                         smethod_8(apiFile_2.id);
                                                         yield break;
                                                     }
-                                                    if ((double)Time.realtimeSinceStartup - num3 > (double)num2)
+                                                    if (Time.realtimeSinceStartup - num3 > num2)
                                                     {
                                                         smethod_3(apiFile_2, flag2);
                                                         smethod_5(gdelegate1_0, apiFile_2, "Timed out waiting for upload processing to complete.");
@@ -1737,10 +1728,7 @@ namespace WengaPort.Modules.Reupload
                             }
                             if (!string.IsNullOrEmpty(string_2))
                             {
-                                if (action_1 != null)
-                                {
-                                    action_1(string_2);
-                                }
+                                action_1?.Invoke(string_2);
                                 if (!bool_1)
                                 {
                                     yield break;
@@ -1758,16 +1746,10 @@ namespace WengaPort.Modules.Reupload
                     action_0?.Invoke(apiFile_0);
                     yield break;
                 }
-                if (action_1 != null)
-                {
-                    action_1("File descriptor is null ('" + type_0.ToString() + "')");
-                }
+                action_1?.Invoke("File descriptor is null ('" + type_0.ToString() + "')");
                 yield break;
             }
-            if (action_1 != null)
-            {
-                action_1("ApiFile is null");
-            }
+            action_1?.Invoke("ApiFile is null");
         }
 
         private IEnumerator method_10(ApiFile apiFile_0, ApiFile.Version.FileDescriptor.Type type_0, string string_0, string string_1, long long_0, System.Action<ApiFile> action_0, System.Action<string> action_1, System.Action<long, long> action_2, GDelegate3 gdelegate3_0)

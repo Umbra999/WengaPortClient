@@ -70,7 +70,7 @@ namespace WengaPort.Buttons
                 Networking.Instantiate(VrcBroadcastType.Local, SelectedPrefab.name, Utils.CurrentUser.transform.position + Utils.CurrentUser.transform.forward * 2f, Utils.CurrentUser.transform.rotation);
             }, "Instatiate Prefab at yourself Local");
 
-            new QMSingleButton(Options, 3, 0, "Instatiate\nMax-ValuenGlobal", delegate
+            new QMSingleButton(Options, 3, 0, "Instatiate\nMax-Value\nGlobal", delegate
             {
                 GameObject Item = Networking.Instantiate(VrcBroadcastType.Always, SelectedPrefab.name, new Vector3(int.MaxValue, int.MaxValue, int.MaxValue), Utils.CurrentUser.transform.rotation);
                 Item.SetActive(false);

@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using UnityEngine;
 using WengaPort.Api;
 using WengaPort.Modules;
+using WengaPort.Wrappers;
 
 namespace WengaPort.Buttons
 {
@@ -81,8 +83,13 @@ namespace WengaPort.Buttons
 
             new QMSingleButton(ThisMenu, 3, 1, "Reupload \nAvatar", () =>
             {
-                Modules.Reupload.ReuploaderButtons.ReuploadSelectedAvatar();
+                Modules.Reupload.ReuploaderButtons.ReuploadAvatar(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar().id);
             }, "Reupload the Player's Avatar");
+
+            new QMSingleButton(ThisMenu, 4, 1, "Copy \nAvatarID", () =>
+            {
+                Clipboard.SetText(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar().id);
+            }, "Copy the Player's AvatarID to Clipboard");
         }
     }
 }

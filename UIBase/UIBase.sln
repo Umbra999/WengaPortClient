@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.1231
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UIBase", "UIBase.csproj", "{788BC472-59F7-46F6-B760-65C18BA74389}"
 EndProject
@@ -17,6 +17,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {EA6E3B39-F664-4CA1-B5BF-9AF735E4B57B}
+		SolutionGuid = {56F49887-9F37-41E0-8A6A-564DD63F1F64}
 	EndGlobalSection
 EndGlobal
