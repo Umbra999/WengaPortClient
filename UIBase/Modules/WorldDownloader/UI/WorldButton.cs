@@ -17,7 +17,6 @@ namespace WengaPort.Modules
 
         public static PageWorldInfo worldInfo { get; set; }
 
-
         private const string PATH_TO_GAMEOBJECT_TO_CLONE = "UserInterface/MenuContent/Screens/WorldInfo/ReportButton";
         private const string PATH_TO_CLONE_PARENT = "UserInterface/MenuContent/Screens/WorldInfo";
         private const string PATH_TO_WORLDINFO = "UserInterface/MenuContent/Screens/WorldInfo";

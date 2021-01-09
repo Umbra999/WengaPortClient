@@ -18,6 +18,7 @@ using VRC;
 using VRC.Core;
 using VRC.Networking;
 using VRC.SDKBase;
+using VRC.UI;
 using WengaPort.Buttons;
 using WengaPort.ConsoleUtils;
 using WengaPort.FoldersManager;
@@ -56,6 +57,9 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(), prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
                 MethodInfo SteamPatch = typeof(PhotonPeer).Assembly.GetType("ExitGames.Client.Photon.EnetPeer").GetMethod("EnqueueOperation", (BindingFlags)(-1));
                 Instance.Patch(SteamPatch, GetPatch("EnqueueOperationPatched"), null, null);
+                Instance.Patch(typeof(NetworkManager).GetMethod("OnJoinedRoom"), GetPatch("OnJoinedRoom"), null);
+                Instance.Patch(typeof(NetworkManager).GetMethod("OnLeftRoom"), GetPatch("OnLeftRoom"), null);
+                Instance.Patch(typeof(PageWorldInfo).GetMethod("Method_Public_Void_ApiWorld_ApiWorldInstance_Boolean_Boolean_0"), GetPatch("SetupWorldPage"), null);
                 Logger.WengaLogger("[Patches] Trigger");
                 Logger.WengaLogger("[Patches] PingSpoof");
                 Logger.WengaLogger("[Patches] Events");
@@ -65,6 +69,7 @@ namespace WengaPort.Extensions
                 Logger.WengaLogger("[Patches] FrameSpoof");
                 Logger.WengaLogger("[Patches] Udon");
                 Logger.WengaLogger("[Patches] Safety");
+                Logger.WengaLogger("[Patches] Network Hooks");
             }
             catch (System.Exception arg)
             {
@@ -101,6 +106,11 @@ namespace WengaPort.Extensions
                 return false;
             }
             return true;
+        }
+
+        private static void SetupWorldPage(ref ApiWorld __0)
+        {
+            WorldButton.UpdateText(__0);
         }
 
         private static bool EnterPortalPrefix(PortalTrigger __instance, MethodInfo __originalMethod)
@@ -220,6 +230,23 @@ namespace WengaPort.Extensions
             }
         }
 
+        private static void OnJoinedRoom()
+        {
+            MelonCoroutines.Start(CacheManager.UpdateDirectoriesBackground());
+            if (LoginDelay)
+            {
+                LoginDelay = false;
+                QuestSpoof = false;
+                ExploitMenu.ButtonToggles();
+                Api.ApiExtension.Start();
+            }
+        }
+
+        private static void OnLeftRoom()
+        {
+            WorldDownloadManager.CancelDownload();
+        }
+
         private static void OnAvatarInstantiate(ref GameObject __0, ref VRCAvatarManager __instance)
         {
             try
@@ -309,17 +336,9 @@ namespace WengaPort.Extensions
                 {
                     PlayerList.DynBoneAdder(__0);
                 }
-                if (LoginDelay)
-                {
-                    LoginDelay = false;
-                    QuestSpoof = false;
-                    ExploitMenu.ButtonToggles();
-                    Api.ApiExtension.Start();
-                }
             }
             catch
-            {
-            }
+            {}
         }
 
         private static bool RequestPatch(ref string __0, ref Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> __2)

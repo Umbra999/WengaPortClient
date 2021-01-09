@@ -515,7 +515,6 @@
     <Compile Include="Modules\WorldDownloader\Constants.cs" />
     <Compile Include="Modules\WorldDownloader\DownloadManager\WorldDownloadManager.cs" />
     <Compile Include="Modules\WorldDownloader\ExtensionMethods.cs" />
-    <Compile Include="Modules\WorldDownloader\Patches.cs" />
     <Compile Include="Modules\WorldDownloader\UI\WorldButton.cs" />
     <Compile Include="Modules\WorldDownloader\UI\WorldDownloadStatus.cs" />
     <Compile Include="Modules\WorldDownloader\Utilities.cs" />

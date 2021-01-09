@@ -169,20 +169,6 @@ namespace WengaPort.Modules
             }
         }
 
-        private static Color? GetColourFromHTMLCode(string colourCode)
-        {
-            Color32 colourTemp;
-            if (ColorUtility.DoTryParseHtmlColor(colourCode.ToUpper().Trim(), out colourTemp))
-            {
-                return colourTemp;
-            }
-            else
-            {
-
-            }
-            return null;
-        }
-
         private static void resetNameplate(PlayerNameplate nameplate)
         {
             nameplate.uiContents.transform.localScale = new Vector3(1, 1, 1);
