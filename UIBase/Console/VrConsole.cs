@@ -38,43 +38,43 @@ namespace WengaPort.ConsoleUtils
             switch (Type)
             {
                 case LogsType.Info:
-                    Text2 = "<color=#ee00ff>[Info]:</color>  " + Text;
+                    Text2 = "<color=#ee00ff>[" + DateTime.Now.ToShortTimeString() + "] " + "[Info]:</color>  " + Text;
                     break;
                 case LogsType.Voice:
-                    Text2 = "<color=#00ffea>[Voice]:</color>  " + Text;
+                    Text2 = "<color=#00ffea>[" + DateTime.Now.ToShortTimeString() + "] " + "[Voice]:</color>  " + Text;
                     break;
                 case LogsType.Avatar:
-                    Text2 = "<color=#4800ff>[Avatar]:</color>  " + Text;
+                    Text2 = "<color=#4800ff>[" + DateTime.Now.ToShortTimeString() + "] " + "[Avatar]:</color>  " + Text;
                     break;
                 case LogsType.Block:
-                    Text2 = "<color=#ad0000>[Block]:</color>  " + Text;
+                    Text2 = "<color=#ad0000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Block]:</color>  " + Text;
                     break;
                 case LogsType.Join:
-                    Text2 = "<color=#00ff04>[+]:</color>  " + Text;
+                    Text2 = "<color=#00ff04>[" + DateTime.Now.ToShortTimeString() + "] " + "[+]:</color>  " + Text;
                     break;
                 case LogsType.Left:
-                    Text2 = "<color=#ff1a1a>[-]:</color>  " + Text;
+                    Text2 = "<color=#ff1a1a>[" + DateTime.Now.ToShortTimeString() + "] " + "[-]:</color>  " + Text;
                     break;
                 case LogsType.Portal:
-                    Text2 = "<color=#030b82>[Portal]:</color>  " + Text;
+                    Text2 = "<color=#030b82>[" + DateTime.Now.ToShortTimeString() + "] " + "[Portal]:</color>  " + Text;
                     break;
                 case LogsType.Warn:
-                    Text2 = "<color=#ffd900>[Warn]:</color>  " + Text;
+                    Text2 = "<color=#ffd900>[" + DateTime.Now.ToShortTimeString() + "] " + "[Warn]:</color>  " + Text;
                     break;
                 case LogsType.Kick:
-                    Text2 = "<color=#ff0000>[Kick]:</color>  " + Text;
+                    Text2 = "<color=#ff0000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Kick]:</color>  " + Text;
                     break;
                 case LogsType.Votekick:
-                    Text2 = "<color=#ff0000>[Votekick]:</color>  " + Text;
+                    Text2 = "<color=#ff0000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Votekick]:</color>  " + Text;
                     break;
                 case LogsType.Logout:
-                    Text2 = "<color=#4800ff>[Logout]:</color>  " + Text;
+                    Text2 = "<color=#4800ff>[" + DateTime.Now.ToShortTimeString() + "] " + "[Logout]:</color>  " + Text;
                     break;
                 case LogsType.Ban:
-                    Text2 = "<color=#c20000>[Ban]:</color>  " + Text;
+                    Text2 = "<color=#c20000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Ban]:</color>  " + Text;
                     break;
                 case LogsType.Friend:
-                    Text2 = "<color=#ccff00>[Friend]:</color>  " + Text;
+                    Text2 = "<color=#ccff00>[" + DateTime.Now.ToShortTimeString() + "] " + "[Friend]:</color>  " + Text;
                     break;
                 case LogsType.Clear:
                     Text2 = "";
@@ -82,10 +82,10 @@ namespace WengaPort.ConsoleUtils
                     ConsoleMenu.QMInfo.SetText("");
                     break;
                 case LogsType.World:
-                    Text2 = "<color=#db5400>[World]:</color>  " + Text;
+                    Text2 = "<color=#db5400>[" + DateTime.Now.ToShortTimeString() + "] " + "[World]:</color>  " + Text;
                     break;
                 case LogsType.Protection:
-                    Text2 = "<color=#eb0000>[Protection]:</color>  " + Text;
+                    Text2 = "<color=#eb0000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Protection]:</color>  " + Text;
                     break;
 
             }

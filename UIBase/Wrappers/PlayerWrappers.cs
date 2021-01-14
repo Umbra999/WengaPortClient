@@ -87,9 +87,5 @@ namespace WengaPort.Wrappers
         {
             return player.field_Private_UInt64_0; 
         }
-
-		//public static ObjectPublicPlObInBoStHaStBoObInUnique GetPhotonPlayer(this Player player) { return player.prop_ObjectPublicPlObInBoStHaStBoObInUnique_0; }
-
-  //      public static Hashtable GetHashtable(this ObjectPublicPlObInBoStHaStBoObInUnique photonPlayer) { return photonPlayer.prop_Hashtable_0; }
     }
 }
