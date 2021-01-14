@@ -10,6 +10,7 @@ using WengaPort.ConsoleUtils;
 using System.Threading;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using WengaPort.Wrappers;
 
 namespace WengaPort.Api
 {
@@ -153,9 +154,7 @@ namespace WengaPort.Api
 				}
 				
 			}
-            catch
-            {  
-            }
+            catch {  }
 		}
 	}
 }

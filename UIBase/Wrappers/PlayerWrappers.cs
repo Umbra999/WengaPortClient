@@ -25,8 +25,6 @@ namespace WengaPort.Wrappers
 
         public static VRCPlayer GetVRCPlayer(this Player player) { return player.field_Internal_VRCPlayer_0; }
 
-        public static VRCPlayerApi GetVRCPlayerApi(this Player player) { return player.prop_VRCPlayerApi_0; }
-
         public static VRCAvatarManager GetVRCAvatarManager(this Player player) { return player.field_Internal_VRCPlayer_0.prop_VRCAvatarManager_0; }
 
         public static USpeaker GetUSpeaker(this VRCPlayer player) { return player.prop_USpeaker_0; }

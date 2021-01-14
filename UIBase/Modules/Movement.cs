@@ -89,59 +89,54 @@ namespace WengaPort.Modules
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
                     }
-                    else if (Shortcut.gameObject.active == true && !NoClipToggle && !Networking.LocalPlayer.IsPlayerGrounded())
+                    else if (Shortcut.gameObject.active == true && !NoClipToggle)
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
                     }
                 }
-            }
-            catch
-            { }
-            if (Input.GetKeyDown(KeyCode.F) & Input.GetKey(KeyCode.LeftControl))
-            {
+                if (Input.GetKeyDown(KeyCode.F) & Input.GetKey(KeyCode.LeftControl))
+                {
+                    if (FlyToggle)
+                    {
+                        MainMenu.NoClipButton.setToggleState(false, false);
+                        MainMenu.FlyButton.setToggleState(false, false);
+                        FlyDisable();
+                    }
+                    else
+                    {
+                        FlyEnable();
+                        MainMenu.FlyButton.setToggleState(true, false);
+                    }
+                }
+                else if (Input.GetKeyDown(KeyCode.G) & Input.GetKey(KeyCode.LeftControl))
+                {
+                    if (NoClipToggle)
+                    {
+                        MainMenu.NoClipButton.setToggleState(false, false);
+                        MainMenu.FlyButton.setToggleState(false, false);
+                        FlyDisable();
+                        NoClipDisable();
+                    }
+                    else
+                    {
+                        NoClipEnable();
+                        FlyEnable();
+                        MainMenu.FlyButton.setToggleState(true, false);
+                        MainMenu.NoClipButton.setToggleState(true, false);
+                    }
+                }
+                if (currentPlayer == null || transform == null)
+                {
+                    currentPlayer = Utils.CurrentUser;
+                    transform = Camera.main.transform;
+                    isInVR = UnityEngine.XR.XRDevice.isPresent;
+                }
                 if (FlyToggle)
                 {
-                    MainMenu.NoClipButton.setToggleState(false, false);
-                    MainMenu.FlyButton.setToggleState(false, false);
-                    FlyDisable();
-                }
-                else
-                {
-                    FlyEnable();
-                    MainMenu.FlyButton.setToggleState(true, false);
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.G) & Input.GetKey(KeyCode.LeftControl))
-            {
-                if (NoClipToggle)
-                {
-                    MainMenu.NoClipButton.setToggleState(false, false);
-                    MainMenu.FlyButton.setToggleState(false, false);
-                    FlyDisable();
-                    NoClipDisable();
-                }
-                else
-                {
-                    NoClipEnable();
-                    FlyEnable();
-                    MainMenu.FlyButton.setToggleState(true, false);
-                    MainMenu.NoClipButton.setToggleState(true, false);
-                }
-            }
-            if (currentPlayer == null || transform == null)
-            {
-                currentPlayer = Utils.CurrentUser;
-                transform = Camera.main.transform;
-                isInVR = UnityEngine.XR.XRDevice.isPresent;
-            }
-            if (FlyToggle)
-            {
-                if (RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
-                {
-                    return;
-                }
-                try
-                {
+                    if (RoomManager.field_Internal_Static_ApiWorldInstance_0 == null)
+                    {
+                        return;
+                    }
                     if (Input.GetKeyDown((KeyCode)304))
                     {
                         FlySpeed *= 2f;
@@ -250,39 +245,33 @@ namespace WengaPort.Modules
                     }
                     Physics.gravity = Vector3.zero;
                 }
-                catch
+                else if (InfJump)
                 {
-                }
-            }
-            else if (InfJump)
-            {
-                if (Input.GetAxis("Jump") == 1)
-                {
-                    var Jump = Networking.LocalPlayer.GetVelocity();
-                    Jump.y = Networking.LocalPlayer.GetJumpImpulse();
-                    Networking.LocalPlayer.SetVelocity(Jump);
-                }
-            }
-            else if (DoubleJump)
-            {
-                try
-                {
-                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 )
+                    if (Input.GetAxis("Jump") == 1)
                     {
-                        Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
-                        velocity.y = JumpPower;
-                        Utils.CurrentUser.GetVRCPlayerApi().SetVelocity(velocity);
+                        var Jump = Networking.LocalPlayer.GetVelocity();
+                        Jump.y = Networking.LocalPlayer.GetJumpImpulse();
+                        Networking.LocalPlayer.SetVelocity(Jump);
                     }
                 }
-                catch (Exception)
+                else if (DoubleJump)
                 {
-                    throw;
+                    try
+                    {
+                        if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 )
+                        {
+                            Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
+                            velocity.y = JumpPower;
+                            Utils.CurrentUser.GetVRCPlayerApi().SetVelocity(velocity);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
                 }
-            }
 
-            if (Rotate)
-            {
-                try
+                if (Rotate)
                 {
                     if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                     {
@@ -312,18 +301,17 @@ namespace WengaPort.Modules
                     }
                     alignTrackingToPlayer?.Invoke();
                 }
-                catch { }
-            }
-
-            if (Attachment)
-            {
-                if (Input.GetKey(KeyCode.W) || RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                if (Attachment)
                 {
-                    InteractMenu.AttachmentToggle.setToggleState(false, false);
-                    Attachment = false;
-                    AttachmentManager.Reset();
+                    if (Input.GetKey(KeyCode.W) || RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                    {
+                        InteractMenu.AttachmentToggle.setToggleState(false, false);
+                        Attachment = false;
+                        AttachmentManager.Reset();
+                    }
                 }
             }
+            catch { }
         }
 
         public static float JumpPower

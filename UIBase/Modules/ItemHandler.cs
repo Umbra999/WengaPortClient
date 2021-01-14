@@ -57,7 +57,7 @@ namespace WengaPort.Modules
                         vrc_Pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
                     }
                 }
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(7f);
                 foreach (VRC.SDKBase.VRC_Pickup vrc_Pickup in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Pickup>())
                 {
                     bool flag = vrc_Pickup.GetComponent<Collider>() && !vrc_Pickup.GetComponent<VRC.SDKBase.VRC_SpecialLayer>() && !vrc_Pickup.IsHeld;
@@ -70,7 +70,7 @@ namespace WengaPort.Modules
                         vrc_Pickup.transform.position = p.transform.position;
                     }
                 }
-                yield return new WaitForSeconds(10f);
+                yield return new WaitForSeconds(7f);
             }
             yield break;
         }
@@ -162,63 +162,6 @@ namespace WengaPort.Modules
             }
         }
 
-        public static IEnumerator FallExploit()
-        {
-            foreach (VRCSDK2.VRC_Pickup pickup in World_Pickups)
-            {
-                if (pickup.IsHeld && pickup.gameObject.activeSelf)
-                {
-                    if (pickup.name.ToLower().Contains("pen") || pickup.name.ToLower().Contains("marker"))
-                    {
-                        Networking.SetOwner(Utils.CurrentUser.field_Private_VRCPlayerApi_0, pickup.gameObject);
-                        Vector3 OriginalPosition = pickup.transform.position;
-                        Quaternion OriginalRotation = pickup.transform.rotation;
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "PickedUp", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnPickup", new Il2CppSystem.Object[0]);
-                        yield return new WaitForSeconds(0.01f);
-                        pickup.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "PenDown", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "DrawStart", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnPuckupUseDown", new Il2CppSystem.Object[0]);
-                        int num;
-                        for (int i = 0; i < 30; i = num + 1)
-                        {
-                            pickup.transform.position = new Vector3(int.MinValue,int.MinValue,int.MinValue);
-                            yield return new WaitForSeconds(0.01f);
-                            pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
-                            num = i;
-                        }
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "PenUp", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnPuckupUseUp", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "DrawEnd", new Il2CppSystem.Object[0]);
-                        yield return new WaitForSeconds(0.01f);
-                        pickup.transform.position = OriginalPosition;
-                        pickup.transform.rotation = OriginalRotation;
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "Dropped", new Il2CppSystem.Object[0]);
-                        Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnDrop", new Il2CppSystem.Object[0]);
-                        OriginalPosition = default;
-                        OriginalRotation = default;
-                    }
-                }
-                if (pickup != null)
-                {
-                    TakeOwnershipIfNecessary(pickup.gameObject);
-                    new Thread(delegate ()
-                    {
-                        for (int j = 0; j < 30; j++)
-                        {
-                            pickup.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue);
-                            Thread.Sleep(10);
-                            pickup.transform.position = Utils.CurrentUser.transform.position + Utils.CurrentUser.transform.up * -10f;
-                            Thread.Sleep(10);
-                            pickup.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
-                        }
-                    }).Start();
-                }
-            }
-            yield break;
-        }
-
         public static void DropItems()
         {
             foreach (var vrc_Pickup in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
@@ -233,7 +176,7 @@ namespace WengaPort.Modules
         public static bool AutoDropItems = false;
         public static IEnumerator DrawCircle(Player Player)
         {
-            foreach (VRC.SDKBase.VRC_Pickup pickup in World_Pickups)
+            foreach (VRCSDK2.VRC_Pickup pickup in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
             {
                 if (!pickup.IsHeld && pickup.gameObject.activeSelf)
                 {
@@ -248,6 +191,7 @@ namespace WengaPort.Modules
                         float b = 1f;
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "PickedUp", new Il2CppSystem.Object[0]);
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnPickup", new Il2CppSystem.Object[0]);
+                        pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickup();
                         pickup.transform.position = new Vector3(Player.transform.position.x + a * (float)Math.Cos(alpha), Player.transform.position.y + 0.3f, Player.transform.position.z + b * (float)Math.Sin(alpha));
                         pickup.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
                         yield return new WaitForSeconds(0.01f);
@@ -259,6 +203,7 @@ namespace WengaPort.Modules
                         for (int i = 0; i < 95; i = num + 1)
                         {
                             alpha += Time.deltaTime * CircleSpeed;
+                            pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickupUseDown();
                             pickup.transform.position = new Vector3(Player.transform.position.x + a * (float)Math.Cos(alpha), Player.transform.position.y + 0.3f, Player.transform.position.z + b * (float)Math.Sin(alpha));
                             yield return new WaitForSeconds(0.01f);
                             num = i;
@@ -267,6 +212,7 @@ namespace WengaPort.Modules
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "OnPuckupUseUp", new Il2CppSystem.Object[0]);
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "Event_OnPuckupUseUp", new Il2CppSystem.Object[0]);
                         Networking.RPC(RPC.Destination.All, pickup.gameObject, "DrawEnd", new Il2CppSystem.Object[0]);
+                        pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickupUseUp();
                         yield return new WaitForSeconds(0.01f);
                         pickup.transform.position = OriginalPosition;
                         pickup.transform.rotation = OriginalRotation;
@@ -300,15 +246,187 @@ namespace WengaPort.Modules
                         gameObject.transform.Rotate(new Vector3(0f, 360 / World_ObjectSyncs.Count, 0f));
                     }
                 }
-                catch 
-                {
-                }
+                catch {}
                 UnityEngine.Object.Destroy(gameObject);
                 yield return new WaitForSeconds(0.035f);
             }
             yield break;
         }
         public static bool ItemOrbitEnabled = false;
+
+        public static List<string> PenNames = new List<string>()
+        {
+            "pen",
+            "marker",
+            "grip"
+        };
+
+        public static IEnumerator SpreadVirus()
+        {
+            List<VRCSDK2.VRC_Pickup> AllPickups = UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>().ToList();
+            if (AllPickups != null)
+            {
+                foreach (var Pickup in AllPickups)
+                {
+                    foreach (var PenName in PenNames)
+                    {
+                        if (Pickup.name.ToLower().Contains(PenName) && !Pickup.transform.parent.name.ToLower().Contains("eraser"))
+                        {
+                            TakeOwnershipIfNecessary(Pickup.gameObject);
+                            Pickup.transform.position = new Vector3(0, 0, 0);
+                            Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickup();
+                        }
+                    }
+                }
+                float a = 0f;
+                float b = 0f;
+                float y = 0f;
+                for (int i = 0; i < 2000; i++)
+                {
+                    foreach (var Pickup in AllPickups)
+                    {
+                        foreach (var PenName in PenNames)
+                        {
+                            if (Pickup.name.ToLower().Contains(PenName) && !Pickup.transform.parent.name.ToLower().Contains("eraser"))
+                            {
+                                Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickupUseDown();
+                                yield return new WaitForSeconds(0.01f);
+                                float CircleSpeed = 9999;
+                                float alpha = 0f;
+                                Pickup.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                                for (int x = 0; x < 4000; x++)
+                                {
+                                    alpha += Time.deltaTime * CircleSpeed;
+                                    Pickup.transform.position = new Vector3(0 + a * (float)System.Math.Cos(alpha), 0 + 0.3f, 0 + b * (float)System.Math.Sin(alpha));
+                                }
+                                a += 0.003f;
+                                b += 0.003f;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public static IEnumerator SpreadVirus2()
+        {
+            List<VRCSDK2.VRC_Pickup> AllPickups = UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>().ToList();
+            if (AllPickups != null)
+            {
+                float a = 0f;
+                float b = 0f;
+                float y = 0.5f;
+                foreach (var Pickup in AllPickups)
+                {
+                    foreach (var PenName in PenNames)
+                    {
+                        if (Pickup.name.ToLower().Contains(PenName))
+                        {
+                            TakeOwnershipIfNecessary(Pickup.gameObject);
+                            Pickup.transform.position = new Vector3(0, 0, 0);
+                            Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickup();
+                            IEnumerator Orbit()
+                            {
+                                while (true)
+                                {
+                                    yield return new WaitForEndOfFrame();
+                                    if (Pickup != null)
+                                    {
+                                        GameObject gameObject = new GameObject();
+                                        Transform transform = gameObject.transform;
+
+                                        transform.position = new Vector3(0f, y, 0f);
+                                        gameObject.transform.Rotate(new Vector3(0f, 360f * Time.time, 0f));
+                                        Pickup.transform.position = gameObject.transform.position + gameObject.transform.forward;
+                                        gameObject.transform.Rotate(new Vector3(0f, 360 / AllPickups.Count, 0f));
+                                        UnityEngine.Object.Destroy(gameObject);
+                                        gameObject = null;
+                                        transform = null;
+                                    }
+                                    else yield break;
+                                }
+                            }
+                            MelonCoroutines.Start(Orbit());
+                        }
+                    }
+                }
+                for (int i = 0; i < 2000; i++)
+                {
+                    foreach (var Pickup in AllPickups)
+                    {
+                        foreach (var PenName in PenNames)
+                        {
+                            if (Pickup.name.ToLower().Contains(PenName))
+                            {
+                                Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickupUseDown();
+                                yield return new WaitForSeconds(0.01f);
+                                float CircleSpeed = 9999;
+                                float alpha = 9999f;
+                                Pickup.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                                for (int x = 0; x < 4000; x++)
+                                {
+                                    alpha += Time.deltaTime * CircleSpeed;
+                                    Pickup.transform.position = new Vector3(0 + a * (float)System.Math.Cos(alpha), 0 + 0.3f, 0 + b * (float)System.Math.Sin(alpha));
+                                }
+                                a += 0.003f;
+                                b += 0.003f;
+                                y += 0.001f;
+                            }
+                        }
+                    }
+                }
+                yield return new WaitForSeconds(1);
+                MelonCoroutines.Start(SpreadVirus2());
+            }
+        }
+
+        public static IEnumerator Tornado()
+        {
+            List<VRCSDK2.VRC_Pickup> AllPickups = UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>().ToList();
+            if (AllPickups != null)
+            {
+                foreach (var Pickup in AllPickups)
+                {
+                    TakeOwnershipIfNecessary(Pickup.gameObject);
+                    Pickup.transform.position = new Vector3(0, 0, 0);
+                    Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickup();
+                }
+                float a = 0f;
+                float b = 0f;
+                float y = 0.5f;
+                for (int i = 0; i < 50; i++)
+                {
+                    foreach (var Pickup in AllPickups)
+                    {
+                        foreach (var PenName in PenNames)
+                        {
+                            if (Pickup.name.ToLower().Contains(PenName))
+                            {
+                                Pickup.gameObject.GetComponent<VRC.SDKBase.VRC_Trigger>().OnPickupUseDown();
+                                yield return new WaitForSeconds(0.001f);
+                                float CircleSpeed = 20;
+                                float alpha = 0f;
+                                Pickup.transform.rotation = new Quaternion(-0.7f, 0f, 0f, 0.7f);
+                                for (int x = 0; x < 95; x++)
+                                {
+                                    alpha += Time.deltaTime * CircleSpeed;
+                                    Pickup.transform.position = new Vector3(0 + a * (float)System.Math.Cos(alpha), y, 0 + b * (float)System.Math.Sin(alpha));
+                                    yield return new WaitForSeconds(0.001f);
+                                }
+                                a += 0.03f;
+                                b += 0.03f;
+                                if (y < 5)
+                                {
+                                    Pickup.transform.position = new Vector3(0, 0.5f, 0);
+                                    y += 0.03f;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

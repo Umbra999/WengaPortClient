@@ -85,12 +85,9 @@ namespace WengaPort.Buttons
                 }
             }));
 
-            new MenuButton(MenuType.WorldInfoMenu, MenuButtonType.ReportButton, "RIP VRCW", 65f, -255f, new Action(() =>
+            new MenuButton(MenuType.WorldInfoMenu, MenuButtonType.ReportButton, "Reupload World", 65f, -255f, new Action(() =>
             {
-                var WorldScreen = GameObject.Find("Screens").transform.Find("WorldInfo");
-                var Info = WorldScreen.transform.GetComponentInChildren<PageWorldInfo>();
-                ApiWorld apiWorld = Info.field_Private_ApiWorld_0;
-                RippingHandler.DownloadWorld(apiWorld);
+                Modules.Reupload.ReuploaderButtons.ReuploadWorldAction();
             }));
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Open VRChat", 125f, -280f, new Action(() =>
@@ -115,18 +112,6 @@ namespace WengaPort.Buttons
                     }
                 }));
             }
-
-            //GameObject unblockButton = UnityEngine.Object.Instantiate(GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress/GoButton").transform, GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup/ProgressPanel").transform).gameObject;
-            //unblockButton.GetComponentInChildren<Text>().text = "Unblock Loading";
-            //unblockButton.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
-            //unblockButton.GetComponent<Button>().onClick.AddListener(DelegateSupport.ConvertDelegate<UnityAction>(new Action(delegate
-            //{
-            //    AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
-            //    if (EventSystem.current.currentSelectedGameObject == unblockButton)
-            //        EventSystem.current.SetSelectedGameObject(null);
-            //})));
-            //unblockButton.GetComponent<Transform>().localPosition = new Vector3(-2.4f, -124f, 0);
-            //GameObject.Find("UserInterface/MenuContent/Popups/LoadingPopup/ProgressPanel/Parent_Loading_Progress").transform.localPosition = new Vector3(0, 17, 0);
         }
     }
 }

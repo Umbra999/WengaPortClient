@@ -25,7 +25,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
     <DebugSymbols>false</DebugSymbols>
-    <LangVersion>7.2</LangVersion>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -486,6 +486,7 @@
     <Compile Include="Modules\CameraHandler.cs" />
     <Compile Include="Modules\ESP.cs" />
     <Compile Include="Modules\GlobalDynamicBones.cs" />
+    <Compile Include="Modules\KeyBindHandler.cs" />
     <Compile Include="Modules\LovenseRemote.cs" />
     <Compile Include="Modules\Moderations.cs" />
     <Compile Include="Modules\Movement.cs" />
@@ -501,11 +502,10 @@
     <Compile Include="Modules\Photon.cs" />
     <Compile Include="Modules\PlayerList.cs" />
     <Compile Include="Modules\PortalHandler.cs" />
+    <Compile Include="Modules\Reupload\ApiFileHelper.cs" />
     <Compile Include="Modules\Reupload\NameChanger.cs" />
-    <Compile Include="Modules\Reupload\OpenFileName.cs" />
     <Compile Include="Modules\Reupload\OpenFileWindows.cs" />
     <Compile Include="Modules\Reupload\ReuploaderButtons.cs" />
-    <Compile Include="Modules\Reupload\ReuploaderComponent.cs" />
     <Compile Include="Modules\RippingHandler.cs" />
     <Compile Include="Modules\RoomCleaner.cs" />
     <Compile Include="Modules\SelfHide.cs" />
@@ -520,6 +520,10 @@
     <Compile Include="Modules\WorldDownloader\Utilities.cs" />
     <Compile Include="Wrappers\GeneralWrappers.cs" />
     <Compile Include="Wrappers\PlayerWrappers.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UBPU.exe" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

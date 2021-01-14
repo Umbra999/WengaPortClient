@@ -1,5 +1,6 @@
 ﻿using MelonLoader;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using VRC;
@@ -333,7 +334,7 @@ namespace WengaPort.Modules
 
 		public static bool MenuRemover = false;
 		public static bool FloorRemover = false;
-		internal static IEnumerator PortalFloorRemover()
+		internal static IEnumerator PortalColliderRemover()
         {
 			for (; ; )
 			{
@@ -341,8 +342,8 @@ namespace WengaPort.Modules
                 {
 					yield break;
                 }
-				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MaxValue, int.MaxValue, int.MaxValue), Quaternion.identity);
-				InfPortal2.transform.position = Vector3.positiveInfinity;
+				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MaxValue, int.MaxValue, int.MaxValue) * 268, Quaternion.identity);
+				InfPortal2.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue) * 268;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal2, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
 					(Il2CppSystem.String)"wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc",
@@ -354,8 +355,8 @@ namespace WengaPort.Modules
 				});
 				InfPortal2.SetActive(false);
 				yield return new WaitForSeconds(4);
-				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MinValue, int.MinValue, int.MinValue), Quaternion.identity);
-				InfPortal3.transform.position = Vector3.negativeInfinity;
+				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MinValue, int.MinValue, int.MinValue) * 268, Quaternion.identity);
+				InfPortal3.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue) * 268;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal3, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
 					(Il2CppSystem.String)"wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc",

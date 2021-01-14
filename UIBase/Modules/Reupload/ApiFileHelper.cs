@@ -3,6 +3,7 @@ using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Tar;
 using librsync.net;
 using MelonLoader;
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -18,7 +19,7 @@ using VRC.Core;
 
 namespace WengaPort.Modules.Reupload
 {
-    public class ReuploaderComponent : MonoBehaviour
+    public class ApiFileHelper : MonoBehaviour
     {
         public delegate void GDelegate0(ApiFile apiFile, string message);
 
@@ -62,36 +63,32 @@ namespace WengaPort.Modules.Reupload
             new Regex("/Editor/Data/UnityExtensions/")
         };
 
-        private static ReuploaderComponent gclass0_0;
-
-        private const float float_4 = 0.75f;
-
+        private static ApiFileHelper helper;
         public static RemoteConfig remoteConfig_0;
 
-        public static ReuploaderComponent GClass0_0
+        public static ApiFileHelper apifilehelper
         {
             get
             {
                 smethod_9();
-                return gclass0_0;
+                return helper;
             }
         }
 
-        public ReuploaderComponent(System.IntPtr intptr_1)
-            : base(intptr_1)
+        public ApiFileHelper(System.IntPtr intptr_1) : base(intptr_1)
         {
             AntiGcList = new Il2CppSystem.Collections.Generic.List<MonoBehaviour>(1);
             AntiGcList.Add(this);
         }
 
-        public ReuploaderComponent(System.Delegate delegate_1, System.IntPtr intptr_1) : base(ClassInjector.DerivedConstructorPointer<ReuploaderComponent>())
+        public ApiFileHelper(System.Delegate delegate_1, System.IntPtr intptr_1) : base(ClassInjector.DerivedConstructorPointer<ApiFileHelper>())
         {
             ClassInjector.DerivedConstructorBody(this);
             ReferencedDelegate = delegate_1;
             MethodInfo = intptr_1;
         }
 
-        ~ReuploaderComponent()
+        ~ApiFileHelper()
         {
             Marshal.FreeHGlobal(MethodInfo);
             MethodInfo = Il2CppSystem.IntPtr.Zero;
@@ -100,18 +97,16 @@ namespace WengaPort.Modules.Reupload
             AntiGcList = null;
         }
 
-        public static void smethod_0(string string_0, string string_1, string string_2, GDelegate0 gdelegate0_0, GDelegate1 gdelegate1_0, GDelegate2 gdelegate2_0, GDelegate3 gdelegate3_0)
+        public static void upload(string FilePath, string record, string AssetBundle, GDelegate0 success, GDelegate1 failure, GDelegate2 filecheck, GDelegate3 cancelled)
         {
             try
             {
-                string extension = Path.GetExtension(string_0);
-                MelonLogger.Log("Uploading " + extension + "..");
+                string extension = Path.GetExtension(FilePath);
+                Extensions.Logger.WengaLogger("Extension: " + extension);
             }
-            catch (System.Exception ex)
-            {
-                MelonLogger.LogError(ex.ToString());
-            }
-            MelonCoroutines.Start(GClass0_0.method_0(string_0, string_1, string_2, gdelegate0_0, gdelegate1_0, gdelegate2_0, gdelegate3_0));
+            catch
+            { }
+            MelonCoroutines.Start(apifilehelper.Upload(FilePath, record, AssetBundle, success, failure, filecheck, cancelled));
         }
 
         public static string smethod_1(string string_0)
@@ -131,7 +126,6 @@ namespace WengaPort.Modules.Reupload
                     return "image/jpg";
 
                 default:
-                    MelonLogger.LogWarning("Unknown file extension for mime-type: " + string_0);
                     return "application/octet-stream";
 
                 case ".delta":
@@ -156,9 +150,9 @@ namespace WengaPort.Modules.Reupload
             return smethod_1(Path.GetExtension(string_0)) == "application/gzip";
         }
 
-        public IEnumerator method_0(string string_0, string string_1, string string_2, GDelegate0 gdelegate0_0, GDelegate1 gdelegate1_0, GDelegate2 gdelegate2_0, GDelegate3 gdelegate3_0)
+        public IEnumerator Upload(string Path, string record, string assetbundle, GDelegate0 success, GDelegate1 Failure, GDelegate2 filecheck, GDelegate3 Cancelled)
         {
-            VRC.Core.Logger.Log("UploadFile: filename: " + string_0 + ", file id: " + ((!string.IsNullOrEmpty(string_1)) ? string_1 : "<new>") + ", name: " + string_2, DebugLevel.All);
+            VRC.Core.Logger.Log("UploadFile: filename: " + Path + ", file id: " + ((!string.IsNullOrEmpty(record)) ? record : "<new>") + ", name: " + assetbundle, DebugLevel.All);
             if (!remoteConfig_0.IsInitialized())
             {
                 bool bool_ = false;
@@ -175,41 +169,41 @@ namespace WengaPort.Modules.Reupload
                 }
                 if (!remoteConfig_0.IsInitialized())
                 {
-                    smethod_5(gdelegate1_0, null, "Failed to fetch configuration.");
+                    smethod_5(Failure, null, "Failed to fetch configuration.");
                     yield break;
                 }
             }
             bool_0 = remoteConfig_0.GetBool("sdkEnableDeltaCompression");
-            smethod_6(gdelegate2_0, null, "Checking file...");
+            CheckFile(filecheck, null, "Checking file...");
             string whyNot;
-            if (string.IsNullOrEmpty(string_0))
+            if (string.IsNullOrEmpty(Path))
             {
-                smethod_5(gdelegate1_0, null, "Upload filename is empty!");
+                smethod_5(Failure, null, "Upload filename is empty!");
             }
-            else if (!Path.HasExtension(string_0))
+            else if (!System.IO.Path.HasExtension(Path))
             {
-                smethod_5(gdelegate1_0, null, "Upload filename must have an extension: " + string_0);
+                smethod_5(Failure, null, "Upload filename must have an extension: " + Path);
             }
-            else if (Tools.FileCanRead(string_0, out whyNot))
+            else if (Tools.FileCanRead(Path, out whyNot))
             {
-                smethod_6(gdelegate2_0, null, string.IsNullOrEmpty(string_1) ? "Creating file record..." : "Getting file record...");
+                CheckFile(filecheck, null, string.IsNullOrEmpty(record) ? "Creating file record..." : "Getting file record...");
                 bool bool_0 = true;
                 bool bool_3 = false;
                 bool bool_2 = false;
                 string string_5 = "";
-                if (string.IsNullOrEmpty(string_2))
+                if (string.IsNullOrEmpty(assetbundle))
                 {
-                    string_2 = string_0;
+                    assetbundle = Path;
                 }
-                string extension = Path.GetExtension(string_0);
+                string extension = System.IO.Path.GetExtension(Path);
                 string mimeType = smethod_1(extension);
                 ApiFile apiFile_2 = null;
-                System.Action<ApiContainer> action = delegate (ApiContainer apiContainer_0)
+                Action<ApiContainer> action = delegate (ApiContainer apiContainer_0)
                 {
                     apiFile_2 = apiContainer_0.Model.Cast<ApiFile>();
                     bool_0 = false;
                 };
-                System.Action<ApiContainer> action2 = delegate (ApiContainer apiContainer_0)
+                Action<ApiContainer> action2 = delegate (ApiContainer apiContainer_0)
                 {
                     string_5 = apiContainer_0.Error;
                     bool_0 = false;
@@ -224,17 +218,17 @@ namespace WengaPort.Modules.Reupload
                     bool_0 = true;
                     bool_2 = false;
                     string_5 = "";
-                    if (string.IsNullOrEmpty(string_1))
+                    if (string.IsNullOrEmpty(record))
                     {
-                        ApiFile.Create(string_2, mimeType, extension, action, action2);
+                        ApiFile.Create(assetbundle, mimeType, extension, action, action2);
                     }
                     else
                     {
-                        API.Fetch<ApiFile>(string_1, action, action2);
+                        API.Fetch<ApiFile>(record, action, action2);
                     }
                     while (bool_0)
                     {
-                        if (apiFile_2 != null && smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                        if (apiFile_2 != null && ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                         {
                             yield break;
                         }
@@ -244,12 +238,12 @@ namespace WengaPort.Modules.Reupload
                     {
                         if (string_5.Contains("File not found"))
                         {
-                            MelonLogger.LogError("Couldn't find file record: " + string_1 + ", creating new file record");
-                            string_1 = "";
+                            Extensions.Logger.WengaLogger("Couldn't find file record: " + record + ", creating new file record");
+                            record = "";
                             continue;
                         }
-                        string string_8 = (string.IsNullOrEmpty(string_1) ? "Failed to create file record." : "Failed to get file record.");
-                        smethod_5(gdelegate1_0, null, string_8, string_5);
+                        string string_8 = (string.IsNullOrEmpty(record) ? "Failed to create file record." : "Failed to get file record.");
+                        smethod_5(Failure, null, string_8, string_5);
                         if (!bool_2)
                         {
                             yield break;
@@ -271,19 +265,19 @@ namespace WengaPort.Modules.Reupload
                 string string_7;
                 while (true)
                 {
-                    if (apiFile_2.HasQueuedOperation(ReuploaderComponent.bool_0))
+                    if (apiFile_2.HasQueuedOperation(ApiFileHelper.bool_0))
                     {
                         bool_0 = true;
-                        apiFile_2.DeleteLatestVersion((System.Action<ApiContainer>)delegate
+                        apiFile_2.DeleteLatestVersion((Action<ApiContainer>)delegate
                         {
                             bool_0 = false;
-                        }, (System.Action<ApiContainer>)delegate
+                        }, (Action<ApiContainer>)delegate
                         {
                             bool_0 = false;
                         });
                         while (bool_0)
                         {
-                            if (apiFile_2 != null && smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                            if (apiFile_2 != null && ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                             {
                                 yield break;
                             }
@@ -295,17 +289,17 @@ namespace WengaPort.Modules.Reupload
                     smethod_3(apiFile_2, bool_1: false);
                     if (apiFile_2.IsInErrorState())
                     {
-                        MelonLogger.LogWarning("ApiFile: " + apiFile_2.id + ": server failed to process last uploaded, deleting failed version");
+                        Extensions.Logger.WengaLogger("ApiFile: " + apiFile_2.id + ": server failed to process last uploaded, deleting failed version");
                         while (true)
                         {
-                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
+                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
                             bool_0 = true;
                             string_5 = "";
                             bool_2 = false;
                             apiFile_2.DeleteLatestVersion(action, action2);
                             while (bool_0)
                             {
-                                if (!smethod_7(gdelegate3_0, gdelegate1_0, null))
+                                if (!ApiFileHelper.Cancelled(Cancelled, Failure, null))
                                 {
                                     yield return null;
                                     continue;
@@ -314,7 +308,7 @@ namespace WengaPort.Modules.Reupload
                             }
                             if (!string.IsNullOrEmpty(string_5))
                             {
-                                smethod_5(gdelegate1_0, apiFile_2, "Failed to delete previous failed version!", string_5);
+                                smethod_5(Failure, apiFile_2, "Failed to delete previous failed version!", string_5);
                                 if (!bool_2)
                                 {
                                     smethod_8(apiFile_2.id);
@@ -330,22 +324,22 @@ namespace WengaPort.Modules.Reupload
                     }
                     yield return new WaitForSecondsRealtime(0.75f);
                     smethod_3(apiFile_2, bool_1: false);
-                    if (!apiFile_2.HasQueuedOperation(ReuploaderComponent.bool_0))
+                    if (!apiFile_2.HasQueuedOperation(ApiFileHelper.bool_0))
                     {
-                        smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Optimizing file");
-                        string_6 = Tools.GetTempFileName(Path.GetExtension(string_0), out string_5, apiFile_2.id);
+                        CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Optimizing file");
+                        string_6 = Tools.GetTempFileName(System.IO.Path.GetExtension(Path), out string_5, apiFile_2.id);
                         if (!string.IsNullOrEmpty(string_6))
                         {
                             bool_3 = false;
-                            yield return MelonCoroutines.Start(method_1(string_0, string_6, delegate (GEnum0 genum0_0)
+                            yield return MelonCoroutines.Start(method_1(Path, string_6, delegate (GEnum0 genum0_0)
                             {
                                 if (genum0_0 == GEnum0.Unchanged)
                                 {
-                                    string_6 = string_0;
+                                    string_6 = Path;
                                 }
                             }, delegate (string string_4)
                             {
-                                smethod_5(gdelegate1_0, apiFile_2, "Failed to optimize file for upload.", string_4);
+                                smethod_5(Failure, apiFile_2, "Failed to optimize file for upload.", string_4);
                                 smethod_8(apiFile_2.id);
                                 bool_3 = true;
                             }));
@@ -354,14 +348,14 @@ namespace WengaPort.Modules.Reupload
                                 break;
                             }
                             smethod_3(apiFile_2, bool_1: false);
-                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Generating file hash");
+                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Generating file hash");
                             bool_0 = true;
                             string_5 = "";
-                            string text = System.Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(string_6)));
+                            string text = Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(string_6)));
                             bool_0 = false;
                             while (bool_0)
                             {
-                                if (!smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                if (!ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                 {
                                     yield return null;
                                     continue;
@@ -371,12 +365,12 @@ namespace WengaPort.Modules.Reupload
                             }
                             if (!string.IsNullOrEmpty(string_5))
                             {
-                                smethod_5(gdelegate1_0, apiFile_2, "Failed to generate MD5 hash for upload file.", string_5);
+                                smethod_5(Failure, apiFile_2, "Failed to generate MD5 hash for upload file.", string_5);
                                 smethod_8(apiFile_2.id);
                                 break;
                             }
                             smethod_3(apiFile_2, bool_1: false);
-                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Checking for changes");
+                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Checking for changes");
                             bool flag = false;
                             if (apiFile_2.HasExistingOrPendingVersion())
                             {
@@ -384,25 +378,25 @@ namespace WengaPort.Modules.Reupload
                                 {
                                     if (!apiFile_2.IsWaitingForUpload())
                                     {
-                                        smethod_4(gdelegate0_0, apiFile_2, "The file to upload is unchanged.");
+                                        smethod_4(success, apiFile_2, "The file to upload is unchanged.");
                                         smethod_8(apiFile_2.id);
                                         break;
                                     }
                                     flag = true;
-                                    MelonLogger.Log("Retrying previous upload");
+                                    Extensions.Logger.WengaLogger("Retrying previous upload");
                                 }
                                 else if (apiFile_2.IsWaitingForUpload())
                                 {
                                     do
                                     {
-                                        smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
+                                        CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
                                         bool_0 = true;
                                         bool_2 = false;
                                         string_5 = "";
                                         apiFile_2.DeleteLatestVersion(action, action2);
                                         while (bool_0)
                                         {
-                                            if (!smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                            if (!ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                             {
                                                 yield return null;
                                                 continue;
@@ -411,7 +405,7 @@ namespace WengaPort.Modules.Reupload
                                         }
                                         if (!string.IsNullOrEmpty(string_5))
                                         {
-                                            smethod_5(gdelegate1_0, apiFile_2, "Failed to delete previous incomplete version!", string_5);
+                                            smethod_5(Failure, apiFile_2, "Failed to delete previous incomplete version!", string_5);
                                             if (!bool_2)
                                             {
                                                 smethod_8(apiFile_2.id);
@@ -424,7 +418,7 @@ namespace WengaPort.Modules.Reupload
                                 }
                             }
                             smethod_3(apiFile_2, bool_1: false);
-                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Generating signature");
+                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Generating signature");
                             string tempFileName = Tools.GetTempFileName(".sig", out string_5, apiFile_2.id);
                             if (!string.IsNullOrEmpty(tempFileName))
                             {
@@ -433,7 +427,7 @@ namespace WengaPort.Modules.Reupload
                                 {
                                 }, delegate (string string_4)
                                 {
-                                    smethod_5(gdelegate1_0, apiFile_2, "Failed to generate file signature!", string_4);
+                                    smethod_5(Failure, apiFile_2, "Failed to generate file signature!", string_4);
                                     smethod_8(apiFile_2.id);
                                     bool_3 = true;
                                 }));
@@ -442,14 +436,14 @@ namespace WengaPort.Modules.Reupload
                                     break;
                                 }
                                 smethod_3(apiFile_2, bool_1: false);
-                                smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Generating signature hash");
+                                CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Generating signature hash");
                                 bool_0 = true;
                                 string_5 = "";
                                 string text2 = System.Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(tempFileName)));
                                 bool_0 = false;
                                 while (bool_0)
                                 {
-                                    if (smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                    if (ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                     {
                                         smethod_8(apiFile_2.id);
                                         yield break;
@@ -463,12 +457,12 @@ namespace WengaPort.Modules.Reupload
                                     {
                                         smethod_3(apiFile_2, bool_1: false);
                                         string_7 = null;
-                                        if (ReuploaderComponent.bool_0 && apiFile_2.HasExistingVersion())
+                                        if (ApiFileHelper.bool_0 && apiFile_2.HasExistingVersion())
                                         {
-                                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Downloading previous version signature");
+                                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Downloading previous version signature");
                                             bool_0 = true;
                                             string_5 = "";
-                                            apiFile_2.DownloadSignature((System.Action<Il2CppStructArray<byte>>)delegate (Il2CppStructArray<byte> il2CppStructArray_0)
+                                            apiFile_2.DownloadSignature((Action<Il2CppStructArray<byte>>)delegate (Il2CppStructArray<byte> il2CppStructArray_0)
                                             {
                                                 string_7 = Tools.GetTempFileName(".sig", out string_5, apiFile_2.id);
                                                 if (!string.IsNullOrEmpty(string_7))
@@ -477,7 +471,7 @@ namespace WengaPort.Modules.Reupload
                                                     {
                                                         File.WriteAllBytes(string_7, il2CppStructArray_0);
                                                     }
-                                                    catch (System.Exception ex)
+                                                    catch (Exception ex)
                                                     {
                                                         string_7 = null;
                                                         string_5 = "Failed to write signature temp file:\n" + ex.Message;
@@ -489,17 +483,17 @@ namespace WengaPort.Modules.Reupload
                                                     string_5 = "Failed to create temp file: \n" + string_5;
                                                     bool_0 = false;
                                                 }
-                                            }, (System.Action<string>)delegate (string string_4)
+                                            }, (Action<string>)delegate (string string_4)
                                             {
                                                 string_5 = string_4;
                                                 bool_0 = false;
-                                            }, (System.Action<long, long>)delegate (long long_0, long long_1)
+                                            }, (Action<long, long>)delegate (long long_0, long long_1)
                                             {
-                                                smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Downloading previous version signature", Tools.DivideSafe(long_0, long_1));
+                                                CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Downloading previous version signature", Tools.DivideSafe(long_0, long_1));
                                             });
                                             while (bool_0)
                                             {
-                                                if (!smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                                if (!ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                                 {
                                                     yield return null;
                                                     continue;
@@ -509,20 +503,20 @@ namespace WengaPort.Modules.Reupload
                                             }
                                             if (!string.IsNullOrEmpty(string_5))
                                             {
-                                                smethod_5(gdelegate1_0, apiFile_2, "Failed to download previous file version signature.", string_5);
+                                                smethod_5(Failure, apiFile_2, "Failed to download previous file version signature.", string_5);
                                                 smethod_8(apiFile_2.id);
                                                 break;
                                             }
                                         }
                                         smethod_3(apiFile_2, bool_1: false);
                                         string text3 = null;
-                                        if (ReuploaderComponent.bool_0 && !string.IsNullOrEmpty(string_7))
+                                        if (ApiFileHelper.bool_0 && !string.IsNullOrEmpty(string_7))
                                         {
-                                            smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Creating file delta");
+                                            CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Creating file delta");
                                             text3 = Tools.GetTempFileName(".delta", out string_5, apiFile_2.id);
                                             if (string.IsNullOrEmpty(text3))
                                             {
-                                                smethod_5(gdelegate1_0, apiFile_2, "Failed to create file delta for upload.", "Failed to create temp file: \n" + string_5);
+                                                smethod_5(Failure, apiFile_2, "Failed to create file delta for upload.", "Failed to create temp file: \n" + string_5);
                                                 smethod_8(apiFile_2.id);
                                                 break;
                                             }
@@ -531,7 +525,7 @@ namespace WengaPort.Modules.Reupload
                                             {
                                             }, delegate (string string_4)
                                             {
-                                                smethod_5(gdelegate1_0, apiFile_2, "Failed to create file delta for upload.", string_4);
+                                                smethod_5(Failure, apiFile_2, "Failed to create file delta for upload.", string_4);
                                                 smethod_8(apiFile_2.id);
                                                 bool_3 = true;
                                             }));
@@ -544,8 +538,8 @@ namespace WengaPort.Modules.Reupload
                                         long size3 = 0L;
                                         if (Tools.GetFileSize(string_6, out size2, out string_5) && (string.IsNullOrEmpty(text3) || Tools.GetFileSize(text3, out size3, out string_5)))
                                         {
-                                            bool flag2 = ReuploaderComponent.bool_0 && size3 > 0L && size3 < size2;
-                                            if (ReuploaderComponent.bool_0)
+                                            bool flag2 = ApiFileHelper.bool_0 && size3 > 0L && size3 < size2;
+                                            if (ApiFileHelper.bool_0)
                                             {
                                                 VRC.Core.Logger.Log("Delta size " + size3 + " (" + (float)size3 / (float)size2 + " %), full file size " + size2 + ", uploading " + (flag2 ? " DELTA" : " FULL FILE"), DebugLevel.All);
                                             }
@@ -557,14 +551,14 @@ namespace WengaPort.Modules.Reupload
                                             string text4 = "";
                                             if (flag2)
                                             {
-                                                smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Generating file delta hash");
+                                                CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Generating file delta hash");
                                                 bool_0 = true;
                                                 string_5 = "";
-                                                text4 = System.Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(text3)));
+                                                text4 = Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(text3)));
                                                 bool_0 = false;
                                                 while (bool_0)
                                                 {
-                                                    if (!smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                                    if (!ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                                     {
                                                         yield return null;
                                                         continue;
@@ -574,7 +568,7 @@ namespace WengaPort.Modules.Reupload
                                                 }
                                                 if (!string.IsNullOrEmpty(string_5))
                                                 {
-                                                    smethod_5(gdelegate1_0, apiFile_2, "Failed to generate file delta hash.", string_5);
+                                                    smethod_5(Failure, apiFile_2, "Failed to generate file delta hash.", string_5);
                                                     smethod_8(apiFile_2.id);
                                                     break;
                                                 }
@@ -586,7 +580,7 @@ namespace WengaPort.Modules.Reupload
                                                 ApiFile.Version version = apiFile_2.GetVersion(apiFile_2.GetLatestVersionNumber());
                                                 if (version == null || !(flag2 ? (size3 == version.delta.sizeInBytes && text4.CompareTo(version.delta.md5) == 0 && size == version.signature.sizeInBytes && text2.CompareTo(version.signature.md5) == 0) : (size2 == version.file.sizeInBytes && text.CompareTo(version.file.md5) == 0 && size == version.signature.sizeInBytes && text2.CompareTo(version.signature.md5) == 0)))
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
+                                                    CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Cleaning up previous version");
                                                     do
                                                     {
                                                         bool_0 = true;
@@ -595,7 +589,7 @@ namespace WengaPort.Modules.Reupload
                                                         apiFile_2.DeleteLatestVersion(action, action2);
                                                         while (bool_0)
                                                         {
-                                                            if (!smethod_7(gdelegate3_0, gdelegate1_0, null))
+                                                            if (!ApiFileHelper.Cancelled(Cancelled, Failure, null))
                                                             {
                                                                 yield return null;
                                                                 continue;
@@ -604,7 +598,7 @@ namespace WengaPort.Modules.Reupload
                                                         }
                                                         if (!string.IsNullOrEmpty(string_5))
                                                         {
-                                                            smethod_5(gdelegate1_0, apiFile_2, "Failed to delete previous incomplete version!", string_5);
+                                                            smethod_5(Failure, apiFile_2, "Failed to delete previous incomplete version!", string_5);
                                                             if (!bool_2)
                                                             {
                                                                 smethod_8(apiFile_2.id);
@@ -618,7 +612,7 @@ namespace WengaPort.Modules.Reupload
                                                 else
                                                 {
                                                     flag3 = true;
-                                                    MelonLogger.Log("Using existing version record");
+                                                    Extensions.Logger.WengaLogger("Using existing version record");
                                                 }
                                             }
                                             smethod_3(apiFile_2, flag2);
@@ -626,7 +620,7 @@ namespace WengaPort.Modules.Reupload
                                             {
                                                 do
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Creating file version record...");
+                                                    CheckFile(filecheck, apiFile_2, "Creating file version record...");
                                                     bool_0 = true;
                                                     string_5 = "";
                                                     bool_2 = false;
@@ -640,7 +634,7 @@ namespace WengaPort.Modules.Reupload
                                                     }
                                                     while (bool_0)
                                                     {
-                                                        if (smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                                        if (ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                                         {
                                                             smethod_8(apiFile_2.id);
                                                             yield break;
@@ -649,7 +643,7 @@ namespace WengaPort.Modules.Reupload
                                                     }
                                                     if (!string.IsNullOrEmpty(string_5))
                                                     {
-                                                        smethod_5(gdelegate1_0, apiFile_2, "Failed to create file version record.", string_5);
+                                                        smethod_5(Failure, apiFile_2, "Failed to create file version record.", string_5);
                                                         if (!bool_2)
                                                         {
                                                             smethod_8(apiFile_2.id);
@@ -665,7 +659,7 @@ namespace WengaPort.Modules.Reupload
                                             {
                                                 if (apiFile_2.GetLatestVersion().file.status == ApiFile.Status.Waiting)
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Uploading file...");
+                                                    CheckFile(filecheck, apiFile_2, "Uploading file...");
                                                     bool_3 = false;
                                                     yield return MelonCoroutines.Start(method_10(apiFile_2, ApiFile.Version.FileDescriptor.Type.file, string_6, text, size2, delegate (ApiFile apiFile_1)
                                                     {
@@ -673,13 +667,13 @@ namespace WengaPort.Modules.Reupload
                                                         apiFile_2 = apiFile_1;
                                                     }, delegate (string string_4)
                                                     {
-                                                        smethod_5(gdelegate1_0, apiFile_2, "Failed to upload file.", string_4);
+                                                        smethod_5(Failure, apiFile_2, "Failed to upload file.", string_4);
                                                         smethod_8(apiFile_2.id);
                                                         bool_3 = true;
                                                     }, delegate (long long_0, long long_1)
                                                     {
-                                                        smethod_6(gdelegate2_0, apiFile_2, "Uploading file...", "", Tools.DivideSafe(long_0, long_1));
-                                                    }, gdelegate3_0));
+                                                        CheckFile(filecheck, apiFile_2, "Uploading file...", "", Tools.DivideSafe(long_0, long_1));
+                                                    }, Cancelled));
                                                     if (bool_3)
                                                     {
                                                         break;
@@ -688,21 +682,21 @@ namespace WengaPort.Modules.Reupload
                                             }
                                             else if (apiFile_2.GetLatestVersion().delta.status == ApiFile.Status.Waiting)
                                             {
-                                                smethod_6(gdelegate2_0, apiFile_2, "Uploading file delta...");
+                                                CheckFile(filecheck, apiFile_2, "Uploading file delta...");
                                                 bool_3 = false;
                                                 yield return MelonCoroutines.Start(method_10(apiFile_2, ApiFile.Version.FileDescriptor.Type.delta, text3, text4, size3, delegate (ApiFile apiFile_1)
                                                 {
-                                                    MelonLogger.Log("Successfully uploaded file delta.");
+                                                    Extensions.Logger.WengaLogger("Successfully uploaded file delta.");
                                                     apiFile_2 = apiFile_1;
                                                 }, delegate (string string_4)
                                                 {
-                                                    smethod_5(gdelegate1_0, apiFile_2, "Failed to upload file delta.", string_4);
+                                                    smethod_5(Failure, apiFile_2, "Failed to upload file delta.", string_4);
                                                     smethod_8(apiFile_2.id);
                                                     bool_3 = true;
                                                 }, delegate (long long_0, long long_1)
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Uploading file delta...", "", Tools.DivideSafe(long_0, long_1));
-                                                }, gdelegate3_0));
+                                                    CheckFile(filecheck, apiFile_2, "Uploading file delta...", "", Tools.DivideSafe(long_0, long_1));
+                                                }, Cancelled));
                                                 if (bool_3)
                                                 {
                                                     break;
@@ -711,7 +705,7 @@ namespace WengaPort.Modules.Reupload
                                             smethod_3(apiFile_2, flag2);
                                             if (apiFile_2.GetLatestVersion().signature.status == ApiFile.Status.Waiting)
                                             {
-                                                smethod_6(gdelegate2_0, apiFile_2, "Uploading file signature...");
+                                                CheckFile(filecheck, apiFile_2, "Uploading file signature...");
                                                 bool_3 = false;
                                                 yield return MelonCoroutines.Start(method_10(apiFile_2, ApiFile.Version.FileDescriptor.Type.signature, tempFileName, text2, size, delegate (ApiFile apiFile_1)
                                                 {
@@ -719,34 +713,34 @@ namespace WengaPort.Modules.Reupload
                                                     apiFile_2 = apiFile_1;
                                                 }, delegate (string string_4)
                                                 {
-                                                    smethod_5(gdelegate1_0, apiFile_2, "Failed to upload file signature.", string_4);
+                                                    smethod_5(Failure, apiFile_2, "Failed to upload file signature.", string_4);
                                                     smethod_8(apiFile_2.id);
                                                     bool_3 = true;
                                                 }, delegate (long long_0, long long_1)
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Uploading file signature...", "", Tools.DivideSafe(long_0, long_1));
-                                                }, gdelegate3_0));
+                                                    CheckFile(filecheck, apiFile_2, "Uploading file signature...", "", Tools.DivideSafe(long_0, long_1));
+                                                }, Cancelled));
                                                 if (bool_3)
                                                 {
                                                     break;
                                                 }
                                             }
                                             smethod_3(apiFile_2, flag2);
-                                            smethod_6(gdelegate2_0, apiFile_2, "Validating upload...");
+                                            CheckFile(filecheck, apiFile_2, "Validating upload...");
                                             if (!(flag2 ? (apiFile_2.GetFileDescriptor(apiFile_2.GetLatestVersionNumber(), ApiFile.Version.FileDescriptor.Type.delta).status == ApiFile.Status.Complete) : (apiFile_2.GetFileDescriptor(apiFile_2.GetLatestVersionNumber(), ApiFile.Version.FileDescriptor.Type.file).status == ApiFile.Status.Complete)) || apiFile_2.GetFileDescriptor(apiFile_2.GetLatestVersionNumber(), ApiFile.Version.FileDescriptor.Type.signature).status != ApiFile.Status.Complete)
                                             {
-                                                smethod_5(gdelegate1_0, apiFile_2, "Failed to upload file.", "Record status is not 'complete'");
+                                                smethod_5(Failure, apiFile_2, "Failed to upload file.", "Record status is not 'complete'");
                                                 smethod_8(apiFile_2.id);
                                                 break;
                                             }
                                             if (!(flag2 ? (apiFile_2.GetFileDescriptor(apiFile_2.GetLatestVersionNumber(), ApiFile.Version.FileDescriptor.Type.file).status != ApiFile.Status.Waiting) : (apiFile_2.GetFileDescriptor(apiFile_2.GetLatestVersionNumber(), ApiFile.Version.FileDescriptor.Type.delta).status != ApiFile.Status.Waiting)))
                                             {
-                                                smethod_5(gdelegate1_0, apiFile_2, "Failed to upload file.", "Record is still in 'waiting' status");
+                                                smethod_5(Failure, apiFile_2, "Failed to upload file.", "Record is still in 'waiting' status");
                                                 smethod_8(apiFile_2.id);
                                                 break;
                                             }
                                             smethod_3(apiFile_2, flag2);
-                                            smethod_6(gdelegate2_0, apiFile_2, "Processing upload...");
+                                            CheckFile(filecheck, apiFile_2, "Processing upload...");
                                             float num = float_2;
                                             float b = float_3;
                                             float num2 = method_5(apiFile_2.GetLatestVersion().file.sizeInBytes);
@@ -754,18 +748,18 @@ namespace WengaPort.Modules.Reupload
                                             double num4 = num3;
                                             while (apiFile_2.HasQueuedOperation(flag2))
                                             {
-                                                smethod_6(gdelegate2_0, apiFile_2, "Processing upload...", "Checking status in " + Mathf.CeilToInt(num) + " seconds");
-                                                while (Time.realtimeSinceStartup - num4 < num)
+                                                CheckFile(filecheck, apiFile_2, "Processing upload...", "Checking status in " + Mathf.CeilToInt(num) + " seconds");
+                                                while ((double)Time.realtimeSinceStartup - num4 < (double)num)
                                                 {
-                                                    if (smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                                    if (ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                                     {
                                                         smethod_8(apiFile_2.id);
                                                         yield break;
                                                     }
-                                                    if (Time.realtimeSinceStartup - num3 > num2)
+                                                    if ((double)Time.realtimeSinceStartup - num3 > (double)num2)
                                                     {
                                                         smethod_3(apiFile_2, flag2);
-                                                        smethod_5(gdelegate1_0, apiFile_2, "Timed out waiting for upload processing to complete.");
+                                                        smethod_5(Failure, apiFile_2, "Timed out waiting for upload processing to complete.");
                                                         smethod_8(apiFile_2.id);
                                                         yield break;
                                                     }
@@ -773,14 +767,14 @@ namespace WengaPort.Modules.Reupload
                                                 }
                                                 do
                                                 {
-                                                    smethod_6(gdelegate2_0, apiFile_2, "Processing upload...", "Checking status...");
+                                                    CheckFile(filecheck, apiFile_2, "Processing upload...", "Checking status...");
                                                     bool_0 = true;
                                                     bool_2 = false;
                                                     string_5 = "";
                                                     API.Fetch<ApiFile>(apiFile_2.id, action, action2);
                                                     while (bool_0)
                                                     {
-                                                        if (smethod_7(gdelegate3_0, gdelegate1_0, apiFile_2))
+                                                        if (ApiFileHelper.Cancelled(Cancelled, Failure, apiFile_2))
                                                         {
                                                             smethod_8(apiFile_2.id);
                                                             yield break;
@@ -789,7 +783,7 @@ namespace WengaPort.Modules.Reupload
                                                     }
                                                     if (!string.IsNullOrEmpty(string_5))
                                                     {
-                                                        smethod_5(gdelegate1_0, apiFile_2, "Checking upload status failed.", string_5);
+                                                        smethod_5(Failure, apiFile_2, "Checking upload status failed.", string_5);
                                                         if (!bool_2)
                                                         {
                                                             smethod_8(apiFile_2.id);
@@ -802,47 +796,47 @@ namespace WengaPort.Modules.Reupload
                                                 num4 = Time.realtimeSinceStartup;
                                             }
                                             yield return MelonCoroutines.Start(method_4(apiFile_2.id));
-                                            smethod_4(gdelegate0_0, apiFile_2, "Upload complete!");
+                                            smethod_4(success, apiFile_2, "Upload complete!");
                                         }
                                         else
                                         {
-                                            smethod_5(gdelegate1_0, apiFile_2, "Failed to create file delta for upload.", "Couldn't get file size: " + string_5);
+                                            smethod_5(Failure, apiFile_2, "Failed to create file delta for upload.", "Couldn't get file size: " + string_5);
                                             smethod_8(apiFile_2.id);
                                         }
                                     }
                                     else
                                     {
-                                        smethod_5(gdelegate1_0, apiFile_2, "Failed to generate file signature!", "Couldn't get file size:\n" + string_5);
+                                        smethod_5(Failure, apiFile_2, "Failed to generate file signature!", "Couldn't get file size:\n" + string_5);
                                         smethod_8(apiFile_2.id);
                                     }
                                 }
                                 else
                                 {
-                                    smethod_5(gdelegate1_0, apiFile_2, "Failed to generate MD5 hash for signature file.", string_5);
+                                    smethod_5(Failure, apiFile_2, "Failed to generate MD5 hash for signature file.", string_5);
                                     smethod_8(apiFile_2.id);
                                 }
                             }
                             else
                             {
-                                smethod_5(gdelegate1_0, apiFile_2, "Failed to generate file signature!", "Failed to create temp file: \n" + string_5);
+                                smethod_5(Failure, apiFile_2, "Failed to generate file signature!", "Failed to create temp file: \n" + string_5);
                                 smethod_8(apiFile_2.id);
                             }
                         }
                         else
                         {
-                            smethod_5(gdelegate1_0, apiFile_2, "Failed to optimize file for upload.", "Failed to create temp file: \n" + string_5);
+                            smethod_5(Failure, apiFile_2, "Failed to optimize file for upload.", "Failed to create temp file: \n" + string_5);
                         }
                     }
                     else
                     {
-                        smethod_5(gdelegate1_0, apiFile_2, "A previous upload is still being processed. Please try again later.");
+                        smethod_5(Failure, apiFile_2, "A previous upload is still being processed. Please try again later.");
                     }
                     break;
                 }
             }
             else
             {
-                smethod_5(gdelegate1_0, null, "Could not read file to upload!", string_0 + "\n" + whyNot);
+                smethod_5(Failure, null, "Could not read file to upload!", Path + "\n" + whyNot);
             }
         }
 
@@ -934,7 +928,7 @@ namespace WengaPort.Modules.Reupload
                     for (TarEntry nextEntry2 = tarInputStream2.GetNextEntry(); nextEntry2 != null; nextEntry2 = tarInputStream2.GetNextEntry())
                     {
                         string string_2 = nextEntry2.Name.Substring(0, nextEntry2.Name.IndexOf('/'));
-                        if (!list.Any((string string_12352352) => string.Compare(string_1, string_2) == 0))
+                        if (!list.Any((string string_1) => string.Compare(string_1, string_2) == 0))
                         {
                             tarOutputStream.PutNextEntry(nextEntry2);
                             tarInputStream2.CopyEntryContents(tarOutputStream);
@@ -1160,11 +1154,11 @@ namespace WengaPort.Modules.Reupload
             {
                 apiFile_0 = new ApiFile();
             }
-            MelonLogger.LogError("ApiFile " + apiFile_0.ToStringBrief() + ": Error: " + string_0 + "\n" + string_1);
+            Extensions.Logger.WengaLogger("ApiFile " + apiFile_0.ToStringBrief() + ": Error: " + string_0 + "\n" + string_1);
             gdelegate1_0?.Invoke(apiFile_0, string_0);
         }
 
-        protected static void smethod_6(GDelegate2 gdelegate2_0, ApiFile apiFile_0, string string_0, string string_1 = "", float float_5 = 0f)
+        protected static void CheckFile(GDelegate2 gdelegate2_0, ApiFile apiFile_0, string string_0, string string_1 = "", float float_5 = 0f)
         {
             if (apiFile_0 == null)
             {
@@ -1173,16 +1167,16 @@ namespace WengaPort.Modules.Reupload
             gdelegate2_0?.Invoke(apiFile_0, string_0, string_1, float_5);
         }
 
-        protected static bool smethod_7(GDelegate3 gdelegate3_0, GDelegate1 gdelegate1_0, ApiFile apiFile_0)
+        protected static bool Cancelled(GDelegate3 gdelegate3_0, GDelegate1 gdelegate1_0, ApiFile apiFile_0)
         {
             if (apiFile_0 == null)
             {
-                MelonLogger.LogError("apiFile was null");
+                Extensions.Logger.WengaLogger("apiFile was null");
                 return true;
             }
             if (gdelegate3_0 != null && gdelegate3_0(apiFile_0))
             {
-                MelonLogger.Log("ApiFile " + apiFile_0.ToStringBrief() + ": Operation cancelled");
+                Extensions.Logger.WengaLogger("ApiFile " + apiFile_0.ToStringBrief() + ": Operation cancelled");
                 gdelegate1_0?.Invoke(apiFile_0, "Cancelled by user.");
                 return true;
             }
@@ -1191,7 +1185,7 @@ namespace WengaPort.Modules.Reupload
 
         protected static void smethod_8(string string_0)
         {
-            MelonCoroutines.Start(GClass0_0.method_4(string_0));
+            MelonCoroutines.Start(apifilehelper.method_4(string_0));
         }
 
         protected IEnumerator method_4(string string_0)
@@ -1219,28 +1213,28 @@ namespace WengaPort.Modules.Reupload
 
         private static void smethod_9()
         {
-            if (gclass0_0 == null)
+            if (helper == null)
             {
                 GameObject obj = new GameObject("ApiFileHelper")
                 {
                     hideFlags = HideFlags.HideAndDontSave
                 };
-                gclass0_0 = obj.AddComponent<ReuploaderComponent>();
+                helper = obj.AddComponent<ApiFileHelper>();
                 remoteConfig_0 = new RemoteConfig();
-                UnityEngine.Object.DontDestroyOnLoad(obj);
+                DontDestroyOnLoad(obj);
             }
         }
 
         private float method_5(int int_2)
         {
-            return Mathf.Clamp(Mathf.Ceil((float)int_2 / (float)int_1) * float_0, float_0, float_1);
+            return Mathf.Clamp(Mathf.Ceil(int_2 / (float)int_1) * float_0, float_0, float_1);
         }
 
         private bool method_6(ApiFile apiFile_0, string string_0, string string_1, long long_0, ApiFile.Version.FileDescriptor fileDescriptor_0, System.Action<ApiFile> action_0, System.Action<string> action_1)
         {
             if (fileDescriptor_0.status != ApiFile.Status.Waiting)
             {
-                MelonLogger.Log("UploadFileComponent: (file record not in waiting status, done)");
+                Extensions.Logger.WengaLogger("UploadFileComponent: (file record not in waiting status, done)");
                 action_0?.Invoke(apiFile_0);
                 return false;
             }
@@ -1271,12 +1265,9 @@ namespace WengaPort.Modules.Reupload
 
         private IEnumerator method_7(ApiFile apiFile_0, ApiFile.Version.FileDescriptor.Type type_0, string string_0, string string_1, long long_0, System.Action<ApiFile> action_0, System.Action<string> action_1, System.Action<long, long> action_2, GDelegate3 gdelegate3_0)
         {
-            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_1, string string_1235235)
+            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_1, string string_1)
             {
-                if (action_1 != null)
-                {
-                    action_1(string_1);
-                }
+                action_1?.Invoke(string_1);
             };
             string string_2 = "";
             while (true)
@@ -1284,11 +1275,11 @@ namespace WengaPort.Modules.Reupload
                 bool bool_0 = true;
                 string string_3 = "";
                 bool bool_3 = false;
-                apiFile_0.StartSimpleUpload(type_0, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                apiFile_0.StartSimpleUpload(type_0, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     string_2 = IL2CPP.Il2CppStringToManaged(apiContainer_0.Cast<ApiDictContainer>().ResponseDictionary["url"].Pointer);
                     bool_0 = false;
-                }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     string_3 = "Failed to start upload: " + apiContainer_0.Error;
                     bool_0 = false;
@@ -1299,7 +1290,7 @@ namespace WengaPort.Modules.Reupload
                 });
                 while (bool_0)
                 {
-                    if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                    if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                     {
                         yield return null;
                         continue;
@@ -1308,10 +1299,7 @@ namespace WengaPort.Modules.Reupload
                 }
                 if (!string.IsNullOrEmpty(string_3))
                 {
-                    if (action_1 != null)
-                    {
-                        action_1(string_3);
-                    }
+                    action_1?.Invoke(string_3);
                     if (!bool_3)
                     {
                         yield break;
@@ -1325,19 +1313,16 @@ namespace WengaPort.Modules.Reupload
             }
             bool bool_ = true;
             string string_4 = "";
-            HttpRequest httpRequest = ApiFile.PutSimpleFileToURL(string_2, string_0, smethod_1(Path.GetExtension(string_0)), string_1, (System.Action)delegate
+            HttpRequest httpRequest = ApiFile.PutSimpleFileToURL(string_2, string_0, smethod_1(Path.GetExtension(string_0)), string_1, (Action)delegate
             {
                 bool_ = false;
-            }, (System.Action<string>)delegate (string string_1235235)
+            }, (Action<string>)delegate (string string_1)
             {
                 string_4 = "Failed to upload file: " + string_1;
                 bool_ = false;
-            }, (System.Action<long, long>)delegate (long long_0235235, long long_1)
+            }, (Action<long, long>)delegate (long long_0, long long_1)
             {
-                if (action_2 != null)
-                {
-                    action_2(long_0, long_1);
-                }
+                action_2?.Invoke(long_0, long_1);
             });
             while (true)
             {
@@ -1345,15 +1330,12 @@ namespace WengaPort.Modules.Reupload
                 {
                     if (!string.IsNullOrEmpty(string_4))
                     {
-                        if (action_1 != null)
-                        {
-                            action_1(string_4);
-                        }
+                        action_1?.Invoke(string_4);
                         yield break;
                     }
                     break;
                 }
-                if (smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                if (Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                 {
                     httpRequest?.Abort();
                     yield break;
@@ -1366,12 +1348,12 @@ namespace WengaPort.Modules.Reupload
                 bool bool_2 = true;
                 string string_5 = "";
                 bool bool_4 = false;
-                apiFile_0.FinishUpload(type_0, null, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                apiFile_0.FinishUpload(type_0, null, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
-                    MelonLogger.LogWarning("YOU CAN IGNORE THE FOLLOWING CASTING ERROR!");
+                    Extensions.Logger.WengaLogger("!!!!YOU CAN IGNORE THIS CASTING ERRORS!!!!");
                     apiFile_0 = apiContainer_0.Model.Cast<ApiFile>();
                     bool_2 = false;
-                }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     string_5 = "Failed to finish upload: " + apiContainer_0.Error;
                     bool_2 = false;
@@ -1382,7 +1364,7 @@ namespace WengaPort.Modules.Reupload
                 });
                 while (bool_2)
                 {
-                    if (smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                    if (Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                     {
                         yield break;
                     }
@@ -1390,10 +1372,7 @@ namespace WengaPort.Modules.Reupload
                 }
                 if (!string.IsNullOrEmpty(string_5))
                 {
-                    if (action_1 != null)
-                    {
-                        action_1(string_5);
-                    }
+                    action_1?.Invoke(string_5);
                     if (!bool_4)
                     {
                         break;
@@ -1410,16 +1389,13 @@ namespace WengaPort.Modules.Reupload
         private IEnumerator method_8(ApiFile apiFile_0, ApiFile.Version.FileDescriptor.Type type_0, string string_0, string string_1, long long_0, System.Action<ApiFile> action_0, System.Action<string> action_1, System.Action<long, long> action_2, GDelegate3 gdelegate3_0)
         {
             FileStream fileStream_0 = null;
-            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_1, string string_0235235235)
+            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_1, string string_0)
             {
                 if (fileStream_0 != null)
                 {
                     fileStream_0.Close();
                 }
-                if (action_1 != null)
-                {
-                    action_1(string_0);
-                }
+                action_1?.Invoke(string_0);
             };
             ApiFile.UploadStatus uploadStatus_0 = null;
             byte[] array;
@@ -1432,12 +1408,12 @@ namespace WengaPort.Modules.Reupload
                 bool bool_3 = true;
                 string string_6 = "";
                 bool bool_5 = false;
-                apiFile_0.GetUploadStatus(apiFile_0.GetLatestVersionNumber(), type_0, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                apiFile_0.GetUploadStatus(apiFile_0.GetLatestVersionNumber(), type_0, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     uploadStatus_0 = apiContainer_0.Model.Cast<ApiFile.UploadStatus>();
                     bool_3 = false;
                     VRC.Core.Logger.Log("Found existing multipart upload status (next part = " + uploadStatus_0.nextPartNumber + ")", DebugLevel.All);
-                }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     string_6 = "Failed to query multipart upload status: " + apiContainer_0.Error;
                     bool_3 = false;
@@ -1448,7 +1424,7 @@ namespace WengaPort.Modules.Reupload
                 });
                 while (bool_3)
                 {
-                    if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                    if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                     {
                         yield return null;
                         continue;
@@ -1457,10 +1433,7 @@ namespace WengaPort.Modules.Reupload
                 }
                 if (!string.IsNullOrEmpty(string_6))
                 {
-                    if (action_1 != null)
-                    {
-                        action_1(string_6);
-                    }
+                    action_1?.Invoke(string_6);
                     if (!bool_5)
                     {
                         yield break;
@@ -1476,10 +1449,7 @@ namespace WengaPort.Modules.Reupload
                 }
                 catch (System.Exception ex)
                 {
-                    if (action_1 != null)
-                    {
-                        action_1("Couldn't open file: " + ex.Message);
-                    }
+                    action_1?.Invoke("Couldn't open file: " + ex.Message);
                     yield break;
                 }
                 array = new byte[this.int_0 * 2];
@@ -1504,22 +1474,16 @@ namespace WengaPort.Modules.Reupload
                 catch (System.Exception ex2)
                 {
                     fileStream_0.Close();
-                    if (action_1 != null)
-                    {
-                        action_1("Couldn't read file: " + ex2.Message);
-                    }
+                    action_1?.Invoke("Couldn't read file: " + ex2.Message);
                     yield break;
                 }
                 if (int_0 != num2)
                 {
                     fileStream_0.Close();
-                    if (action_1 != null)
-                    {
-                        action_1("Couldn't read file: read incorrect number of bytes from stream");
-                    }
+                    action_1?.Invoke("Couldn't read file: read incorrect number of bytes from stream");
                     yield break;
                 }
-                if (uploadStatus_0 == null || !((double)i <= uploadStatus_0.nextPartNumber))
+                if (uploadStatus_0 == null || !(i <= uploadStatus_0.nextPartNumber))
                 {
                     string string_5 = "";
                     bool flag;
@@ -1528,18 +1492,18 @@ namespace WengaPort.Modules.Reupload
                         bool bool_2 = true;
                         string string_4 = "";
                         flag = false;
-                        apiFile_0.StartMultipartUpload(type_0, i, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                        apiFile_0.StartMultipartUpload(type_0, i, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                         {
                             string_5 = IL2CPP.Il2CppStringToManaged(apiContainer_0.Cast<ApiDictContainer>().ResponseDictionary["url"].Pointer);
                             bool_2 = false;
-                        }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                        }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                         {
                             string_4 = "Failed to start part upload: " + apiContainer_0.Error;
                             bool_2 = false;
                         });
                         while (bool_2)
                         {
-                            if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                            if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                             {
                                 yield return null;
                                 continue;
@@ -1549,10 +1513,7 @@ namespace WengaPort.Modules.Reupload
                         if (!string.IsNullOrEmpty(string_4))
                         {
                             fileStream_0.Close();
-                            if (action_1 != null)
-                            {
-                                action_1(string_4);
-                            }
+                            action_1?.Invoke(string_4);
                             if (!flag)
                             {
                                 yield break;
@@ -1563,7 +1524,7 @@ namespace WengaPort.Modules.Reupload
                     while (flag);
                     bool bool_ = true;
                     string string_3 = "";
-                    HttpRequest httpRequest = ApiFile.PutMultipartDataToURL(string_5, array, int_0, smethod_1(Path.GetExtension(string_0)), (System.Action<string>)delegate (string string_1235235)
+                    HttpRequest httpRequest = ApiFile.PutMultipartDataToURL(string_5, array, int_0, smethod_1(Path.GetExtension(string_0)), (System.Action<string>)delegate (string string_1)
                     {
                         if (!string.IsNullOrEmpty(string_1))
                         {
@@ -1571,20 +1532,17 @@ namespace WengaPort.Modules.Reupload
                         }
                         long_4 += int_0;
                         bool_ = false;
-                    }, (System.Action<string>)delegate (string string_1234234)
+                    }, (System.Action<string>)delegate (string string_1)
                     {
                         string_3 = "Failed to upload data: " + string_1;
                         bool_ = false;
                     }, (System.Action<long, long>)delegate (long long_2, long long_3)
                     {
-                        if (action_2 != null)
-                        {
-                            action_2(long_4 + long_2, long_0);
-                        }
+                        action_2?.Invoke(long_4 + long_2, long_0);
                     });
                     while (bool_)
                     {
-                        if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                        if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                         {
                             yield return null;
                             continue;
@@ -1595,10 +1553,7 @@ namespace WengaPort.Modules.Reupload
                     if (!string.IsNullOrEmpty(string_3))
                     {
                         fileStream_0.Close();
-                        if (action_1 != null)
-                        {
-                            action_1(string_3);
-                        }
+                        action_1?.Invoke(string_3);
                         yield break;
                     }
                 }
@@ -1618,12 +1573,12 @@ namespace WengaPort.Modules.Reupload
                 {
                     list.Add(item);
                 }
-                apiFile_0.FinishUpload(type_0, list, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                apiFile_0.FinishUpload(type_0, list, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
-                    MelonLogger.LogWarning("YOU CAN IGNORE THE FOLLOWING CASTING ERROR!");
+                    Extensions.Logger.WengaLogger("!!!!YOU CAN IGNORE THIS CASTING ERRORS!!!!");
                     apiFile_0 = apiContainer_0.Model.Cast<ApiFile>();
                     bool_0 = false;
-                }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                 {
                     string_2 = "Failed to finish upload: " + apiContainer_0.Error;
                     bool_0 = false;
@@ -1634,7 +1589,7 @@ namespace WengaPort.Modules.Reupload
                 });
                 while (bool_0)
                 {
-                    if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                    if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                     {
                         yield return null;
                         continue;
@@ -1644,10 +1599,7 @@ namespace WengaPort.Modules.Reupload
                 if (!string.IsNullOrEmpty(string_2))
                 {
                     fileStream_0.Close();
-                    if (action_1 != null)
-                    {
-                        action_1(string_2);
-                    }
+                    action_1?.Invoke(string_2);
                     if (!bool_4)
                     {
                         yield break;
@@ -1664,12 +1616,9 @@ namespace WengaPort.Modules.Reupload
 
         private IEnumerator method_9(ApiFile apiFile_0, ApiFile.Version.FileDescriptor.Type type_0, string string_0, string string_1, long long_0, ApiFile.Version.FileDescriptor fileDescriptor_0, System.Action<ApiFile> action_0, System.Action<string> action_1, System.Action<long, long> action_2, GDelegate3 gdelegate3_0)
         {
-            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_023523523, string string_023523523)
+            GDelegate1 gdelegate1_ = delegate (ApiFile apiFile_0, string string_0)
             {
-                if (action_1 != null)
-                {
-                    action_1(string_0);
-                }
+                action_1?.Invoke(string_0);
             };
             float realtimeSinceStartup = Time.realtimeSinceStartup;
             float num = realtimeSinceStartup;
@@ -1685,7 +1634,7 @@ namespace WengaPort.Modules.Reupload
                     {
                         while (Time.realtimeSinceStartup - num < num3)
                         {
-                            if (smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                            if (Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                             {
                                 yield break;
                             }
@@ -1694,10 +1643,7 @@ namespace WengaPort.Modules.Reupload
                                 yield return null;
                                 continue;
                             }
-                            if (action_1 != null)
-                            {
-                                action_1("Couldn't verify upload status: Timed out wait for server processing");
-                            }
+                            action_1?.Invoke("Couldn't verify upload status: Timed out wait for server processing");
                             yield break;
                         }
                         while (true)
@@ -1705,10 +1651,10 @@ namespace WengaPort.Modules.Reupload
                             bool bool_0 = true;
                             string string_2 = "";
                             bool bool_1 = false;
-                            apiFile_0.Refresh((System.Action<ApiContainer>)delegate
+                            apiFile_0.Refresh((Action<ApiContainer>)delegate
                             {
                                 bool_0 = false;
-                            }, (System.Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+                            }, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
                             {
                                 string_2 = "Couldn't verify upload status: " + apiContainer_0.Error;
                                 bool_0 = false;
@@ -1719,7 +1665,7 @@ namespace WengaPort.Modules.Reupload
                             });
                             while (bool_0)
                             {
-                                if (!smethod_7(gdelegate3_0, gdelegate1_, apiFile_0))
+                                if (!Cancelled(gdelegate3_0, gdelegate1_, apiFile_0))
                                 {
                                     yield return null;
                                     continue;

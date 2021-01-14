@@ -36,11 +36,16 @@ namespace WengaPort.Modules
                 {
                     UnfavoriteAvatar(currPageAvatar.avatar.field_Internal_ApiAvatar_0);
                 }
-               MelonCoroutines.Start(RefreshMenu(1));
+                MelonCoroutines.Start(RefreshMenu(1));
             });
             AvatarList = new VRCList(PublicAvatarList.transform.parent, "WengaPort Favorites", 0);
             AvatarObjects = JsonConvert.DeserializeObject<List<AvatarObject>>(File.ReadAllText("WengaPort\\AvatarFavorites.json"));
             Extensions.Logger.WengaLogger("[AvatarFavs] Loaded");
+
+            new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Image", -380f, 375, delegate
+            {
+                Reupload.NameChanger.ChangeAvatarImage();
+            });
 
             new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Delete", 260f, 375, delegate
             {

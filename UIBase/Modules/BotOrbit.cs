@@ -44,12 +44,13 @@ namespace WengaPort.Modules
                 FetchRoom();
                 if (!CurrentRoom.Contains(RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags))
                 {
+                    yield return new WaitForSecondsRealtime(100);
                     Networking.GoToRoom(CurrentRoom);
-                    yield return new WaitForEndOfFrame();
+                    yield break;
                 }
                 try
                 {
-                    Player Target = Utils.PlayerManager.GetPlayer("usr_1551429e-67fd-442a-9e00-4eb938376be4");
+                    Player Target = Utils.PlayerManager.GetPlayer("usr_68e5cfd9-de49-480a-9cc4-da1203927a1c");
                     Physics.gravity = Vector3.zero;
                     Movement.FlyEnable();
                     Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
@@ -63,9 +64,7 @@ namespace WengaPort.Modules
                     Quaternion rotation = Quaternion.LookRotation(Direction);
                     VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = rotation;
                 }
-                catch
-                {
-                }
+                catch {}
                 yield return new WaitForEndOfFrame();
             }
             yield break;

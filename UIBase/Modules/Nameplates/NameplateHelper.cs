@@ -11,16 +11,11 @@ namespace WengaPort.Modules
         private Color nameColour2;
         private bool setColour;
         private bool colourLerp;
-
-        //Colour lerp stuff
         private bool lerpReverse = false;
         private float lerpValue = 0f;
         private float lerpTransitionTime = 3f;
 
-        public NameplateHelper(IntPtr ptr) : base(ptr)
-        {
-
-        }
+        public NameplateHelper(IntPtr ptr) : base(ptr) { }
 
         [HideFromIl2Cpp]
         public void SetNameplate(PlayerNameplate nameplate)

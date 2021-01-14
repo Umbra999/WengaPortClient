@@ -27,7 +27,10 @@ namespace WengaPort.Modules
             GameObject portal = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", Target.transform.position + Target.transform.forward * 1.505f, Target.transform.rotation);
             string world = "wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc";
             string instance = "\n[₩Ɇ₦₲₳₱ØⱤ₮]\n" + Target.field_Private_Player_0.field_Private_APIUser_0.displayName + "\0";
-            int count = -666;
+            System.Random r = new System.Random();
+            var values = new[] { -69, -666 };
+            int result = values[r.Next(values.Length)];
+            int count = result;
 
             Networking.RPC(RPC.Destination.AllBufferOne, portal, "ConfigurePortal", new Il2CppSystem.Object[]
             {
@@ -35,7 +38,7 @@ namespace WengaPort.Modules
               (String)instance,
                  new Int32
                  {
-                   m_value = count
+                    m_value = count
                  }.BoxIl2CppObject()
             });
         }
@@ -45,7 +48,7 @@ namespace WengaPort.Modules
             string world = "wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc";
             string instance = "\n[₩Ɇ₦₲₳₱ØⱤ₮]\n" + Target.field_Private_Player_0.field_Private_APIUser_0.displayName + "\0";
             MelonCoroutines.Start(DestroyDelayed(1f, portal.GetComponent<PortalInternal>()));
-            int count = -69;
+            int count = int.MinValue;
 
             Networking.RPC(RPC.Destination.AllBufferOne, portal, "ConfigurePortal", new Il2CppSystem.Object[]
             {
@@ -53,7 +56,7 @@ namespace WengaPort.Modules
               (String)instance,
                  new Int32
                  {
-                   m_value = count
+                    m_value = count
                  }.BoxIl2CppObject()
             });
 

@@ -11,7 +11,6 @@ namespace WengaPort.Buttons
 {
     class InviteButtons
     {
-
         public static QMSingleButton PortalToInvite;
 
         public static Transform NotificationMenu = Utils.QuickMenu.transform.Find("NotificationInteractMenu");

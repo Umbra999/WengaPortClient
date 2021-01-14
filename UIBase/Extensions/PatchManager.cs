@@ -45,7 +45,6 @@ namespace WengaPort.Extensions
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTime").GetMethod, null, GetPatch("FakePing"), null);
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTimeVariance").GetMethod, null, GetPatch("FakePing"), null);
                 Instance.Patch(typeof(ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique).GetMethod("OnEvent"), GetPatch("OnEvent"), null);
-                Instance.Patch(typeof(VRCAvatarManager).GetMethod("Method_Private_Boolean_GameObject_PDM_0"), GetPatch("OnAvatarInstantiate"));
                 Instance.Patch(AccessTools.Method(typeof(API), "SendPutRequest", null, null), GetPatch("RequestPatch"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(PostOffice), "Put", null, null), GetPatch("ReceivedNotificationPatch"), null, null);
                 Instance.Patch(typeof(PortalTrigger).GetMethod(nameof(PortalTrigger.OnTriggerEnter), BindingFlags.Public | BindingFlags.Instance), GetPatch("EnterPortalPrefix"), null, null);
@@ -60,6 +59,8 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(NetworkManager).GetMethod("OnJoinedRoom"), GetPatch("OnJoinedRoom"), null);
                 Instance.Patch(typeof(NetworkManager).GetMethod("OnLeftRoom"), GetPatch("OnLeftRoom"), null);
                 Instance.Patch(typeof(PageWorldInfo).GetMethod("Method_Public_Void_ApiWorld_ApiWorldInstance_Boolean_Boolean_0"), GetPatch("SetupWorldPage"), null);
+                typeof(VRCPlayer).GetMethods().Where(m => m.Name.StartsWith("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_") && !m.checkXref("Avatar is Ready, Initializing")).ToList()
+                    .ForEach(m => Instance.Patch(m, postfix: new HarmonyMethod(typeof(PatchManager).GetMethod("AvatarFinishedLoadingPostfix", BindingFlags.NonPublic | BindingFlags.Static))));
                 Logger.WengaLogger("[Patches] Trigger");
                 Logger.WengaLogger("[Patches] PingSpoof");
                 Logger.WengaLogger("[Patches] Events");
@@ -118,12 +119,19 @@ namespace WengaPort.Extensions
             try
             {
                 var portalInternal = __instance.field_Private_PortalInternal_0;
+                string dropper;
+                using (StringReader sr = new StringReader(__instance.transform.Find("NameTag").GetComponentInChildren<TMPro.TextMeshPro>().text))
+                {
+                    sr.ReadLine();
+                    dropper = sr.ReadLine();
+                    dropper = dropper == "" ? "No Player" : dropper;
+                }
                 if (Vector3.Distance(Utils.CurrentUser.transform.position, __instance.transform.position) > 0.8f)
                 {
                     return false;
                 }
                 {
-                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name}", "Yes", new System.Action(() =>
+                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name} \n by {dropper}", "Yes", new System.Action(() =>
                     {
                         Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
                         Utils.VRCUiPopupManager.HideCurrentPopUp();
@@ -247,14 +255,16 @@ namespace WengaPort.Extensions
             WorldDownloadManager.CancelDownload();
         }
 
-        private static void OnAvatarInstantiate(ref GameObject __0, ref VRCAvatarManager __instance)
+        private static void AvatarFinishedLoadingPostfix(VRCPlayer __instance, GameObject __0, bool __2)
         {
             try
             {
-                if (__0 == null || __instance?.field_Private_VRCPlayer_0?.field_Private_Player_0?.prop_APIUser_0 == null || __instance.field_Private_ApiAvatar_0 == null) return;
-                var player = __instance.field_Private_VRCPlayer_0;
-                var Avatar = __instance.field_Private_ApiAvatar_0;
-                var AvatarID = __instance.field_Private_ApiAvatar_0.id;
+                if (__instance == null || __0 == null || !__2) return;
+                var player = __instance;
+                var Avatar = __instance.GetAPIAvatar();
+                var AvatarID = __instance.GetAPIAvatar().id;
+
+                APIUser apiUser = __instance.field_Private_Player_0.field_Private_APIUser_0;
                 var AvatarGameobject = __0;
                 if (CrashAvatars.Contains(AvatarID) && player.UserID() != Utils.CurrentUser.UserID())
                 {
@@ -632,6 +642,11 @@ namespace WengaPort.Extensions
             return int.MaxValue < v3.x || int.MaxValue < v3.y || int.MaxValue < v3.z || int.MinValue > v3.x || int.MinValue > v3.y || int.MinValue > v3.z;
         }
 
+        private static bool IsMaxPos(Vector3 v3)
+        {
+            return int.MaxValue == v3.x || int.MaxValue == v3.y || int.MaxValue == v3.z || int.MinValue == v3.x || int.MinValue == v3.y || int.MinValue == v3.z;
+        }
+
         private static bool CaughtEventPatch(ref Player __0, ref VrcEvent __1, ref VrcBroadcastType __2, ref int __3, ref float __4)
         {
             try
@@ -702,6 +717,12 @@ namespace WengaPort.Extensions
                     {
                         VRConsole.Log(VRConsole.LogsType.Protection, text + " --> spawned Infinity-Objects");
                         Logger.WengaLogger("[Room] [Protection] Prevented " + text + " from spawning Objects at Infinity");
+                        return false;
+                    }
+                    else if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && IsMaxPos(__1.ParameterObject.transform.position))
+                    {
+                        VRConsole.Log(VRConsole.LogsType.Protection, text + " --> spawned MaxValue-Objects");
+                        Logger.WengaLogger("[Room] [Protection] Prevented " + text + " from spawning Objects at MaxValue");
                         return false;
                     }
                     else if (__1.ParameterObject.name == "VRCVideoSync" && BlockPlayer)

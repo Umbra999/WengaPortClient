@@ -139,6 +139,14 @@ namespace WengaPort.Buttons
                 PatchManager.AntiWorldTrigger = false;
             }, "Make all global Triggers local");
 
+            new QMToggleButton(ThisMenu, 5, 0, "Avatar \nSpoof", () =>
+            {
+                AvatarHider.AvatarSpoofToggle = true;
+            }, "Disabled", () =>
+            {
+                AvatarHider.AvatarSpoofToggle = false;
+            }, "Spoof your Avatar Picture to a Cute Cat");
+
             new QMToggleButton(ThisMenu, 1, 1, "Anti \nDisconnect", () =>
             {
                 PatchManager.AntiMasterDC = true;

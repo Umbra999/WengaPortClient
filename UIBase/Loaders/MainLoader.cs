@@ -43,6 +43,9 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<NameplateHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<ESP>();
             ClassInjector.RegisterTypeInIl2Cpp<AvatarHider>();
+            ClassInjector.RegisterTypeInIl2Cpp<KeyBindHandler>();
+            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
+            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ApiFileHelper>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -74,10 +77,10 @@ namespace WengaPort.MainLoader
                     break;
                 default:
                     MelonCoroutines.Start(NoClipping.SetNearClipPlane(0.001f));
-                    //if (APIUser.CurrentUser.id == "usr_3be96c4e-7ca2-477f-b351-c4358c294a0a")
-                    //{
-                    //    BotOrbit.StartBot();
-                    //}
+                    if (APIUser.CurrentUser.id == "usr_50ec3de0-63f9-4bfd-803b-9ae1d7c2bbb9")
+                    {
+                        BotOrbit.StartBot();
+                    }
                     break;
             }
 
@@ -161,7 +164,7 @@ namespace WengaPort.MainLoader
 
             if (ItemHandler.AutoHoldToggle)
             {
-                foreach (var item in Resources.FindObjectsOfTypeAll<VRCSDK2.VRC_Pickup>())
+                foreach (var item in Resources.FindObjectsOfTypeAll<VRC_Pickup>())
                 {
                     if (item.gameObject.active && item.pickupable)
                     {
@@ -183,57 +186,9 @@ namespace WengaPort.MainLoader
             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) ButtonsMainColor.Initialize3(); //Really scuffed but this is to disable the blue loading screen
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
-                RoomTime += Time.deltaTime;
-                if (!UnityEngine.XR.XRDevice.isPresent)
-                {
-                    CameraHandler.Zoom();
-                    if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.K))
-                    {
-                        if (!CameraHandler.DesktopCam)
-                        {
-                            CameraHandler.EnableDesktopCam();
-                        }
-                        else
-                        {
-                            CameraHandler.DisableDesktopCam();
-                        }
-                    }
-
-                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Mouse0))
-                    {
-                        var r = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
-                        if (Physics.Raycast(r, out RaycastHit raycastHit))
-                        {
-                            VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = raycastHit.point;
-                        }
-                    }
-
-                    else if (Input.GetKeyDown(KeyCode.Mouse2))
-                    {
-                        Modules.Photon.EmojiRPC(29);
-                        Modules.Photon.EmoteRPC(3);
-                    }
-
-                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha0))
-                    {
-                        Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible = !Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible;
-                    }
-
-                    else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
-                    {
-                        if (AntiMenuOverrender.AntiOverrenderToggle)
-                        {
-                            AntiMenuOverrender.AntiOverrender(false);
-                        }
-                        else
-                        {
-                            AntiMenuOverrender.AntiOverrender(true);
-                        }
-                    }
-                }
-
                 try
                 {
+                    RoomTime += Time.deltaTime;
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     if (Modules.Photon.DisconnectToggle)
@@ -389,6 +344,9 @@ namespace WengaPort.MainLoader
             Client.AddComponent<AntiMenuOverrender>();
             Client.AddComponent<ESP>();
             Client.AddComponent<AvatarHider>();
+            Client.AddComponent<KeyBindHandler>();
+            Client.AddComponent<Modules.Reupload.ReuploaderButtons>();
+            Client.AddComponent<Modules.Reupload.ApiFileHelper>();
         }
         GameObject menu;
         GameObject inviteDot;

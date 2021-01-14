@@ -66,7 +66,7 @@ namespace WengaPort.Modules
 
         public static IEnumerator CustomTag(Player player)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(2);
             Transform contents = player.transform.Find("Player Nameplate/Canvas/Nameplate/Contents");
             Transform stats = contents.Find("Quick Stats");
             int stack = 0;
@@ -157,9 +157,7 @@ namespace WengaPort.Modules
                     }
                 }
             }
-            catch
-            {
-            }
+            catch {}
         }
 
         private static Transform MakeTag(Transform stats, int index)
@@ -210,8 +208,7 @@ namespace WengaPort.Modules
                 Wenga = new WebClient().DownloadString(str + "Wenga.txt");
                 ClientUser = new WebClient().DownloadString(str + "ClientUser.txt");
             }
-            catch
-            {}
+            catch {}
         }
 
         public static bool CheckWenga(string Id)

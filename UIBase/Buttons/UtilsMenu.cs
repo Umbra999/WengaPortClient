@@ -77,11 +77,14 @@ namespace WengaPort.Buttons
             }, "Drop Portal by ID");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            HalfButton = new QMSingleButton(ThisMenu, 3, 1.75f, "Rejoin", () =>
+            HalfButton = new QMSingleButton(ThisMenu, 3, 1.75f, "Reupload \nAvatarID", () =>
             {
-                var CurrentRoom = RoomManager.field_Internal_Static_ApiWorld_0.id + ":" + RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags;
-                Networking.GoToRoom(CurrentRoom);
-            }, "Rejoin the current World");
+                string ID = Clipboard.GetText();
+                if (ID.Contains("avtr_"))           
+                {
+                    Modules.Reupload.ReuploaderButtons.ReuploadAvatar(ID);
+                }
+            }, "Reupload a AvatarID from your Clipboard");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 1, 2.25f, "Clear \nDrawings", () =>

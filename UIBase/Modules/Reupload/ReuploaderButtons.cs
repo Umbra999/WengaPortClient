@@ -9,103 +9,60 @@ using System.Text;
 using System.Threading.Tasks;
 using UnhollowerRuntimeLib;
 using UnityEngine;
-using VRC;
 using VRC.Core;
 using VRC.UI;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Il2CppSystem.Collections.Generic;
-using UnhollowerBaseLib.Attributes;
 
 namespace WengaPort.Modules.Reupload
 {
     public class ReuploaderButtons : MonoBehaviour
     {
+        public static string string_8;
 
         public static Delegate ReferencedDelegate;
 
         public static IntPtr MethodInfo;
 
-        public static  Il2CppSystem.Collections.Generic.List<MonoBehaviour> AntiGcList;
+        public static Il2CppSystem.Collections.Generic.List<MonoBehaviour> AntiGcList;
 
         public static volatile bool ActionsBool;
 
-        public static  System.Collections.Generic.List<Action> Actions = new System.Collections.Generic.List<Action>(10);
+        public static System.Collections.Generic.List<Action> Actions = new System.Collections.Generic.List<Action>(10);
 
-        public static  System.Collections.Generic.List<Action> list_2 = new System.Collections.Generic.List<Action>(10);
+        public static System.Collections.Generic.List<Action> Actions2 = new System.Collections.Generic.List<Action>(10);
 
         private static string NewAvatarID = string.Empty;
 
-        private static Player player_0;
-
-        private static VRCPlayer vrcplayer_0;
-
-        private static APIUser apiuser_0;
-
-        private static VRCAvatarManager vrcavatarManager_0;
-
-        private static ApiAvatar apiAvatar_0;
+        private static ApiAvatar SelectedAvatar;
 
         private static ApiAvatar apiAvatar_1;
 
-        private static ApiWorld apiWorld_0;
+        private static ApiWorld ReuploadedWorld;
 
-        private static ApiFile apiFile_0;
+        private static string NewWorldID = string.Empty;
 
-        private static ApiFile apiFile_1;
+        private static ApiWorld SelectedWorld;
 
-        private static string string_2 = string.Empty;
+        private static ApiFile WorldAssetBundle;
 
-        public static volatile string string_3 = string.Empty;
-
-        private static string string_4 = string.Empty;
-
-        private static string string_5 = string.Empty;
-
-        private static ApiWorld apiWorld_1;
-
-        public static volatile string string_6 = string.Empty;
-
-        public static volatile string string_7 = string.Empty;
-
-        private static string string_8 = string.Empty;
-
-        public static volatile string ReuploadFilePath = string.Empty;
-
-        public static volatile string string_10 = string.Empty;
-
+        private static ApiFile AvatarAssetBundle;
 
         private static string AssetBundlePath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "AssetBundles");
 
         private static string VrcaStorePath = Path.Combine(AssetBundlePath, "VrcaStore");
 
-        private static string ReuploaderModDataPath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "ReuploaderModData");
-
-        private static string NameTxtFile = "name.txt";
-
-        private static string NameTxtPath = Path.Combine(ReuploaderModDataPath, NameTxtFile);
-
-        private static string string_18 = string.Empty;
-
         private static Assembly assembly_0;
 
-        private static Type type_0;
+        private static Type GetUnpackerType;
 
-        private static MethodInfo methodInfo_0;
+        private static MethodInfo GetUnpackerMethod;
 
-        private static string string_19 = string.Empty;
-
-        private static string string_20 = string.Empty;
-
-        public ReuploaderButtons(IntPtr intptr_1)
-            : base(intptr_1)
+        public ReuploaderButtons(IntPtr intptr_1) : base(intptr_1)
         {
             AntiGcList = new Il2CppSystem.Collections.Generic.List<MonoBehaviour>(1);
             AntiGcList.Add(this);
         }
 
-        public ReuploaderButtons(Delegate delegate_1, IntPtr intptr_1)
-            : base(ClassInjector.DerivedConstructorPointer<ReuploaderButtons>())
+        public ReuploaderButtons(Delegate delegate_1, IntPtr intptr_1) : base(ClassInjector.DerivedConstructorPointer<ReuploaderButtons>())
         {
             ClassInjector.DerivedConstructorBody(this);
             ReferencedDelegate = delegate_1;
@@ -121,47 +78,49 @@ namespace WengaPort.Modules.Reupload
             AntiGcList = null;
         }
 
-        [DllImport("kernel32.dll", ExactSpelling = true)]
-        public static extern IntPtr GetConsoleWindow();
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool SetForegroundWindow(IntPtr intptr_1);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern IntPtr FindWindow(string string_21, string string_22);
-        
         public void Start()
         {
+            try
+            {
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("WengaPort.Resources.UBPU.exe"))
+                {
+                    using MemoryStream memoryStream = new MemoryStream((int)stream.Length);
+                    stream.CopyTo(memoryStream);
+                    assembly_0 = Assembly.Load(memoryStream.ToArray());
+                }
+                GetUnpackerType = assembly_0.GetTypes().First((Type type_0) => type_0.Name.Equals("Program"));
+                GetUnpackerMethod = GetUnpackerType.GetMethods(BindingFlags.Static | BindingFlags.NonPublic).First((MethodInfo methodInfo_0) => methodInfo_0.Name.Equals("Main"));
+            }
+            catch {}
             if (Directory.Exists(AssetBundlePath))
 	        {
 		        Directory.EnumerateDirectories(AssetBundlePath).ToList().ForEach(delegate(string string_0)
-		    {
-			try
-			{
-				if (string_0.EndsWith("_dump"))
-				{
-					Directory.Delete(string_0, recursive: true);
-				}
-			}
-			catch {}
-		    });
-		    Directory.EnumerateFiles(AssetBundlePath).ToList().ForEach(delegate(string string_0)
-		    {
-			    try
-			    {
-				    File.Delete(string_0);
-			    }
-			    catch { }
-		    });
-		    Directory.EnumerateFiles(VrcaStorePath).ToList().ForEach(delegate(string string_0)
-		    {
-			try
-			{
-				File.Delete(string_0);
-			}
-			catch { }
-		    });
+		        {
+			        try
+			        {
+				        if (string_0.EndsWith("_dump"))
+				        {
+					        Directory.Delete(string_0, recursive: true);
+				        }
+			        }
+			        catch { }
+		        });
+		        Directory.EnumerateFiles(AssetBundlePath).ToList().ForEach(delegate(string string_0)
+		        {
+			        try
+			        {
+				        File.Delete(string_0);
+			        }
+			        catch {}
+		        });
+		        Directory.EnumerateFiles(VrcaStorePath).ToList().ForEach(delegate(string string_0)
+		        {
+			        try
+			        {
+				        File.Delete(string_0);
+			        }
+			        catch {}
+		        });
 	        }
 	        else
 	        {
@@ -169,22 +128,25 @@ namespace WengaPort.Modules.Reupload
 		        Directory.CreateDirectory(VrcaStorePath);
 	        }
         }
+
+
         public void Update()
         {
             if (ActionsBool)
             {
                 lock (Actions)
                 {
-                    System.Collections.Generic.List<Action> list = list_2;
-                    list_2 = Actions;
+                    System.Collections.Generic.List<Action> list = Actions2;
+                    Actions2 = Actions;
                     Actions = list;
                     ActionsBool = false;
                 }
-                foreach (Action item in list_2)
+                foreach (Action item in Actions2)
                 {
                     item();
+                    Actions.Remove(item);
                 }
-                list_2.Clear();
+                Actions2.Clear();
             }
         }
 
@@ -197,7 +159,7 @@ namespace WengaPort.Modules.Reupload
             }
         }
 
-        private void ReuploadWorldAction()
+        public static void ReuploadWorldAction()
         {
             VRCUiManager vRCUiManager = VRCUiManager.prop_VRCUiManager_0;
             if (!vRCUiManager)
@@ -219,85 +181,75 @@ namespace WengaPort.Modules.Reupload
                 }
                 else
                 {
-                    MelonLogger.LogError("Couldn't fetch APIWorld");
+                    Extensions.Logger.WengaLogger("Failed to fetch APIWorld");
                 }
             }
         }
-        
-        internal static void ReuploadAvatar(string string_21)
+
+        public static void ReuploadAvatar(string avatarID)
         {
-            if (string.IsNullOrEmpty(string_21))
+            if (string.IsNullOrEmpty(avatarID))
             {
-                MelonLogger.LogError("AvatarId was empty");
+                Extensions.Logger.WengaLogger("No AvatarID found");
                 return;
             }
-            API.Fetch<ApiAvatar>(string_21, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+            API.Fetch<ApiAvatar>(avatarID, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
             {
-                apiAvatar_0 = apiContainer_0.Model.Cast<ApiAvatar>();
-                if (apiAvatar_0 == null)
+                SelectedAvatar = apiContainer_0.Model.Cast<ApiAvatar>();
+                if (SelectedAvatar == null)
                 {
-                    MelonLogger.LogError("Couldn't fetch ApiAvatar");
+                    Extensions.Logger.WengaLogger("Failed to get Avatar");
                 }
                 else
                 {
-                    NewAvatarID = GetAvatarID();
+                    NewAvatarID = GenerateAvatarID();
                     API.Fetch<ApiAvatar>(NewAvatarID, (Action<ApiContainer>)delegate
                     {
-                        MelonLogger.LogError("AvatarId " + NewAvatarID + " already in use!");
-                        ReuploadAvatar(string_21);
+                        Extensions.Logger.WengaLogger("AvatarId " + NewAvatarID + " already in use");
+                        ReuploadAvatar(avatarID);
                     }, (Action<ApiContainer>)delegate
                     {
                         Task.Run(async delegate
                         {
-                            await Task.Delay(1000);
-
-                            MelonLogger.Log("AvatarId: " + apiAvatar_0.id + " | AssetUrl: " + apiAvatar_0.assetUrl + " | Author: " + apiAvatar_0.authorName);
+                            Extensions.Logger.WengaLogger("AvatarId: " + SelectedAvatar.id + " | AssetUrl: " + SelectedAvatar.assetUrl + " | Author: " + SelectedAvatar.authorName);
                             try
                             {
-                                string text2 = await DownloadAvatar(apiAvatar_0);
-                                ReuploadFilePath = text2;
-                                if (!string.IsNullOrEmpty(ReuploadFilePath))
+                                string DownloadPath = await DownloadAvatar(SelectedAvatar);
+                                if (!string.IsNullOrEmpty(DownloadPath))
                                 {
-                                    MelonLogger.Log("DownloadAvatarSuccess");
-                                    await GenerateAssetBundle(ReuploadFilePath);
-                                    MelonLogger.Log("AssetBundle created");
-                                    if (!string.IsNullOrEmpty(ReuploadFilePath))
+                                    Extensions.Logger.WengaLogger("Avatar Downloaded");
+                                    string UncompressedVRCA = await UncompressBundle(DownloadPath);
+                                    Extensions.Logger.WengaLogger("AssetBundle created");
+                                    if (!string.IsNullOrEmpty(UncompressedVRCA))
                                     {
-                                        string unityVersion = apiAvatar_0.unityVersion.ToLower();
-                                        string platform = apiAvatar_0.platform.ToLower();
+                                        string unityVersion = SelectedAvatar.unityVersion.ToLower();
+                                        string platform = SelectedAvatar.platform.ToLower();
                                         string ApiVersion = ApiWorld.VERSION.ApiVersion.ToString().ToLower();
                                         if (string.IsNullOrEmpty(ApiVersion))
                                         {
                                             ApiVersion = "4";
                                         }
-                                        string_8 = apiAvatar_0.name;
-                                        string_20 = "Avatar - " + string_8 + " - Image - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
-                                        string_19 = "Avatar - " + string_8 + " - Asset bundle - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
-                                        MelonLogger.Log("AvatarNames generated!");
-                                        MelonLogger.Log(string_20);
-                                        MelonLogger.Log(string_19);
-                                        if (!(await OwerWriteAssetBundle(NewAvatarID, apiAvatar_0.id)))
+                                       var avatarimage = "Avatar - " + SelectedAvatar.name + " - Image - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
+                                        var AvatarAssetBundle = "Avatar - " + SelectedAvatar.name + " - Asset bundle - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
+                                        if (!(await ReplaceID(UncompressedVRCA, NewAvatarID, SelectedAvatar.id)))
                                         {
-                                            MelonLogger.LogError("Failed to set AvatarId!");
+                                            Extensions.Logger.WengaLogger("Failed to set AvatarID");
                                         }
-                                        else if (await CompressAssetBundle())
+                                        string PackedBundle = await CompressAssetBundle(UncompressedVRCA);
+                                        if (!string.IsNullOrEmpty(PackedBundle))
                                         {
                                             RegisterAction(delegate
                                             {
-                                                MelonLogger.Log("Uploading vrca");
-                                                ReuploaderComponent.smethod_0(ReuploadFilePath, null, string_19, OnUploadVrcaAsyncSuccess, OnUploadVrcaAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float float_0)
+                                                Extensions.Logger.WengaLogger("Uploading VRCA...");
+                                                ApiFileHelper.upload(PackedBundle, null, AvatarAssetBundle, OnUploadVrcaAsyncSuccess, OnUploadVrcaAsyncFailure, delegate (ApiFile imageBundle,  string string_0, string string_1, float UploadingStatus)
                                                 {
-                                                    
-                                                    if (float_0 >= 50f)
-                                                    {
-                                                        MelonLogger.Log("Uploading vrca 50% done");
-                                                    }
-                                                }, (ApiFile apiFile_0) => false);
+                                                    Extensions.Logger.WengaLogger($"VRCA Uploading Progress: {UploadingStatus * 100}%");
+                                                }, (ApiFile File) => false);
                                             });
                                         }
                                         else
                                         {
-                                            MelonLogger.LogError("Failed to recompress AssetBundle!");
+                                            Extensions.Logger.WengaLogger("Failed to recompress AssetBundle");
                                         }
                                     }
                                 }
@@ -310,45 +262,43 @@ namespace WengaPort.Modules.Reupload
                     });
                 }
             }, (Action<ApiContainer>)delegate
-          {
-              MelonLogger.LogError("Couldn't fetch avatar (API)");
-          });
+            {
+                Extensions.Logger.WengaLogger("Couldn't fetch avatar (API)");
+            });
         }
 
-        private static void OnUploadVrcaAsyncSuccess(ApiFile apiFile_2, string string_21)
+        private static void OnUploadVrcaAsyncSuccess(ApiFile avatar, string string_21)
         {
-            MelonLogger.Log("OnUploadVrcaAsyncSuccess");
-            apiFile_0 = apiFile_2;
+            Extensions.Logger.WengaLogger("VRCA Uploaded");
+            AvatarAssetBundle = avatar;
+            Extensions.Logger.WengaLogger("AvatarAssetBundle : " + avatar.GetFileURL());
             Task.Run(async delegate
             {
-                string_10 = await DownloadImage(apiAvatar_0.imageUrl);
-                if (!string.IsNullOrEmpty(string_10))
+                var image = await DownloadImage(SelectedAvatar.imageUrl);
+                if (!string.IsNullOrEmpty(image))
                 {
-                    MelonLogger.Log("DownloadAvatarImageSuccess");
+                    Extensions.Logger.WengaLogger("Avatar Image downloaded");
                     RegisterAction(delegate
                     {
-                        MelonLogger.Log("Uploading image");
-                        ReuploaderComponent.smethod_0(string_10, null, string_20, OnUploadImageAsyncSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float float_0)
+                        Extensions.Logger.WengaLogger("Uploading Image...");
+                        ApiFileHelper.upload(image, null, avatar.GetFileURL(), OnUploadVrcaAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float Progress)
                         {
-                            if (float_0 >= 50f)
-                            {
-                                MelonLogger.Log("Uploading image 50% done");
-                            }
-                        }, (ApiFile apiFile_0) => false);
+                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Progress * 100}%");
+                        }, (ApiFile Assets) => false);
                     });
                 }
             });
         }
 
-        private static void OnUploadVrcaAsyncFailure(ApiFile apiFile_2, string string_21)
+        private static void OnUploadVrcaAsyncFailure(ApiFile ImageUrl, string status)
         {
-            MelonLogger.Log("OnUploadVrcaAsyncFailure");
+            Extensions.Logger.WengaLogger("VRCA Upload Failed");
         }
 
-        private static void OnUploadImageAsyncSuccess(ApiFile apiFile_2, string string_21)
+        private static void OnUploadVrcaAsynSuccess(ApiFile ImageUrl, string status)
         {
-            MelonLogger.Log("OnUploadImageAsyncSuccess");
-            apiFile_1 = apiFile_2;
+
+            Extensions.Logger.WengaLogger("VRCA Upload Success");
             RegisterAction(delegate
             {
                 apiAvatar_1 = new ApiAvatar
@@ -356,10 +306,10 @@ namespace WengaPort.Modules.Reupload
                     id = NewAvatarID,
                     authorName = APIUser.CurrentUser.username,
                     authorId = APIUser.CurrentUser.id,
-                    name = string_8,
-                    imageUrl = apiFile_1.GetFileURL(),
-                    assetUrl = apiFile_0.GetFileURL(),
-                    description = apiAvatar_0.description,
+                    name = SelectedAvatar.name,
+                    imageUrl = ImageUrl.GetFileURL(),
+                    assetUrl = AvatarAssetBundle.GetFileURL(),
+                    description = SelectedAvatar.description,
                     releaseStatus = "private"
                 };
                 apiAvatar_1.Post((Action<ApiContainer>)OnApiAvatarPostSuccess, (Action<ApiContainer>)OnApiAvatarPostFailure);
@@ -368,142 +318,124 @@ namespace WengaPort.Modules.Reupload
 
         private static void OnUploadImageAsyncFailure(ApiFile apiFile_2, string string_21)
         {
-            MelonLogger.Log("OnUploadImageAsyncFailure");
+            Extensions.Logger.WengaLogger("Avatar Image upload failed");
         }
 
         private static void OnApiAvatarPostSuccess(ApiContainer apiContainer_0)
         {
-            MelonLogger.Log("OnApiAvatarPostSuccess");
+            Extensions.Logger.WengaLogger("Avatar Reuploaded");
             if (!ClearOldSession())
             {
-                MelonLogger.LogWarning("Error while cleaning up the AssetBundles directory, you can probably ignore this.");
+                Extensions.Logger.WengaLogger("Old Session not cleaned");
             }
         }
 
         private static void OnApiAvatarPostFailure(ApiContainer apiContainer_0)
         {
-            MelonLogger.Log("OnApiAvatarPostFailure");
+            Extensions.Logger.WengaLogger("Failed to Reupload Avatar");
             if (!ClearOldSession())
             {
-                MelonLogger.LogWarning("Error while cleaning up the AssetBundles directory, you can probably ignore this.");
+                Extensions.Logger.WengaLogger("Old Session not cleaned");
             }
         }
 
-        private void ReuploadWorld(string worldPath)
+        public static void ReuploadWorld(string SelectedWorldID)
         {
-            if (string.IsNullOrEmpty(worldPath))
+            if (string.IsNullOrEmpty(SelectedWorldID))
             {
-                MelonLogger.LogError("WorldId was empty");
+                Extensions.Logger.WengaLogger("WorldID not found");
                 return;
             }
-            API.Fetch<ApiWorld>(worldPath, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
+            API.Fetch<ApiWorld>(SelectedWorldID, (Action<ApiContainer>)delegate (ApiContainer apiContainer_0)
             {
-                apiWorld_1 = apiContainer_0.Model.Cast<ApiWorld>();
-                if (apiWorld_1 != null)
+                SelectedWorld = apiContainer_0.Model.Cast<ApiWorld>();
+                if (SelectedWorld == null)
                 {
-                    string_5 = GetWorldID();
-                    API.Fetch<ApiWorld>(string_5, (Action<ApiContainer>)delegate
+                    Extensions.Logger.WengaLogger("Failed to fetch ApiWorld");
+                }
+                else
+                {
+                    NewWorldID = GenerateWorldID();
+                    API.Fetch<ApiAvatar>(NewWorldID, (Action<ApiContainer>)delegate
                     {
-                        MelonLogger.LogError("WorldId " + string_5 + " already in use!");
-                        ReuploadWorld(worldPath);
+                        Extensions.Logger.WengaLogger("WorldID " + NewWorldID + " already in use");
+                        ReuploadWorld(SelectedWorldID);
                     }, (Action<ApiContainer>)delegate
                     {
                         Task.Run(async delegate
                         {
-                            await Task.Delay(1000);
-                            string text = string_6;
-                            string_6 = string.Empty;
-                            if (!string.IsNullOrEmpty(text) && !text.Equals("YES"))
+                            Extensions.Logger.WengaLogger("WorldId: " + SelectedWorld.id + " | AssetUrl: " + SelectedWorld.assetUrl + " | Author: " + SelectedWorld.authorName);
+                            try
                             {
-                                MelonLogger.Log("WorldId: " + apiWorld_1.id + " | AssetUrl: " + apiWorld_1.assetUrl + " | Author: " + apiWorld_1.authorName);
-                                try
+                                string DownloadPath = await DownloadWorld(SelectedWorld);
+                                if (!string.IsNullOrEmpty(DownloadPath))
                                 {
-                                    string text2 = await DownloadWorld(apiWorld_1);
-                                    ReuploadFilePath = text2;
-                                    if (!string.IsNullOrEmpty(ReuploadFilePath))
+                                    Extensions.Logger.WengaLogger("World downloaded");
+                                    string UncompressedVRCW = await UncompressBundle(DownloadPath);
+                                    Extensions.Logger.WengaLogger("AssetBundle created");
+                                    if (!string.IsNullOrEmpty(UncompressedVRCW))
                                     {
-                                        MelonLogger.Log("DownloadWorldSuccess");
-                                        await GenerateAssetBundle(ReuploadFilePath);
-                                        MelonLogger.Log("AssetBundle created");
-
-                                        await Task.Delay(1000);
-                                        if (!string.IsNullOrEmpty(string_4))
+                                        string unityVersion = SelectedWorld.unityVersion.ToLower();
+                                        string platform = SelectedWorld.platform.ToLower();
+                                        string ApiVersion = SelectedWorld.apiVersion.ToString().ToLower();
+                                        if (string.IsNullOrEmpty(ApiVersion))
                                         {
-                                            string text3 = apiWorld_1.unityVersion.ToLower();
-                                            string text4 = apiWorld_1.platform.ToLower();
-                                            string text5 = ApiWorld.VERSION.ApiVersion.ToString().ToLower();
-                                            if (string.IsNullOrEmpty(text5))
-                                            {
-                                                text5 = "4";
-                                            }
-                                            string_20 = "World - " + string_4 + " - Image - " + text3 + "_" + text5 + "_" + text4 + "_Release";
-                                            string_2 = "World - " + string_4 + " - Asset bundle - " + text3 + "_" + text5 + "_" + text4 + "_Release";
-                                            MelonLogger.Log("WorldNames generated!");
-                                            MelonLogger.Log(string_20);
-                                            MelonLogger.Log(string_2);
-                                            if (!(await OwerWriteAssetBundle(string_5, apiWorld_1.id)))
-                                            {
-                                                MelonLogger.LogError("Failed to set AvatarId!");
-                                            }
-                                            else if (!(await CompressAssetBundle()))
-                                            {
-                                                MelonLogger.LogError("Failed to recompress AssetBundle!");
-                                            }
-                                            else
-                                            {
-                                                RegisterAction(delegate
+                                            ApiVersion = "4";
+                                        }
+                                        var WorldImage = "World - " + SelectedWorld.name + " - Image - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
+                                        var WorldAsset = "World - " + SelectedWorld.name + " - Asset bundle - " + unityVersion + "_" + ApiVersion + "_" + platform + "_Release";
+                                        if (!(await ReplaceID(UncompressedVRCW, NewWorldID, SelectedWorld.id)))
                                         {
-                                            MelonLogger.Log("Uploading vrcw");
-                                            ReuploaderComponent.smethod_0(ReuploadFilePath, null, string_2, OnUploadVrcwAsyncSuccess, OnUploadVrcwAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float float_0)
-                                                            {
-                                                                if (float_0 >= 50f)
-                                                                {
-                                                                    MelonLogger.Log("Uploading vrcw 50% done");
-                                                                }
-                                                            }, (ApiFile apiFile_0) => false);
-                                        });
-                                            }
+                                            Extensions.Logger.WengaLogger("Failed to set WorldID");
+                                        }
+                                        string PackedBundle = await CompressAssetBundle(UncompressedVRCW);
+                                        if (!string.IsNullOrEmpty(PackedBundle))
+                                        {
+                                            RegisterAction(delegate
+                                            {
+                                                Extensions.Logger.WengaLogger("Uploading VRCW...");
+                                                ApiFileHelper.upload(PackedBundle, null, WorldAsset, OnUploadVrcwAsyncSuccess, OnUploadVrcwAsyncFailure, delegate (ApiFile imageBundle,  string string_0, string string_1, float UploadingStatus)
+                                                {
+                                                    Extensions.Logger.WengaLogger($"VRCW Uploading Progress: {UploadingStatus * 100}%");
+                                                }, (ApiFile File) => false);
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Extensions.Logger.WengaLogger("Failed to recompress AssetBundle");
                                         }
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    MelonLogger.LogError(ex.ToString());
-                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                MelonLogger.LogError(ex.ToString());
                             }
                         });
                     });
                 }
-                else
-                {
-                    MelonLogger.LogError("Couldn't fetch ApiWorld");
-                }
             }, (Action<ApiContainer>)delegate
             {
-                MelonLogger.LogError("Couldn't fetch world (API)");
+              Extensions.Logger.WengaLogger("Couldn't fetch World (API)");
             });
         }
 
-        private void OnUploadVrcwAsyncSuccess(ApiFile apiFile_2, string string_21)
+        private static void OnUploadVrcwAsyncSuccess(ApiFile World, string AssetBundle)
         {
-            MelonLogger.Log("OnUploadVrcwAsyncSuccess");
-            apiFile_0 = apiFile_2;
+            Extensions.Logger.WengaLogger("VRCW Uploaded");
+            WorldAssetBundle = World;
             Task.Run(async delegate
             {
-                string_10 = await DownloadImage(apiWorld_1.imageUrl);
-                if (!string.IsNullOrEmpty(string_10))
+                var Image = await DownloadImage(SelectedWorld.imageUrl);
+                if (!string.IsNullOrEmpty(Image))
                 {
-                    MelonLogger.Log("OnUploadVrcwAsyncSuccess");
                     RegisterAction(delegate
                     {
-                        MelonLogger.Log("Uploading image");
-                        ReuploaderComponent.smethod_0(string_10, null, string_20, OnUploadVrcwAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float float_0)
+                        Extensions.Logger.WengaLogger("Uploading Image...");
+                        ApiFileHelper.upload(Image, null, AssetBundle, OnUploadVrcwAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile world, string ImageUrl, string AssetUrl, float progress)
                         {
-                            if (float_0 >= 50f)
-                            {
-                                MelonLogger.Log("Uploading image 50% done");
-                            }
-                        }, (ApiFile apiFile_0) => false);
+                            Extensions.Logger.WengaLogger($"World Image Uploading: {progress * 100}%");
+                        }, (ApiFile worlddone) => false);
                     });
                 }
             });
@@ -511,45 +443,46 @@ namespace WengaPort.Modules.Reupload
 
         private static void OnUploadVrcwAsyncFailure(ApiFile apiFile_2, string string_21)
         {
-            MelonLogger.Log("OnUploadVrcwAsyncFailure");
+            Extensions.Logger.WengaLogger("Failed to upload VRCW");
         }
 
-        private static void OnUploadVrcwAsynSuccess(ApiFile apiFile_2, string string_21)
+        private static void OnUploadVrcwAsynSuccess(ApiFile WorldImage, string notused)
         {
-            MelonLogger.Log("OnUploadVrcwAsynSuccess");
-            apiFile_1 = apiFile_2;
+            Extensions.Logger.WengaLogger("VRCW Upload Success");
             RegisterAction(delegate
             {
-                apiWorld_0 = new ApiWorld
+                ReuploadedWorld = new ApiWorld
                 {
-                    id = string_5,
+                    id = NewWorldID,
                     authorName = APIUser.CurrentUser.username,
                     authorId = APIUser.CurrentUser.id,
-                    name = string_4,
-                    imageUrl = apiFile_1.GetFileURL(),
-                    assetUrl = apiFile_0.GetFileURL(),
-                    description = apiWorld_1.description,
+                    name = SelectedWorld.name,
+                    imageUrl = WorldImage.GetFileURL(),
+                    assetUrl = WorldAssetBundle.GetFileURL(),
+                    description = SelectedWorld.description,
                     releaseStatus = "private"
                 };
-                apiWorld_0.Post((Action<ApiContainer>)OnApiWorldPostSuccess, (Action<ApiContainer>)OnApiWorldPostFailure);
+                ReuploadedWorld.Post((Action<ApiContainer>)OnApiWorldPostSuccess, (Action<ApiContainer>)OnApiWorldPostFailure);
             });
         }
 
+
+
         private static void OnApiWorldPostSuccess(ApiContainer apiContainer_0)
         {
-            MelonLogger.Log("OnApiWorldPostSuccess");
+            Extensions.Logger.WengaLogger("World Reuploaded");
             if (!ClearOldSession())
             {
-                MelonLogger.LogWarning("Error while cleaning up the AssetBundles directory, you can probably ignore this.");
+                Extensions.Logger.WengaLogger("Old Session not cleaned");
             }
         }
 
         private static void OnApiWorldPostFailure(ApiContainer apiContainer_0)
         {
-            MelonLogger.Log("OnApiWorldPostFailure");
+            Extensions.Logger.WengaLogger("Failed to Reupload World");
             if (!ClearOldSession())
             {
-                MelonLogger.LogWarning("Error while cleaning up the AssetBundles directory, you can probably ignore this.");
+                Extensions.Logger.WengaLogger("Old Session not cleaned");
             }
         }
 
@@ -574,9 +507,7 @@ namespace WengaPort.Modules.Reupload
                     {
                         Directory.Delete(item2, recursive: true);
                     }
-                    catch (Exception)
-                    {
-                    }
+                    catch { }
                 }
             }
             if (Directory.EnumerateFiles(AssetBundlePath).Count() == 1 && Directory.EnumerateDirectories(AssetBundlePath).Count() == 1)
@@ -586,12 +517,12 @@ namespace WengaPort.Modules.Reupload
             return false;
         }
 
-        private static string GetAvatarID()
+        private static string GenerateAvatarID()
         {
             return "avtr_" + Guid.NewGuid().ToString();
         }
 
-        private string GetWorldID()
+        private static string GenerateWorldID()
         {
             return "wrld_" + Guid.NewGuid().ToString();
         }
@@ -624,18 +555,18 @@ namespace WengaPort.Modules.Reupload
             return num;
         }
 
-        private static async Task<bool> OwerWriteAssetBundle(string string_21, string string_22)
+        private static async Task<bool> ReplaceID(string filepath, string NewID, string OldID)
         {
             await Task.Delay(100);
             try
             {
-                byte[] array = File.ReadAllBytes(string_18);
-                byte[] bytes = Encoding.ASCII.GetBytes(string_22);
-                Encoding.ASCII.GetBytes(string_22.ToLower());
-                byte[] bytes2 = Encoding.ASCII.GetBytes(string_21);
-                if (!string_22.Contains("avtr_") && !string_22.Contains("wrld_"))
+                byte[] array = File.ReadAllBytes(filepath);
+                byte[] bytes = Encoding.ASCII.GetBytes(OldID);
+                Encoding.ASCII.GetBytes(OldID.ToLower());
+                byte[] bytes2 = Encoding.ASCII.GetBytes(NewID);
+                if (!OldID.Contains("avtr_") && !OldID.Contains("wrld_"))
                 {
-                    MelonLogger.LogError("Custom avatar ids aren't supported");
+                    Extensions.Logger.WengaLogger("Custom AvatarID is not supported");
                     return false;
                 }
                 byte[] array2 = new byte[array.Length + bytes2.Length - bytes.Length];
@@ -648,8 +579,8 @@ namespace WengaPort.Modules.Reupload
                     Buffer.BlockCopy(array3, num + bytes.Length, array2, num + bytes2.Length, array3.Length - num - bytes.Length);
                     array3 = array2;
                 }
-                File.WriteAllBytes(string_18, array2);
-                MelonLogger.Log("AssetBundle overwritten!");
+                File.WriteAllBytes(filepath, array2);
+                Extensions.Logger.WengaLogger("AssetBundle overwritten");
                 return true;
             }
             catch (Exception ex)
@@ -664,7 +595,7 @@ namespace WengaPort.Modules.Reupload
             byte[] bytes = await new HttpClient().GetByteArrayAsync(apiAvatar_2.assetUrl);
             string text = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".vrca");
             File.WriteAllBytes(text, bytes);
-            MelonLogger.Log("DownloadAvatar");
+            Extensions.Logger.WengaLogger("Downloading Avatar");
             return text;
         }
 
@@ -673,7 +604,7 @@ namespace WengaPort.Modules.Reupload
             byte[] bytes = await new HttpClient().GetByteArrayAsync(apiWorld_2.assetUrl);
             string text = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + ".vrcw");
             File.WriteAllBytes(text, bytes);
-            MelonLogger.Log("DownloadWorld");
+            Extensions.Logger.WengaLogger("Downloading World");
             return text;
         }
 
@@ -683,21 +614,19 @@ namespace WengaPort.Modules.Reupload
             byte[] array = await httpResponseMessage.Content.ReadAsByteArrayAsync();
             if (array == null || array.Length == 0)
             {
-                MelonLogger.Log("image was null or 0");
+                Extensions.Logger.WengaLogger("image was null or 0");
             }
             string text = httpResponseMessage.Content.Headers.GetValues("Content-Type").First().Split('/')[1];
-            MelonLogger.Log(text);
             string text2 = Path.Combine(Path.GetTempPath(), Path.GetTempFileName() + "." + text);
-            MelonLogger.Log(text2);
             File.WriteAllBytes(text2, array);
-            MelonLogger.Log("DownloadImage");
+            Extensions.Logger.WengaLogger("DownloadImage");
             return text2;
         }
 
-        private static string GetDumpedVRCA()
+        private static string GetDumpedVRCA(string path)
         {
             string result = string.Empty;
-            System.Collections.Generic.IEnumerable<string> enumerable = from string_0 in Directory.EnumerateFiles(ReuploadFilePath + "_dump")
+            System.Collections.Generic.IEnumerable<string> enumerable = from string_0 in Directory.EnumerateFiles(path + "_dump")
                                                                         select new FileInfo(string_0) into fileInfo_0
                                                                         orderby fileInfo_0.CreationTime
                                                                         select fileInfo_0.FullName;
@@ -715,93 +644,103 @@ namespace WengaPort.Modules.Reupload
             return enumerable.ElementAt(0);
         }
 
-        private static async Task GenerateAssetBundle(string downloadedpath)
+        public static void RunUBPU(string[] string_21)
         {
-            if (File.Exists(downloadedpath))
+            try
             {
-                string newpath = Path.Combine(AssetBundlePath, Path.GetFileName(downloadedpath));
-                File.Move(downloadedpath, newpath);
-                if (File.Exists(newpath))
+                GetUnpackerMethod?.Invoke(null, new object[1]
                 {
-                    File.Delete(downloadedpath);
-                    Process p = new Process();
-                    p.StartInfo.FileName = $"{AssetBundlePath}\\UBPU.exe";
-                    p.StartInfo.Arguments = newpath;
-                    p.Start();
-                    p.WaitForExit();
-                    MelonLogger.Log("UBPU 1 done");
-
-                    //UBPU.Program.Main(new string[] { newpath });
-                    ReuploadFilePath = newpath;
-
-                    MelonLogger.Log("Decompressing assetbundle..");
-                    
-                    await Task.Delay(10000);
-                    MelonLogger.Log("Finished decompressing!");
-                    ReuploadFilePath = newpath;
-                    
-                    string_18 = GetDumpedVRCA();
-                    MelonLogger.Log(string_18);
-                    File.Delete(newpath);
-                    ReuploadFilePath = string_18;
-                }
+                    string_21
+                });
+            }
+            catch (Exception ex)
+            {
+                MelonLogger.LogError(ex.ToString());
             }
         }
 
-        private static async Task<bool> CompressAssetBundle()
+        private static async Task<string> UncompressBundle(string downloadedpath)
+        {
+
+            string AssetBundlePath = string.Empty;
+
+            if (File.Exists(downloadedpath))
+            {
+                string path = Path.Combine(ReuploaderButtons.AssetBundlePath, Path.GetFileName(downloadedpath));
+                File.Move(downloadedpath, path);
+                if (File.Exists(path))
+                {
+                    File.Delete(downloadedpath);
+                    RunUBPU(new string[1]
+                    {
+                    path
+                    });
+                    Extensions.Logger.WengaLogger("Decompressing assetbundle..");
+                    
+                    await Task.Delay(1000);
+                    Extensions.Logger.WengaLogger("Finished Decompressing");
+                    AssetBundlePath = GetDumpedVRCA(path);
+                    File.Delete(path);
+                    return AssetBundlePath;
+                }
+                else
+                {
+                    return AssetBundlePath;
+                }
+            }
+            else
+            {
+                return AssetBundlePath;
+            }
+        }
+
+
+        private static async Task<string> CompressAssetBundle(string UncompressedBundlePath)
         {
             try
             {
                 string text = GetXMLFile();
                 if (string.IsNullOrEmpty(text))
                 {
-                    return false;
+                    Extensions.Logger.WengaLogger("XML File Empty!");
+                    return string.Empty;
                 }
-                MelonLogger.Log("Compressing assetbundle..");
+                Extensions.Logger.WengaLogger("Compressing Assetbundle..");
                 string directoryName = Path.GetDirectoryName(Application.dataPath);
                 Directory.SetCurrentDirectory(AssetBundlePath);
-                Process p = new Process();
-                p.StartInfo.FileName = "UBPU.exe";
-                p.StartInfo.Arguments = text + " lz4hc";
-                p.Start();
-                p.WaitForExit();
-
-                MelonLogger.Log("UBPU 2 done");
-                //UBPU.Program.Main(new string[2]
-                //{
-                //    text,
-                //    "lz4hc"
-                //});
-                await Task.Delay(10000);
-                Directory.SetCurrentDirectory(directoryName);
-                MelonLogger.Log("Finished compressing!");
-                ReuploadFilePath = GetLZ4HCFile();
-                if (!string.IsNullOrEmpty(ReuploadFilePath))
+                RunUBPU(new string[2]
                 {
-                    int startIndex = ReuploadFilePath.IndexOf(".LZ4HC");
-                    string fileName = Path.GetFileName(ReuploadFilePath.Remove(startIndex, 6));
+                    text,
+                    "lz4hc"
+                });
+                await Task.Delay(1000);
+                Directory.SetCurrentDirectory(directoryName);
+                Extensions.Logger.WengaLogger("Finished Compressing");
+                var Compressed = GetLZ4HCFile();
+                if (!string.IsNullOrEmpty(Compressed))
+                {
+                    int startIndex = Compressed.IndexOf(".LZ4HC");
+                    string fileName = Path.GetFileName(Compressed.Remove(startIndex, 6));
                     string destFileName = Path.Combine(VrcaStorePath, fileName);
-                    File.Move(ReuploadFilePath, destFileName);
-                    ReuploadFilePath = destFileName;
-                    MelonLogger.Log(ReuploadFilePath);
-                    return true;
+                    File.Move(Compressed, destFileName);
+                    return destFileName;
                 }
-                return false;
+                return string.Empty;
             }
             catch (Exception ex)
             {
                 MelonLogger.LogError(ex.Message);
-                return false;
+                return string.Empty;
             }
         }
 
         private static string GetXMLFile()
         {
             string result = string.Empty;
-            System.Collections.Generic.IEnumerable<string> enumerable = from string_0 in Directory.EnumerateFiles(AssetBundlePath)
-                                                                        select new FileInfo(string_0) into fileInfo_0
-                                                                        orderby fileInfo_0.CreationTime
-                                                                        select fileInfo_0.FullName;
+            System.Collections.Generic.IEnumerable<string> enumerable = from Path in Directory.EnumerateFiles(AssetBundlePath)
+                                                                        select new FileInfo(Path) into File
+                                                                        orderby File.CreationTime
+                                                                        select File.FullName;
             if (enumerable.Any())
             {
                 foreach (string item in enumerable)
@@ -819,10 +758,10 @@ namespace WengaPort.Modules.Reupload
         private static string GetLZ4HCFile()
         {
             string result = string.Empty;
-            System.Collections.Generic.IEnumerable<string> enumerable = from string_0 in Directory.EnumerateFiles(AssetBundlePath)
-                                                                        select new FileInfo(string_0) into fileInfo_0
-                                                                        orderby fileInfo_0.CreationTime
-                                                                        select fileInfo_0.FullName;
+            System.Collections.Generic.IEnumerable<string> enumerable = from Path in Directory.EnumerateFiles(AssetBundlePath)
+                                                                        select new FileInfo(Path) into File
+                                                                        orderby File.CreationTime
+                                                                        select File.FullName;
             if (enumerable.Any())
             {
                 foreach (string item in enumerable)
@@ -835,11 +774,6 @@ namespace WengaPort.Modules.Reupload
                 return result;
             }
             return result;
-        }
-
-        static object RunUBFU(object obj, object[] parameters)
-        {
-            return MethodBase.GetCurrentMethod().Invoke(obj, parameters);
         }
     }
 }

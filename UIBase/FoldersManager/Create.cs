@@ -30,6 +30,14 @@ namespace WengaPort.FoldersManager
             {
                 Directory.CreateDirectory("WengaPort");
             }
+            if (!Directory.Exists("AssetBundles"))
+            {
+                Directory.CreateDirectory("AssetBundles");
+            }
+            if (!Directory.Exists("AssetBundles\\VrcaStore"))
+            {
+                Directory.CreateDirectory("AssetBundles\\VrcaStore");
+            }
             if (!File.Exists("WengaPort\\Config.ini"))
             {
                 File.Create("WengaPort\\Config.ini");
@@ -41,26 +49,37 @@ namespace WengaPort.FoldersManager
             }
             if (!File.Exists("WengaPort\\WengaPort.nmasset"))
             {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/794314592930496542/WengaPort.nmasset", Path.Combine(System.Environment.CurrentDirectory, "WengaPort/WengaPort.nmasset"));
-                }
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/794314592930496542/WengaPort.nmasset", Path.Combine(System.Environment.CurrentDirectory, "WengaPort/WengaPort.nmasset"));
             }
             if (!Directory.Exists(Path.Combine(System.Environment.CurrentDirectory, "Dependencies")))
+            {
                 Directory.CreateDirectory(Path.Combine(System.Environment.CurrentDirectory, "Dependencies"));
+            }
             if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "Dependencies/discord-rpc.dll")))
             {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile("http://thetrueyoshifan.com/downloads/discord-rpc.dll", Path.Combine(System.Environment.CurrentDirectory, "Dependencies/discord-rpc.dll"));
-                }
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("http://thetrueyoshifan.com/downloads/discord-rpc.dll", Path.Combine(System.Environment.CurrentDirectory, "Dependencies/discord-rpc.dll"));
             }
             if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "websocket-sharp.dll")))
             {
-                using (WebClient webClient = new WebClient())
-                {
-                    webClient.DownloadFile("https://cdn.discordapp.com/attachments/777934995905708063/781565586424987688/websocket-sharp.dll", Path.Combine(System.Environment.CurrentDirectory, "websocket-sharp.dll"));
-                }
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/797668950883565638/797669207822303242/websocket-sharp.dll", Path.Combine(System.Environment.CurrentDirectory, "websocket-sharp.dll"));
+            }
+            if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "librsync.net.dll")))
+            {
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/797668950883565638/797669228350013440/librsync.net.dll", Path.Combine(System.Environment.CurrentDirectory, "librsync.net.dll"));
+            }
+            if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "DotZLib.dll")))
+            {
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/797668950883565638/797669224612626463/DotZLib.dll", Path.Combine(System.Environment.CurrentDirectory, "DotZLib.dll"));
+            }
+            if (!File.Exists(Path.Combine(System.Environment.CurrentDirectory, "Blake2Sharp.dll")))
+            {
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/797668950883565638/797669219374334002/Blake2Sharp.dll", Path.Combine(System.Environment.CurrentDirectory, "Blake2Sharp.dll"));
             }
             if (!Directory.Exists("WengaPort\\VRCA"))
             {
