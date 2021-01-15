@@ -147,6 +147,22 @@ namespace WengaPort.Buttons
                 AvatarHider.AvatarSpoofToggle = false;
             }, "Spoof your Avatar Picture to a Cute Cat");
 
+            new QMToggleButton(ThisMenu, 5, 1, "Anti \nSpawnsound", () =>
+            {
+                GlobalDynamicBones.AntiSpawnToggle = true;
+                foreach (Player p in Utils.PlayerManager.GetAllPlayers())
+                {
+                    PlayerExtensions.ReloadAvatar(p);
+                }
+            }, "Disabled", () =>
+            {
+                GlobalDynamicBones.AntiSpawnToggle = false;
+                foreach (Player p in Utils.PlayerManager.GetAllPlayers())
+                {
+                    PlayerExtensions.ReloadAvatar(p);
+                }
+            }, "Disable Avatar spawn Sounds");
+
             new QMToggleButton(ThisMenu, 1, 1, "Anti \nDisconnect", () =>
             {
                 PatchManager.AntiMasterDC = true;

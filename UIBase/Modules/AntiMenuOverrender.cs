@@ -160,9 +160,6 @@ namespace WengaPort.Modules
             }
         }
 
-        public AntiMenuOverrender(IntPtr ptr) : base(ptr)
-        {
-
-        }
+        public AntiMenuOverrender(IntPtr ptr) : base(ptr) { }
     }
 }

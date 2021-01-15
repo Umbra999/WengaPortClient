@@ -268,7 +268,9 @@ namespace WengaPort.Extensions
                 var AvatarGameobject = __0;
                 if (CrashAvatars.Contains(AvatarID) && player.UserID() != Utils.CurrentUser.UserID())
                 {
-                    player.GetAvatarObject().SetActive(false);
+                    AvatarGameobject.SetActive(false);
+                    AvatarGameobject.gameObject.SetActive(false);
+                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
                     Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
                     VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
                 }
@@ -278,6 +280,7 @@ namespace WengaPort.Extensions
                     VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                     GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
                     GlobalDynamicBones.OptimizeBone(AvatarGameobject);
+                    GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
                     GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
                 }
             }
@@ -311,8 +314,7 @@ namespace WengaPort.Extensions
                         break;
                 }
             }
-            catch
-            { }
+            catch { }
             return true;
         }
 
@@ -323,8 +325,7 @@ namespace WengaPort.Extensions
                 VRConsole.Log(VRConsole.LogsType.Left, __0.DisplayName());
                 Logger.WengaLogger($"[-] {__0.DisplayName()}");
             }
-            catch
-            { }
+            catch { }
         }
 
         public static bool LoginDelay = true;
@@ -347,8 +348,7 @@ namespace WengaPort.Extensions
                     PlayerList.DynBoneAdder(__0);
                 }
             }
-            catch
-            {}
+            catch { }
         }
 
         private static bool RequestPatch(ref string __0, ref Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> __2)
@@ -590,8 +590,8 @@ namespace WengaPort.Extensions
                         bool flag4 = il2CppStructArray2.Length > 1700;
                         if (flag4)
                         {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event");
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented Malicious USpeak");
+                            Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event {il2CppStructArray2.Length}");
+                            VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented USpeak Event {il2CppStructArray2.Length}");
                             return false;
                         }
                         break;
@@ -627,8 +627,7 @@ namespace WengaPort.Extensions
                     return false;
                 }
             }
-            catch
-            { }
+            catch { }
             return true;
         }
 
@@ -809,7 +808,7 @@ namespace WengaPort.Extensions
                         Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{__1.EventType}]");
                         return false;
                     }
-                    else if (__1.ParameterString.Length >= 250)
+                    else if (__1.ParameterString.Length >= 200)
                     {
                         VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{__1.EventType}]");
                         Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{__1.EventType}]");

@@ -33,6 +33,8 @@ namespace WengaPort.MainLoader
             OnStart();
             Console.Title = $"WengaPort";
             PatchManager.QuestIni();
+            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
+            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ApiFileHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<Movement>();
             ClassInjector.RegisterTypeInIl2Cpp<LovenseRemote>();
             ClassInjector.RegisterTypeInIl2Cpp<PlayerList>();
@@ -44,8 +46,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<ESP>();
             ClassInjector.RegisterTypeInIl2Cpp<AvatarHider>();
             ClassInjector.RegisterTypeInIl2Cpp<KeyBindHandler>();
-            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
-            ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ApiFileHelper>();
+            ClassInjector.RegisterTypeInIl2Cpp<GlobalDynamicBones>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -345,6 +346,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<ESP>();
             Client.AddComponent<AvatarHider>();
             Client.AddComponent<KeyBindHandler>();
+            Client.AddComponent<GlobalDynamicBones>();
             Client.AddComponent<Modules.Reupload.ReuploaderButtons>();
             Client.AddComponent<Modules.Reupload.ApiFileHelper>();
         }

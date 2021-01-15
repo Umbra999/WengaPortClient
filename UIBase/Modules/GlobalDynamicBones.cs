@@ -6,10 +6,11 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC;
 using WengaPort.Wrappers;
+using System;
 
 namespace WengaPort.Modules
 {
-    public class GlobalDynamicBones
+    public class GlobalDynamicBones : MonoBehaviour
     {
         public static List<string> UsersBones = new List<string>();
         public static List<string> FriendOnlyBones = new List<string>();
@@ -123,6 +124,30 @@ namespace WengaPort.Modules
                     item2.m_UpdateRate = 45;
                 }
             }
+            foreach (Mesh renderer in AvatarGameobject.GetComponentsInChildren<Mesh>(true))
+            {
+                if (renderer != null)
+                {
+                    renderer.Optimize();
+                }
+            }
+        }
+
+        public static bool AntiSpawnToggle = false;
+        public static void AntiSpawnSound(GameObject avatarObject)
+        {
+            if (AntiSpawnToggle)
+            {
+                foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
+                {
+                    if (renderer != null && renderer.playOnAwake && renderer.enabled && renderer.isPlaying)
+                    {
+                        renderer.playOnAwake = false;
+                        renderer.Stop();
+                        renderer.enabled = false;
+                    }
+                }
+            }
         }
 
         public static void DisableAvatarFeatures(GameObject avatarObject, VRCPlayer player)
@@ -164,5 +189,6 @@ namespace WengaPort.Modules
                 }
             }
         }
+        public GlobalDynamicBones(IntPtr ptr) : base(ptr) { }
     }
 }

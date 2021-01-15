@@ -482,7 +482,7 @@
     <Compile Include="Modules\AttachmentManager.cs" />
     <Compile Include="Modules\AvatarFavs.cs" />
     <Compile Include="Modules\AvatarHider.cs" />
-    <Compile Include="Modules\BotOrbit.cs" />
+    <Compile Include="Modules\Bot\BotOrbit.cs" />
     <Compile Include="Modules\CameraHandler.cs" />
     <Compile Include="Modules\ESP.cs" />
     <Compile Include="Modules\GlobalDynamicBones.cs" />

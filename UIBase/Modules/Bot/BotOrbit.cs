@@ -33,38 +33,36 @@ namespace WengaPort.Modules
             {
                 Render2.enabled = false;
             }
+            Application.targetFrameRate = 25;
+            Screen.SetResolution(int.MinValue, int.MinValue, false);
             MelonCoroutines.Start(BotRotation());
         }
         public static IEnumerator BotRotation()
         {
-            yield return new WaitForSecondsRealtime(15);
+            yield return new WaitForSecondsRealtime(25);
             for (; ; )
             {
                 while (RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
                 FetchRoom();
                 if (!CurrentRoom.Contains(RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags))
                 {
-                    yield return new WaitForSecondsRealtime(100);
+                    yield return new WaitForSecondsRealtime(63);
                     Networking.GoToRoom(CurrentRoom);
                     yield break;
                 }
-                try
-                {
-                    Player Target = Utils.PlayerManager.GetPlayer("usr_68e5cfd9-de49-480a-9cc4-da1203927a1c");
-                    Physics.gravity = Vector3.zero;
-                    Movement.FlyEnable();
-                    Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
-                    timer += Time.deltaTime * rotSpeed;
-                    float x = -Mathf.Cos(timer) * xSpread;
-                    float z = Mathf.Sin(timer) * zSpread;
-                    Vector3 pos = new Vector3(x, yOffset, z);
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = pos + Target.field_Private_VRCPlayerApi_0.GetBonePosition(HumanBodyBones.Chest);
-                    Vector3 Direction = Target.transform.position - VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.transform.position;
-                    Direction.y = 0;
-                    Quaternion rotation = Quaternion.LookRotation(Direction);
-                    VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = rotation;
-                }
-                catch {}
+                Player Target = Utils.PlayerManager.GetPlayer("usr_9feb6710-89b8-4e47-a169-70b181fce4e8");
+                while (Target == null) yield return new WaitForEndOfFrame();
+                Movement.FlyEnable();
+                Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
+                timer += Time.deltaTime * rotSpeed;
+                float x = -Mathf.Cos(timer) * xSpread;
+                float z = Mathf.Sin(timer) * zSpread;
+                Vector3 pos = new Vector3(x, yOffset, z);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.position = pos + Target.field_Private_VRCPlayerApi_0.GetBonePosition(HumanBodyBones.Chest);
+                Vector3 Direction = Target.transform.position - VRCPlayer.field_Internal_Static_VRCPlayer_0.gameObject.transform.position;
+                Direction.y = 0;
+                Quaternion rotation = Quaternion.LookRotation(Direction);
+                VRCPlayer.field_Internal_Static_VRCPlayer_0.transform.rotation = rotation;
                 yield return new WaitForEndOfFrame();
             }
             yield break;
