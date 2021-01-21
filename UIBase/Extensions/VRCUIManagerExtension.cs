@@ -19,15 +19,67 @@ namespace WengaPort.Extensions
 			return Instance.menuContent.GetComponentInChildren<PageUserInfo>().user;
 		}
 
+		public static void QueHudMessage(this VRCUiManager instance, string Message)
+		{
+			if (RoomManager.field_Internal_Static_ApiWorld_0 == null) return;
+			else if (HudMessage1 == null)
+            {
+				HudMessage1 = CreateTextNear(CreateImage("WengaPortHud", -300f), 55f, TextAnchor.LowerLeft);
+			}
+			MelonCoroutines.Start(ShowMessage(HudMessage1, MessagesList, Message));
+		}
+
+		public static Image CreateImage(string name, float offset)				
+		{
+			var hudRoot = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud");
+			var requestedParent = hudRoot.transform.Find("NotificationDotParent");
+			var indicator = UnityEngine.Object.Instantiate(hudRoot.transform.Find("NotificationDotParent/NotificationDot").gameObject, requestedParent, false).Cast<GameObject>();
+			indicator.name = "NotifyDot-" + name;
+			indicator.SetActive(true);
+			indicator.transform.localPosition += Vector3.right * offset;
+			var image = indicator.GetComponent<Image>();
+			image.enabled = false;
+			return image;
+		}
+
+		public static List<string> MessagesList = new List<string>();
+		public static Text CreateTextNear(Image image, float offset, TextAnchor alignment)
+		{
+			var gameObject = new GameObject(image.gameObject.name + "-text");
+			gameObject.AddComponent<Text>();
+			gameObject.transform.SetParent(image.transform, false);
+			gameObject.transform.localScale = Vector3.one;
+			gameObject.transform.localPosition = Vector3.up * offset + Vector3.right * 300f;
+			var text = gameObject.GetComponent<Text>();
+			text.color = Color.white;
+			text.fontStyle = FontStyle.Bold;
+			text.horizontalOverflow = HorizontalWrapMode.Overflow;
+			text.verticalOverflow = VerticalWrapMode.Overflow;
+			text.alignment = alignment;
+			text.fontSize = 25;
+			text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+			text.supportRichText = true;
+
+			gameObject.SetActive(true);
+			return text;
+		}
+		public static Text HudMessage1;
+		public static System.Collections.IEnumerator ShowMessage(Text text, List<string> MessagesList, string message)
+		{
+			MessagesList.Add(message);
+			text.text = string.Join("\n", MessagesList);
+			yield return new WaitForSeconds(5.5f);
+			MessagesList.Remove(message);
+			text.text = string.Join("\n", MessagesList);
+		}
+
 		public static void CloseUI(this VRCUiManager Instance, bool withFade = false)
 		{
 			try
 			{
 				Instance.Method_Public_Void_Boolean_0(withFade);
 			}
-			catch
-			{
-			}
+			catch { }
 		}
 		public static VRCUiPage GetPage(this VRCUiManager Instance, string screenPath)
 		{

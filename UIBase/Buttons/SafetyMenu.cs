@@ -139,13 +139,13 @@ namespace WengaPort.Buttons
                 PatchManager.AntiWorldTrigger = false;
             }, "Make all global Triggers local");
 
-            new QMToggleButton(ThisMenu, 5, 0, "Avatar \nSpoof", () =>
+            new QMToggleButton(ThisMenu, 5, 0, "Friend \nPortal", () =>
             {
-                AvatarHider.AvatarSpoofToggle = true;
+                PortalHandler.FriendOnlyPortal = true;
             }, "Disabled", () =>
             {
-                AvatarHider.AvatarSpoofToggle = false;
-            }, "Spoof your Avatar Picture to a Cute Cat");
+                PortalHandler.FriendOnlyPortal = false;
+            }, "Delete all Portals from non friends");
 
             new QMToggleButton(ThisMenu, 5, 1, "Anti \nSpawnsound", () =>
             {
@@ -169,7 +169,7 @@ namespace WengaPort.Buttons
             }, "Disabled", () =>
             {
                 PatchManager.AntiMasterDC = false;
-            }, "Advanced Anti Master Disconnect (Disable some Events)");
+            }, "Disable all Always Events");
 
             new QMToggleButton(ThisMenu, 3, 1, "Anti \nVideoplayer", () =>
             {

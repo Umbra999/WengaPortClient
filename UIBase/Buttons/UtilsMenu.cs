@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using static WengaPort.Buttons.SocialMenu;
 using System.Linq;
 using Logger = WengaPort.Extensions.Logger;
+using MelonLoader;
 
 namespace WengaPort.Buttons
 {
@@ -43,13 +44,13 @@ namespace WengaPort.Buttons
                 Headlight.Toggle(false);
             }, "Toggle Headlight");
 
-            new QMToggleButton(ThisMenu, 3, 0, "World \nTrigger", () =>
+            new QMToggleButton(ThisMenu, 3, 0, "Hide \nCamera", () =>
             {
-                PatchManager.WorldTrigger = true;
+                PatchManager.HideCamera = true;
             }, "Disabled", () =>
             {
-                PatchManager.WorldTrigger = false;
-            }, "Make all Triggers Global");
+                PatchManager.HideCamera = false;
+            }, "Hide your Camera from other People");
 
             new QMToggleButton(ThisMenu, 4, 0, "Serialize", () =>
             {
@@ -117,6 +118,12 @@ namespace WengaPort.Buttons
             {
                 ItemHandler.BringPickups();
             }, "Bring all Pickups to you");
+            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+
+            HalfButton = new QMSingleButton(ThisMenu, 0, 1.75f, "Add\nFriends", () =>
+            {
+                MelonCoroutines.Start(Modules.Photon.FriendBackup());
+            }, "Add Friends from a txt file");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             new QMToggleButton(ThisMenu, 1, 1, "ESP", () =>

@@ -18,6 +18,9 @@ using WengaPort.Wrappers;
 using static VRC.SDKBase.VRC_EventHandler;
 using VRC.Udon;
 using VRC.Udon.Common.Interfaces;
+using System.IO;
+using Transmtn.DTO.Notifications;
+using VRC.Core;
 
 namespace WengaPort.Modules
 {
@@ -41,6 +44,30 @@ namespace WengaPort.Modules
 			}
 		}
 
+		public static IEnumerator FriendBackup()
+		{
+			string[] Friends = File.ReadAllLines("WengaPort\\Friends.txt");
+			Extensions.Logger.WengaLogger($"[Friends] Adding {Friends.Length} Friends - Time: {Friends.Length * 12} Seconds");
+			int i = 0;
+			foreach (string line in Friends)
+			{
+				if (!APIUser.IsFriendsWith(line))
+				{
+					yield return new WaitForSeconds(12);
+					Extensions.Logger.WengaLogger("[Friends] sending request to " + line);
+                    Transmtn.DTO.Notifications.Notification xx = FriendRequest.Create(line);
+					Utils.VRCWebSocketsManager.SendNotification(xx);
+					i++;
+				}
+				else
+				{
+					Extensions.Logger.WengaLogger("[Friends] Skipping " + line);
+				}
+			}
+            Extensions.Logger.WengaLogger($"Summary:\n Total Request: {i} with {File.ReadAllLines("WengaPort\\Friends.txt").Length} friends");
+            yield break;
+		}
+
 		public static void EmoteRPC(int i)
 		{
 			try
@@ -57,8 +84,18 @@ namespace WengaPort.Modules
 		}
 		private static void OpRaiseEvent(byte code, object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
 		{
-			Il2CppSystem.Object Object = Utils.Serialization.FromManagedToIL2CPP(customObject);
-			PhotonHandler.field_Internal_Static_PhotonHandler_0.prop_ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique_0.Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_1(code,Object,RaiseEventOptions,sendOptions);
+			Il2CppSystem.Object Object = Utils.Serialization.FromManagedToIL2CPP<Il2CppSystem.Object>(customObject);
+			OpRaiseEvent(code, Object, RaiseEventOptions, sendOptions);
+		}
+		public static void OpRaiseEvent(byte code, Il2CppSystem.Object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
+		{
+			PhotonHandler.
+			 field_Internal_Static_PhotonHandler_0.prop_ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique_0.
+			 Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_0
+			(code,
+			 customObject,
+			 RaiseEventOptions,
+			 sendOptions);
 		}
 
 		public static bool Desync = false;

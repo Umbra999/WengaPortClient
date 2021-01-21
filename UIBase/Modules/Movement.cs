@@ -137,117 +137,65 @@ namespace WengaPort.Modules
                     {
                         return;
                     }
-                    if (Input.GetKeyDown((KeyCode)304))
+                    if (isInVR)
                     {
-                        FlySpeed *= 2f;
-                    }
-                    if (Input.GetKeyUp((KeyCode)304))
-                    {
-                        FlySpeed /= 2f;
-                    }
-                    if (VRFlyToggle)
-                    {
-                        if (isInVR)
+                        if (Math.Abs(Input.GetAxis("Vertical")) != 0f)
                         {
-                            if (Math.Abs(Input.GetAxis("Vertical")) != 0f)
-                            {
-                                currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime * Input.GetAxis("Vertical");
-                            }
-                            if (Math.Abs(Input.GetAxis("Horizontal")) != 0f)
-                            {
-                                currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime * Input.GetAxis("Horizontal");
-                            }
-                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f)
-                            {
-                                currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
-                            }
-                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f)
-                            {
-                                currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
-                            }
+                            currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime * Input.GetAxis("Vertical");
                         }
-                        else
+                        if (Math.Abs(Input.GetAxis("Horizontal")) != 0f)
                         {
-                            if (Input.GetKey((KeyCode)101))
-                            {
-                                currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)113))
-                            {
-                                currentPlayer.transform.position += transform.transform.up * -1f * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)119))
-                            {
-                                currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)97))
-                            {
-                                currentPlayer.transform.position += transform.transform.right * -1f * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)100))
-                            {
-                                currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)115))
-                            {
-                                currentPlayer.transform.position += transform.transform.forward * -1f * FlySpeed * Time.deltaTime;
-                            }
+                            currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime * Input.GetAxis("Horizontal");
+                        }
+                        if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f)
+                        {
+                            currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
+                        }
+                        if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f)
+                        {
+                            currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
                         }
                     }
                     else
                     {
-                        if (isInVR)
+                        if (Input.GetKeyDown((KeyCode)304))
                         {
-                            if (Math.Abs(Input.GetAxis("Vertical")) != 0f)
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.forward * FlySpeed * Time.deltaTime * Input.GetAxis("Vertical");
-                            }
-                            if (Math.Abs(Input.GetAxis("Horizontal")) != 0f)
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.right * FlySpeed * Time.deltaTime * Input.GetAxis("Horizontal");
-                            }
-                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") < 0f)
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
-                            }
-                            if (Input.GetAxis("Oculus_CrossPlatform_SecondaryThumbstickVertical") > 0f)
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime * Input.GetAxisRaw("Oculus_CrossPlatform_SecondaryThumbstickVertical");
-                            }
+                            FlySpeed *= 2f;
                         }
-                        else
+                        else if (Input.GetKeyUp((KeyCode)304))
                         {
-                            if (Input.GetKey((KeyCode)101))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.up * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)113))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.up * -1f * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)119))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.forward * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)97))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.right * -1f * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)100))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.right * FlySpeed * Time.deltaTime;
-                            }
-                            if (Input.GetKey((KeyCode)115))
-                            {
-                                currentPlayer.transform.position += currentPlayer.transform.forward * -1f * FlySpeed * Time.deltaTime;
-                            }
+                            FlySpeed /= 2f;
+                        }
+                        if (Input.GetKey((KeyCode)101))
+                        {
+                            currentPlayer.transform.position += transform.transform.up * FlySpeed * Time.deltaTime;
+                        }
+                        else if (Input.GetKey((KeyCode)113))
+                        {
+                            currentPlayer.transform.position += transform.transform.up * -1f * FlySpeed * Time.deltaTime;
+                        }
+                        if (Input.GetKey((KeyCode)119)) // W
+                        {
+                            currentPlayer.transform.position += transform.transform.forward * FlySpeed * Time.deltaTime;
+                        }
+                        else if (Input.GetKey((KeyCode)115)) // S
+                        {
+                            currentPlayer.transform.position += transform.transform.forward * -1f * FlySpeed * Time.deltaTime;
+                        }
+                        if (Input.GetKey((KeyCode)97)) // A
+                        {
+                            currentPlayer.transform.position += transform.transform.right * -1f * FlySpeed * Time.deltaTime;
+                        }
+                        else if (Input.GetKey((KeyCode)100)) // D
+                        {
+                            currentPlayer.transform.position += transform.transform.right * FlySpeed * Time.deltaTime;
                         }
                     }
                     Physics.gravity = Vector3.zero;
                 }
                 else if (InfJump)
                 {
-                    if (Input.GetAxis("Jump") == 1)
+                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Single_0 == 1)
                     {
                         var Jump = Networking.LocalPlayer.GetVelocity();
                         Jump.y = Networking.LocalPlayer.GetJumpImpulse();
@@ -256,23 +204,17 @@ namespace WengaPort.Modules
                 }
                 else if (DoubleJump)
                 {
-                    try
+                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_0 && !Networking.LocalPlayer.IsPlayerGrounded())
                     {
-                        if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_2 )
-                        {
-                            Vector3 velocity = Utils.CurrentUser.GetVRCPlayerApi().GetVelocity();
-                            velocity.y = JumpPower;
-                            Utils.CurrentUser.GetVRCPlayerApi().SetVelocity(velocity);
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        throw;
+                        var Jump = Networking.LocalPlayer.GetVelocity();
+                        Jump.y = Networking.LocalPlayer.GetJumpImpulse();
+                        Jump.y += 1f;
+                        Networking.LocalPlayer.SetVelocity(Jump);
+                        Jump.y -= 1f;
                     }
                 }
-
                 if (Rotate)
-                {
+                {       
                     if (RoomManager.field_Internal_Static_ApiWorld_0 == null)
                     {
                         MovementMenu.RotateToggle.setToggleState(false, false);
@@ -303,7 +245,7 @@ namespace WengaPort.Modules
                 }
                 if (Attachment)
                 {
-                    if (Input.GetKey(KeyCode.W) || RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                    if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.Space) || RoomManager.field_Internal_Static_ApiWorld_0 == null)
                     {
                         InteractMenu.AttachmentToggle.setToggleState(false, false);
                         Attachment = false;
@@ -312,32 +254,6 @@ namespace WengaPort.Modules
                 }
             }
             catch { }
-        }
-
-        public static float JumpPower
-        {
-            get
-            {
-                float result;
-                try
-                {
-                    result = Utils.CurrentUser.GetPlayer().GetComponent<PlayerModComponentJump>().field_Private_Single_0;
-                }
-                catch (Exception)
-                {
-                    result = -1f;
-                }
-                return result;
-            }
-            set
-            {
-                try
-                {
-                    Utils.CurrentUser.GetPlayer().GetComponent<PlayerModComponentJump>().field_Private_Single_0 = value;
-                }
-                catch
-                { }
-            }
         }
 
         internal static AlignTrackingToPlayerDelegate GetAlignTrackingToPlayerDelegate
@@ -386,12 +302,9 @@ namespace WengaPort.Modules
         private static VRCPlayer currentPlayer;
         private static Transform transform;
         public static bool isInVR;
-        public static bool VRFlyToggle = true;
         public static bool Rotate = false;
         public static float FlySpeed = 4.2f;
         public static float RotateSpeed = 180f;
-        public Movement(IntPtr ptr) : base(ptr)
-        {
-        }
+        public Movement(IntPtr ptr) : base(ptr) { }
     }
 }

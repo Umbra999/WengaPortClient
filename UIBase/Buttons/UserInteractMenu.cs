@@ -226,11 +226,10 @@ namespace WengaPort.Buttons
                 RPCAndEventBlock.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Block the Player's Photonevents");
 
-            HalfButton = new QMSingleButton(ThisMenu, 2, -0.25f, "RIP \nVRCA", () =>
+            HalfButton = new QMSingleButton(ThisMenu, 2, -0.25f, "Friend \nSpam", () =>
             {
-                ApiAvatar apiAvatar = Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar();
-                RippingHandler.DownloadAvatar(apiAvatar);
-            }, "Download the VRC File of the Avatar");
+                Extensions.APIExtension.ApiBot.BotFriendSpam(Utils.QuickMenu.SelectedPlayer());
+            }, "Friend the Player with API Bots");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             SpamToggle = new QMToggleButton(ThisMenu, 3, 1, "Spam \nPortal", () =>

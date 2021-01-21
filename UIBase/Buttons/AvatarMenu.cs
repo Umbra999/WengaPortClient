@@ -2,10 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using UnityEngine;
+using VRC;
+using VRC.Core;
 using WengaPort.Api;
 using WengaPort.Modules;
 using WengaPort.Wrappers;
@@ -90,6 +93,11 @@ namespace WengaPort.Buttons
             {
                 Clipboard.SetText(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar().id);
             }, "Copy the Player's AvatarID to Clipboard");
+
+            new QMSingleButton(ThisMenu, 1, 2, "RIP \nVRCA", () =>
+            {
+                RippingHandler.DownloadAvatar(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar());
+            }, "Download the VRC File of the Avatar");
         }
     }
 }

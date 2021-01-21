@@ -22,24 +22,8 @@ namespace WengaPort.Modules
     {
 		public static void Initialize(bool State)
 		{
-			bool flag = ForwardObject == null;
-			if (flag)
-			{
-                ForwardObject = GameObject.Find(Utils.CurrentUser.gameObject.name + "/ForwardDirection");
-			}
-			bool flag2 = isActive == State;
-			if (!flag2)
-			{
-				bool flag3 = isActive && State;
-				if (!flag3)
-				{
-					ForwardObject.SetActive(!State);
-					isActive = State;
-				}
-			}
+			Utils.CurrentUser.transform.Find("ForwardDirection").gameObject.active = !State;
 		}
-		private static GameObject ForwardObject;
-		private static bool isActive;
 
 		public static void Invisible()
 		{

@@ -278,9 +278,25 @@ namespace WengaPort.Modules
 			{
 				return FromByteArray<T>(ToByteArray(obj));
 			}
-			public static Il2CppSystem.Object FromManagedToIL2CPP(object obj)
+
+			public static T FromManagedToIL2CPP<T>(object obj)
 			{
-				return IL2CPPFromByteArray<Il2CppSystem.Object>(ToByteArray(obj));
+				return IL2CPPFromByteArray<T>(ToByteArray(obj));
+			}
+
+			public static object[] FromIL2CPPArrayToManagedArray(Il2CppSystem.Object[] obj)
+			{
+				object[] Parameters = new object[obj.Length];
+				for (int i = 0; i < obj.Length; i++)
+					Parameters[i] = FromIL2CPPToManaged<object>(obj[i]);
+				return Parameters;
+			}
+			public static Il2CppSystem.Object[] FromManagedArrayToIL2CPPArray(object[] obj)
+			{
+				Il2CppSystem.Object[] Parameters = new Il2CppSystem.Object[obj.Length];
+				for (int i = 0; i < obj.Length; i++)
+					Parameters[i] = FromManagedToIL2CPP<Il2CppSystem.Object>(obj[i]);
+				return Parameters;
 			}
 		}
 	}

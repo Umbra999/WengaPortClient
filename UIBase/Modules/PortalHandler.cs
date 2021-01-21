@@ -97,5 +97,6 @@ namespace WengaPort.Modules
         public static List<Player> Camstrings = new List<Player>();
 
         public static bool AntiPortal = false;
+        public static bool FriendOnlyPortal = false;
     }
 }

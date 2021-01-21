@@ -84,8 +84,12 @@ namespace WengaPort.Api
 						Extensions.Logger.WengaLogger($"[API] {apiuser.displayName} -> Online");
 						break;
 					case "friend-offline":
-						Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> Offline");
-						Extensions.Logger.WengaLogger($"[API] {apiuser.displayName} -> Offline");
+						APIUser.FetchUser(WebSocketData.userId, new Action<APIUser>((user) =>
+						{
+							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{user.DisplayName()} --> Offline");
+							Extensions.Logger.WengaLogger($"[API] {user.DisplayName()} -> Offline");
+						}),
+						new Action<string>((text) => { }));
 						break;
 					case "friend-location":
 						if (apiuser.id != APIUser.CurrentUser.id)
@@ -120,8 +124,12 @@ namespace WengaPort.Api
 					case "friend-delete":
 						if (WebSocketData.userId != APIUser.CurrentUser.id)
 						{
-							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{WebSocketData.userId} --> Unfriend");
-							Extensions.Logger.WengaLogger($"[Friend] {WebSocketData.userId} -> Unfriend");
+							APIUser.FetchUser(WebSocketData.userId, new Action<APIUser>((user) =>
+							{
+								Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{user.DisplayName()} --> Unfriend");
+								Extensions.Logger.WengaLogger($"[Friend] {user.DisplayName()} -> Unfriend");
+							}),
+							new Action<string>((text) => { }));
 						}
 						break;
 					case "friend-add":
@@ -135,10 +143,7 @@ namespace WengaPort.Api
 						if (apiuser.id != APIUser.CurrentUser.id)
 						{
 							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> {apiuser.state}");
-							if (ApiConsole)
-							{
-								Extensions.Logger.WengaLogger($"[State] {apiuser.displayName} -> {apiuser.state}");
-							}
+							Extensions.Logger.WengaLogger($"[State] {apiuser.displayName} -> {apiuser.state}");
 						}
 						break;
 					case "notification":

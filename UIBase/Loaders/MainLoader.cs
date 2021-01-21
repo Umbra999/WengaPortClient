@@ -33,6 +33,7 @@ namespace WengaPort.MainLoader
             OnStart();
             Console.Title = $"WengaPort";
             PatchManager.QuestIni();
+            PatchManager.PatchSafety();
             ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
             ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ApiFileHelper>();
             ClassInjector.RegisterTypeInIl2Cpp<Movement>();
@@ -93,6 +94,7 @@ namespace WengaPort.MainLoader
             ItemHandler.World_Chairs.Clear();
             ItemHandler.PostProcess.Clear();
             ItemHandler.Pedestals.Clear();
+            ItemHandler.World_Panorama.Clear();
 
             ItemHandler.World_ObjectSyncs = Resources.FindObjectsOfTypeAll<VRC_ObjectSync>().ToArray().ToList();
             ItemHandler.World_Triggers = UnityEngine.Object.FindObjectsOfType<VRC_Trigger>().ToArray().ToList();
@@ -159,6 +161,18 @@ namespace WengaPort.MainLoader
                     {
                         vrc_AvatarPedestal.enabled = false;
                         ItemHandler.Pedestals.Add(vrc_AvatarPedestal);
+                    }
+                }
+            }
+
+            if (ItemHandler.PanoramaToggle)
+            {
+                foreach (VRC.SDKBase.VRC_Panorama panorama in Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_Panorama>())
+                {
+                    if (panorama.enabled)
+                    {
+                        ItemHandler.World_Panorama.Add(panorama);
+                        panorama.enabled = false;
                     }
                 }
             }

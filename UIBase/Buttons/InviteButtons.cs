@@ -6,6 +6,7 @@ using WengaPort.Api;
 using WengaPort.Modules;
 using VRC.Core;
 using WengaPort.Extensions;
+using System.Windows.Forms;
 
 namespace WengaPort.Buttons
 {
@@ -57,6 +58,23 @@ namespace WengaPort.Buttons
                 {
                     Extensions.Logger.WengaLogger("Start the Photonbots before using this feature");
                 }
+            }), "Check the Instance for Players");
+            PortalToInvite.SetParent(NotificationMenu);
+
+            PortalToInvite = new QMSingleButton("ShortcutMenu", 3, 1, "Copy\nWorldID", new Action(() =>
+            {
+                string ID = "";
+                Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>.Enumerator enumerator = Utils.QuickMenu.Notification().details.GetEnumerator();
+                while (enumerator.MoveNext())
+                {
+                    string a = enumerator.current.Key;
+                    if (a.ToLower() == "worldid")
+                    {
+                        Il2CppSystem.Object b = enumerator.current.value;
+                        ID = b.ToString();
+                    }
+                }
+                Clipboard.SetText(ID);
             }), "Check the Instance for Players");
             PortalToInvite.SetParent(NotificationMenu);
         }

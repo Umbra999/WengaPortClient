@@ -178,6 +178,45 @@ namespace WengaPort.Modules
 			return Color.red;
 		}
 
+		public static float GetQuality(this VRCPlayer Instance)
+		{
+			return ((!(Instance.prop_PlayerNet_0 == null)) ? Instance.prop_PlayerNet_0.prop_Single_0 : 0f) * 100;
+		}
+		public static string GetQualityColored(this VRCPlayer Instance)
+		{
+            string color;
+            if (Instance.GetQuality() >= 85)
+				color = "<color=#59D365>";
+			else if (Instance.GetQuality() >= 50)
+				color = "<color=#FF7000>";
+			else
+				color = "<color=red>";
+			string Percent = Instance.GetQuality().ToString().Split(',')[0];
+			return $"{color}{Percent}%</color>";
+		}
+
+		public static string GetQualitySymbols(this VRCPlayer Instance)
+		{
+			string color;
+			string Percent;
+			if (Instance.GetQuality() >= 85)
+            {
+				color = "<color=#59D365>";
+				Percent = "+";
+			}
+			else if (Instance.GetQuality() >= 50)
+            {
+				color = "<color=#FF7000>";
+				Percent = "/";
+			}	
+			else
+            {
+				color = "<color=red>";
+				Percent = "-";
+			}
+			return $"{color}{Percent}</color>";
+		}
+
 		public static string GetRank(this APIUser Instance)
 		{
 			string result;
@@ -185,72 +224,45 @@ namespace WengaPort.Modules
 			{
 				result = "Moderation User";
 			}
-			else
+			else if (Instance.hasSuperPowers || Instance.tags.Contains("admin_"))
 			{
-				if (Instance.hasSuperPowers || Instance.tags.Contains("admin_"))
-				{
-					result = "Admin User";
-				}
-				else
-				{
-					if (Instance.hasVIPAccess || (Instance.tags.Contains("system_legend") && Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
-					{
-						result = "Legend";
-					}
-					else
-					{
-						if (Instance.hasLegendTrustLevel || (Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
-						{
-							result = "Veteran";
-						}
-						else
-						{
-							if (Instance.hasVeteranTrustLevel)
-							{
-								result = "Trusted";
-							}
-							else
-							{
-								if (Instance.hasTrustedTrustLevel)
-								{
-									result = "Known";
-								}
-								else
-								{
-									if (Instance.hasKnownTrustLevel)
-									{
-										result = "User";
-									}
-									else
-									{
-										if (Instance.hasBasicTrustLevel || Instance.isNewUser)
-										{
-											result = "New User";
-										}
-										else
-										{
-											if (Instance.hasNegativeTrustLevel)
-											{
-												result = "NegativeTrust";
-											}
-											else
-											{
-												if (Instance.hasVeryNegativeTrustLevel)
-												{
-													result = "VeryNegativeTrust";
-												}
-												else
-												{
-													result = "Visitor";
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				result = "Admin User";
+			}
+			else if (Instance.hasVIPAccess || (Instance.tags.Contains("system_legend") && Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
+			{
+				result = "Legend";
+			}
+			else if (Instance.hasLegendTrustLevel || (Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
+			{
+				result = "Veteran";
+			}
+			else if (Instance.hasVeteranTrustLevel)
+			{
+				result = "Trusted";
+			}
+			else if (Instance.hasTrustedTrustLevel)
+			{
+				result = "Known";
+			}
+			else if (Instance.hasKnownTrustLevel)
+			{
+				result = "User";
+			}
+			else if (Instance.hasBasicTrustLevel || Instance.isNewUser)
+			{
+				result = "New User";
+			}
+			else if (Instance.hasNegativeTrustLevel)
+			{
+				result = "NegativeTrust";
+			}
+			else if (Instance.hasVeryNegativeTrustLevel)
+			{
+				result = "VeryNegativeTrust";
+			}
+			else
+            {
+				result = "Visitor";
 			}
 			return result;
 		}

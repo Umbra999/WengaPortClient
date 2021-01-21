@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using VRC;
@@ -47,6 +48,7 @@ namespace WengaPort.Modules
                 SafetyMenu.AntiMenuToggle.setToggleState(false);
             }
         }
+
         public static void UIInit()
         {
             VRCVrCamera vrCamera = VRCVrCamera.field_Private_Static_VRCVrCamera_0;
@@ -71,9 +73,7 @@ namespace WengaPort.Modules
             _menuCameraClone.transform.parent = screenCamera.transform.parent;
 
             _menuCameraUI = _menuCameraClone.AddComponent<Camera>();
-            _menuCameraUI.cullingMask =
-                (1 << LayerMask.NameToLayer("UiMenu"))
-                | (1 << LayerMask.NameToLayer("UI"));
+            _menuCameraUI.cullingMask = (1 << LayerMask.NameToLayer("UiMenu")) | (1 << LayerMask.NameToLayer("UI"));
             _menuCameraUI.clearFlags = CameraClearFlags.Depth;
 
             _uiLayer = LayerMask.NameToLayer("UI");
@@ -88,9 +88,11 @@ namespace WengaPort.Modules
             SetLayerRecursively(userCamera.transform, _playerLocalLayer, _uiLayer);
             SetLayerRecursively(userCamera.transform, _playerLocalLayer, _uiMenuLayer);
 
-            PatchManager.Instance.Patch(typeof(VRCUiBackgroundFade).GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Where(m => m.Name.Contains("Method_Public_Void_Single_Action") && !m.Name.Contains("PDM")).First(),
-                postfix: new HarmonyMethod(typeof(AntiMenuOverrender).GetMethod("OnFade", BindingFlags.Static | BindingFlags.NonPublic)));
+            typeof(VRCUiBackgroundFade).GetMethods(BindingFlags.Public | BindingFlags.Instance)
+               .Where(m => m.Name.Contains("Method_Public_Void_Single_Action") && !m.Name.Contains("PDM"))
+               .ToList().ForEach(m => PatchManager.Instance.Patch(m, postfix: new HarmonyMethod(typeof(AntiMenuOverrender).GetMethod("OnFade", BindingFlags.Static | BindingFlags.NonPublic))));
+
+
 
             typeof(SimpleAvatarPedestal).GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Where(m => m.Name.Contains("Method_Private_Void_GameObject"))

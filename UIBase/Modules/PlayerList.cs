@@ -40,7 +40,7 @@ namespace WengaPort.Modules
                 foreach (Player Player in Utils.PlayerManager.GetAllPlayers().ToArray())
                 {
                     string Text;
-                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().isSupporter ? "<color=#b66b25>[V+]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
+                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().isSupporter ? "<color=#b66b25>[V+]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player) + " [Q] " + PlayerExtensions.GetQualitySymbols(Player.GetVRCPlayer());
                     Players.Insert(0, Text);
                     UpdateText();
                     PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
@@ -241,7 +241,7 @@ namespace WengaPort.Modules
 
         public static MenuText PlayerCount;
 
-        public static float posx = -1200;
+        public static float posx = -1300;
 
         public static float posy = -400f;
 

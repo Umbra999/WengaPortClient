@@ -11,6 +11,7 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using VRC.Core;
 using VRC.UI;
+using WengaPort.ConsoleUtils;
 
 namespace WengaPort.Modules.Reupload
 {
@@ -46,9 +47,9 @@ namespace WengaPort.Modules.Reupload
 
         private static ApiFile AvatarAssetBundle;
 
-        private static string AssetBundlePath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "AssetBundles");
+        private static readonly string AssetBundlePath = Path.Combine(Path.GetDirectoryName(Application.dataPath), "AssetBundles");
 
-        private static string VrcaStorePath = Path.Combine(AssetBundlePath, "VrcaStore");
+        private static readonly string VrcaStorePath = Path.Combine(AssetBundlePath, "VrcaStore");
 
         private static Assembly assembly_0;
 
@@ -128,7 +129,6 @@ namespace WengaPort.Modules.Reupload
 		        Directory.CreateDirectory(VrcaStorePath);
 	        }
         }
-
 
         public void Update()
         {
@@ -235,7 +235,7 @@ namespace WengaPort.Modules.Reupload
                                         {
                                             Extensions.Logger.WengaLogger("Failed to set AvatarID");
                                         }
-                                        string PackedBundle = await CompressAssetBundle(UncompressedVRCA);
+                                        string PackedBundle = await CompressAssetBundle();
                                         if (!string.IsNullOrEmpty(PackedBundle))
                                         {
                                             RegisterAction(delegate
@@ -287,6 +287,19 @@ namespace WengaPort.Modules.Reupload
                         }, (ApiFile Assets) => false);
                     });
                 }
+                else
+                {
+                    Extensions.Logger.WengaLogger("Avatar Image missing - replacing with WengaPort Image");
+                    image = await DownloadImage("https://cdn.discordapp.com/attachments/797668950883565638/801867151287910430/Komp_1_00501.png");
+                    RegisterAction(delegate
+                    {
+                        Extensions.Logger.WengaLogger("Uploading Image...");
+                        ApiFileHelper.upload(image, null, avatar.GetFileURL(), OnUploadVrcaAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float Progress)
+                        {
+                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Progress * 100}%");
+                        }, (ApiFile Assets) => false);
+                    });
+                }
             });
         }
 
@@ -324,6 +337,7 @@ namespace WengaPort.Modules.Reupload
         private static void OnApiAvatarPostSuccess(ApiContainer apiContainer_0)
         {
             Extensions.Logger.WengaLogger("Avatar Reuploaded");
+            VRConsole.Log(VRConsole.LogsType.Avatar, $"Avatar Reuploaded");
             if (!ClearOldSession())
             {
                 Extensions.Logger.WengaLogger("Old Session not cleaned");
@@ -388,7 +402,7 @@ namespace WengaPort.Modules.Reupload
                                         {
                                             Extensions.Logger.WengaLogger("Failed to set WorldID");
                                         }
-                                        string PackedBundle = await CompressAssetBundle(UncompressedVRCW);
+                                        string PackedBundle = await CompressAssetBundle();
                                         if (!string.IsNullOrEmpty(PackedBundle))
                                         {
                                             RegisterAction(delegate
@@ -429,6 +443,20 @@ namespace WengaPort.Modules.Reupload
                 var Image = await DownloadImage(SelectedWorld.imageUrl);
                 if (!string.IsNullOrEmpty(Image))
                 {
+                    Extensions.Logger.WengaLogger("World Image downloaded");
+                    RegisterAction(delegate
+                    {
+                        Extensions.Logger.WengaLogger("Uploading Image...");
+                        ApiFileHelper.upload(Image, null, AssetBundle, OnUploadVrcwAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile world, string ImageUrl, string AssetUrl, float progress)
+                        {
+                            Extensions.Logger.WengaLogger($"World Image Uploading: {progress * 100}%");
+                        }, (ApiFile worlddone) => false);
+                    });
+                }
+                else
+                {
+                    Extensions.Logger.WengaLogger("World Image missing - replacing with WengaPort Image");
+                    Image = await DownloadImage("https://cdn.discordapp.com/attachments/797668950883565638/801867151287910430/Komp_1_00501.png");
                     RegisterAction(delegate
                     {
                         Extensions.Logger.WengaLogger("Uploading Image...");
@@ -471,6 +499,7 @@ namespace WengaPort.Modules.Reupload
         private static void OnApiWorldPostSuccess(ApiContainer apiContainer_0)
         {
             Extensions.Logger.WengaLogger("World Reuploaded");
+            VRConsole.Log(VRConsole.LogsType.Avatar, $"World Reuploaded");
             if (!ClearOldSession())
             {
                 Extensions.Logger.WengaLogger("Old Session not cleaned");
@@ -566,7 +595,7 @@ namespace WengaPort.Modules.Reupload
                 byte[] bytes2 = Encoding.ASCII.GetBytes(NewID);
                 if (!OldID.Contains("avtr_") && !OldID.Contains("wrld_"))
                 {
-                    Extensions.Logger.WengaLogger("Custom AvatarID is not supported");
+                    Extensions.Logger.WengaLogger("Custom ID found");
                     return false;
                 }
                 byte[] array2 = new byte[array.Length + bytes2.Length - bytes.Length];
@@ -695,7 +724,7 @@ namespace WengaPort.Modules.Reupload
         }
 
 
-        private static async Task<string> CompressAssetBundle(string UncompressedBundlePath)
+        private static async Task<string> CompressAssetBundle()
         {
             try
             {

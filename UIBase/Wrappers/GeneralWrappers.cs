@@ -59,16 +59,13 @@ namespace WengaPort.Wrappers
             {
                 arg = "<color=#59D365>";
             }
+            else if(Instance.GetPing() <= 130)
+            {
+                arg = "<color=#FF7000>";
+            }
             else
             {
-                if (Instance.GetPing() >= 75 && Instance.GetPing() <= 130)
-                {
-                    arg = "<color=#FF7000>";
-                }
-                else
-                {
-                    arg = "<color=red>";
-                }
+                arg = "<color=red>";
             }
             return string.Format("{0}{1}</color>", arg, Instance.GetPing());
         }
@@ -80,16 +77,13 @@ namespace WengaPort.Wrappers
             {
                 arg = "<color=#59D365>";
             }
+            else if(Instance.GetPing() <= 130)
+            {
+                arg = "<color=#FF7000>";
+            }
             else
             {
-                if (Instance.GetPing() >= 75 && Instance.GetPing() <= 130)
-                {
-                    arg = "<color=#FF7000>";
-                }
-                else
-                {
-                    arg = "<color=red>";
-                }
+                arg = "<color=red>";
             }
             return string.Format("{0}{1}</color>", arg, Instance.GetPing());
         }
@@ -101,16 +95,13 @@ namespace WengaPort.Wrappers
             {
                 arg = "<color=#59D365>";
             }
+            else if(Instance.GetFrames() >= 30)
+            {
+                arg = "<color=#FF7000>";
+            }
             else
             {
-                if (Instance.GetFrames() <= 80 && Instance.GetFrames() >= 30)
-                {
-                    arg = "<color=#FF7000>";
-                }
-                else
-                {
-                    arg = "<color=red>";
-                }
+                arg = "<color=red>";
             }
             return string.Format("{0}{1}</color>", arg, Instance.GetFrames());
         }
@@ -122,16 +113,13 @@ namespace WengaPort.Wrappers
             {
                 arg = "<color=#59D365>";
             }
+            else if (Instance.GetFrames() >= 30)
+            {
+                arg = "<color=#FF7000>";
+            }
             else
             {
-                if (Instance.GetFrames() <= 80 && Instance.GetFrames() >= 30)
-                {
-                    arg = "<color=#FF7000>";
-                }
-                else
-                {
-                    arg = "<color=red>";
-                }
+                arg = "<color=red>";
             }
             return string.Format("{0}{1}</color>", arg, Instance.GetFrames());
         }

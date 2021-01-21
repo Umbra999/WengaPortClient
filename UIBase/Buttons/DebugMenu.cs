@@ -70,6 +70,14 @@ namespace WengaPort.Buttons
             {
                 PatchManager.DictLog = false;
             }, "Toggle More Event Logging");
+
+            new QMToggleButton(ThisMenu, 2, 1, "Operation \nLog", () =>
+            {
+                PatchManager.OperationLog = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.OperationLog = false;
+            }, "Toggle Operation Logging");
         }
     }
 }

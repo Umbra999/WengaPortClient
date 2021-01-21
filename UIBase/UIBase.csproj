@@ -457,6 +457,7 @@
     <Compile Include="Buttons\UserInteractMenu.cs" />
     <Compile Include="Buttons\MediaMenu.cs" />
     <Compile Include="Console\VrConsole.cs" />
+    <Compile Include="Extensions\API\ApiBot.cs" />
     <Compile Include="Extensions\API\ApiExtension.cs" />
     <Compile Include="Extensions\API\ApiObjects.cs" />
     <Compile Include="Extensions\API\WebSocketObject.cs" />

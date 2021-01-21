@@ -163,8 +163,8 @@ namespace WengaPort.Buttons
                 {
                     if (item.gameObject.active)
                     {
-                        item.gameObject.SetActive(false);
                         ItemHandler.World_Chairs.Add(item);
+                        item.gameObject.SetActive(false);
                     }
                 }
             }, "Disabled", () =>
@@ -229,6 +229,34 @@ namespace WengaPort.Buttons
             {
                 CameraHandler.NightMode(false);
             }, "Toggle Nightmode");
+
+            new QMToggleButton(PrefabsPage, 3, 2, "Disable \nPanorama", () =>
+            {
+                ItemHandler.PanoramaToggle = true;
+                foreach (VRC_Panorama panorama in Resources.FindObjectsOfTypeAll<VRC_Panorama>())
+                {
+                    if (panorama.enabled)
+                    {
+                        ItemHandler.World_Panorama.Add(panorama);
+                        panorama.enabled = false;
+                    }
+                }
+            }, "Disabled", () =>
+            {
+                ItemHandler.PanoramaToggle = false;
+                foreach (var panorama in ItemHandler.World_Panorama)
+                {
+                    panorama.enabled = true;
+                }
+            }, "Toggle VRC_Panorama");
+
+            new QMToggleButton(PrefabsPage, 4, 2, "World \nTrigger", () =>
+            {
+                PatchManager.WorldTrigger = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.WorldTrigger = false;
+            }, "Make all Triggers Global");
 
             HalfButton = new QMSingleButton("ShortcutMenu", 5, 1.25f, "Delete \nPortals", () =>
             {

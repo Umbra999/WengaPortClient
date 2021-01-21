@@ -283,6 +283,25 @@ namespace WengaPort.Modules
 			yield break;
 		}
 
+		public static string BackAvatarID;
+		public static IEnumerator AvatarCrash(bool active)
+		{
+			if (!active)
+			{
+				PlayerExtensions.ChangeAvatar(BackAvatarID);
+				yield return new WaitForSeconds(1);
+				SelfHide.Initialize(false);
+				PlayerExtensions.ReloadAvatar(Utils.CurrentUser);
+			}
+			else
+            {
+				BackAvatarID = Utils.CurrentUser.GetAPIAvatar().id;
+				SelfHide.Initialize(true);
+				PlayerExtensions.ChangeAvatar("avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab");
+			}
+			yield break;
+		}
+
 		internal static IEnumerator TargetAvatarCrash(Player Target, string AvatarID)
 		{
 			if (CrashPlayerRunning)

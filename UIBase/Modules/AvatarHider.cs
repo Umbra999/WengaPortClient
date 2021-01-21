@@ -53,7 +53,7 @@ namespace WengaPort.Modules
             }));
         }
 
-        public static string AviSpoofID = "avtr_8dd19312-d6b9-4961-a8ea-e6ab392ff509";
+        public static string AviSpoofID = "avtr_2a945204-f146-4053-97f0-96e98a39d568";
         public static bool AvatarSpoofToggle = false;
 
         private static IEnumerator AvatarSpoof()

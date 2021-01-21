@@ -33,8 +33,7 @@ namespace WengaPort.Buttons
                     Player p = Utils.PlayerManager.GetPlayer(apiuser.UserID());
                     Utils.CurrentUser.transform.position = p.transform.position;
                 }
-                catch
-                { }
+                catch { }
             }));
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Drop Portal", -100f, -280f, new Action(() =>
