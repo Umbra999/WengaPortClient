@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using UnhollowerBaseLib;
 using UnhollowerBaseLib.Runtime;
 using UnityEngine;
@@ -15,7 +13,7 @@ using AMEnumA = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumerat
 using AMEnumB = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObGaVRApBoBoObBoObUnique;
 using AMEnumC = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObVRAc1GaApAcObObUnique;
 
-namespace DayClientML2.Modules.Misc
+namespace WengaPort.Extensions
 {
     class AntiCrashHelper
     {
@@ -102,9 +100,7 @@ namespace DayClientML2.Modules.Misc
                 }
                 AvatarObject.SetActive(wasawake);
             }
-            catch
-            {
-            }
+            catch { }
             return true;
         }
         private static bool MoveNextPatchA(IntPtr thisPtr)

@@ -65,7 +65,7 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(PageWorldInfo).GetMethod("Method_Public_Void_ApiWorld_ApiWorldInstance_Boolean_Boolean_0"), GetPatch("SetupWorldPage"), null);
                 typeof(VRCPlayer).GetMethods().Where(m => m.Name.StartsWith("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_") && !m.checkXref("Avatar is Ready, Initializing")).ToList()
                     .ForEach(m => Instance.Patch(m, postfix: new HarmonyMethod(typeof(PatchManager).GetMethod("AvatarFinishedLoadingPostfix", BindingFlags.NonPublic | BindingFlags.Static))));
-                DayClientML2.Modules.Misc.AntiCrashHelper.Hook();
+                AntiCrashHelper.Hook();
                 Logger.WengaLogger("[Patches] Trigger");
                 Logger.WengaLogger("[Patches] PingSpoof");
                 Logger.WengaLogger("[Patches] Events");
@@ -75,6 +75,7 @@ namespace WengaPort.Extensions
                 Logger.WengaLogger("[Patches] FrameSpoof");
                 Logger.WengaLogger("[Patches] Udon");
                 Logger.WengaLogger("[Patches] Safety");
+                Logger.WengaLogger("[Patches] Anticrash");
                 Logger.WengaLogger("[Patches] Network Hooks");
                 Logger.WengaLogger("[Patches] HWID Spoof");
             }
@@ -321,36 +322,15 @@ namespace WengaPort.Extensions
                 APIUser apiUser = __instance.field_Private_Player_0.field_Private_APIUser_0;
                 var AvatarGameobject = __0;
 
-                if (AvatarGameobject.GetComponentsInChildren<AudioSource>(true).Count >= 500 && player.UserID() != Utils.CurrentUser.UserID())
+                Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> {Avatar.name} [{Avatar.releaseStatus}]");
+                VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
+                GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
+                GlobalDynamicBones.OptimizeBone(AvatarGameobject);
+                if (GlobalDynamicBones.AntiSpawnToggle)
                 {
-                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
-                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Audiocrash");
-                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Audiocrash");
+                    GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
                 }
-                else if (AvatarGameobject.GetComponentsInChildren<SkinnedMeshRenderer>(true).Count >= 1000 && player.UserID() != Utils.CurrentUser.UserID())
-                {
-                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
-                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Materialcrash");
-                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Materialcrash");
-                }
-                else if (AvatarGameobject.GetComponentsInChildren<ParticleSystem>(true).Count >= 1000 && player.UserID() != Utils.CurrentUser.UserID())
-                {
-                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
-                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Particlecrash");
-                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Particlecrash");
-                }
-                else
-                {
-                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> {Avatar.name} [{Avatar.releaseStatus}]");
-                    VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
-                    GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
-                    GlobalDynamicBones.OptimizeBone(AvatarGameobject);
-                    if (GlobalDynamicBones.AntiSpawnToggle)
-                    {
-                        GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
-                    }
-                    GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
-                }
+                GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
             }
             catch { }
         }

@@ -8,12 +8,11 @@ using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.Animations;
 using VRC.Core;
-using VRC.SDKBase;
-using WengaPort.Modules;
+using WengaPort.ConsoleUtils;
 using WengaPort.Extensions;
 using Logger = WengaPort.Extensions.Logger;
 
-namespace DayClientML2.Modules.Misc
+namespace WengaPort.Modules
 {
     static class AvatarProcesser
     {
@@ -29,21 +28,20 @@ namespace DayClientML2.Modules.Misc
         public static bool ScreenShaders = true;
 
         public static bool Enabled = true;
-        public static bool ProcessYourself = true;
 
-        public static int MaxAudio = 50;
-        public static int MaxParticleSystems = 50;
-        public static int MaxLights = 50;
-        public static int MaxAnimators = 50;
-        public static int MaxRidgitBodys = 50;
-        public static int MaxColliders = 50;
-        public static int MaxConstraints = 50;
-        public static int MaxMaterialslots = 50;
-        public static int MaxComponents = 50;
-        public static int MaxClothVerticies = 5000;
-        public static int MaxParticles = 5000;
-        public static int MaxPolys = 1000000;
-        public static int MaxTransforms = 50;
+        public static int MaxAudio = 350;
+        public static int MaxParticleSystems = 750;
+        public static int MaxLights = 350;
+        public static int MaxAnimators = 500;
+        public static int MaxRidgitBodys = 500;
+        public static int MaxColliders = 3000;
+        public static int MaxConstraints = 5000;
+        public static int MaxMaterialslots = 250;
+        public static int MaxComponents = 5000;
+        public static int MaxClothVerticies = 50000;
+        public static int MaxParticles = 350000;
+        public static int MaxPolys = 1500000;
+        public static int MaxTransforms = 5000;
 
         public static void ProcessAvatar(GameObject AvatarObject,VRCAvatarManager avatarManager)
         {
@@ -96,7 +94,11 @@ namespace DayClientML2.Modules.Misc
                 Bfs(ourBfsQueue.Dequeue());
 
             AvatarObject.SetActive(true);
-            Logger.WengaLogger($"[Anti Crash] {avatar.name} | {player.DisplayName()} | Destroyed: {destroyedObjects} | Scan Time: {start.ElapsedMilliseconds} MS");
+            if (destroyedObjects != 0)
+            {
+                Logger.WengaLogger($"[Anti Crash] {avatar.name} | {player.DisplayName()} | Destroyed: {destroyedObjects} | Scan Time: {start.ElapsedMilliseconds} MS");
+                VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar");
+            }
             start.Stop();
         }
         private static void Check(this AudioSource instance,ref int scannedObjects,ref int destroyedObjects, ref int seenAudioSources)
