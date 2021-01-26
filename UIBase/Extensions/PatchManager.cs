@@ -65,6 +65,7 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(PageWorldInfo).GetMethod("Method_Public_Void_ApiWorld_ApiWorldInstance_Boolean_Boolean_0"), GetPatch("SetupWorldPage"), null);
                 typeof(VRCPlayer).GetMethods().Where(m => m.Name.StartsWith("Method_Private_Void_GameObject_VRC_AvatarDescriptor_Boolean_") && !m.checkXref("Avatar is Ready, Initializing")).ToList()
                     .ForEach(m => Instance.Patch(m, postfix: new HarmonyMethod(typeof(PatchManager).GetMethod("AvatarFinishedLoadingPostfix", BindingFlags.NonPublic | BindingFlags.Static))));
+                DayClientML2.Modules.Misc.AntiCrashHelper.Hook();
                 Logger.WengaLogger("[Patches] Trigger");
                 Logger.WengaLogger("[Patches] PingSpoof");
                 Logger.WengaLogger("[Patches] Events");
