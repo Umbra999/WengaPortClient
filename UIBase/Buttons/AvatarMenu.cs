@@ -10,6 +10,7 @@ using UnityEngine;
 using VRC;
 using VRC.Core;
 using WengaPort.Api;
+using WengaPort.ConsoleUtils;
 using WengaPort.Modules;
 using WengaPort.Wrappers;
 
@@ -94,10 +95,30 @@ namespace WengaPort.Buttons
                 Clipboard.SetText(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar().id);
             }, "Copy the Player's AvatarID to Clipboard");
 
-            new QMSingleButton(ThisMenu, 1, 2, "RIP \nVRCA", () =>
+            new QMSingleButton(ThisMenu, 1, 2, "Lewdify \nAvatar", () =>
+            {
+                Lewdify.LewdifyAvatar(Utils.QuickMenu.SelectedVRCPlayer().prop_VRCAvatarManager_0.prop_GameObject_0);
+            }, "Make the Player's Avatar Lewd");
+
+            new QMSingleButton(ThisMenu, 2, 2, "RIP \nVRCA", () =>
             {
                 RippingHandler.DownloadAvatar(Utils.QuickMenu.SelectedVRCPlayer().GetAPIAvatar());
             }, "Download the VRC File of the Avatar");
+
+            new QMSingleButton(ThisMenu, 3, 2, "Forceclone", () =>
+            {
+                VRCPlayer player = Utils.QuickMenu.SelectedVRCPlayer();
+                if (player.GetAPIAvatar().releaseStatus != "private")
+                {
+                    PlayerExtensions.ChangeAvatar(player.GetAPIAvatar().id);
+                    VRConsole.Log(VRConsole.LogsType.Avatar, $"Forceclone --> {player}");
+                }
+                else
+                {
+                    Extensions.Logger.WengaLogger("This Avatar is Private");
+                    VRConsole.Log(VRConsole.LogsType.Avatar, "Forceclone --> This Avatar is Private");
+                }
+            }, "Forceclone the Players public Avatar");
         }
     }
 }

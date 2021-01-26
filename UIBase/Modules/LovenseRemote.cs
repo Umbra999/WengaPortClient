@@ -50,7 +50,11 @@ namespace WengaPort.Modules
             {
                 foreach (var Button in Toy.Buttons)
                 {
-                    UnityEngine.Object.Destroy(Button);
+                    Destroy(Button);
+                }
+                foreach (Toy toy in toys)
+                {
+                    toy.setSpeed(0);
                 }
                 toys.Clear();
                 Text.SetText($"Connected toys: 0 / 2");
@@ -197,9 +201,7 @@ namespace WengaPort.Modules
             int pos = url.LastIndexOf("/") + 1;
             return url.Substring(pos, url.Length - pos);
         }
-        public LovenseRemote(IntPtr ptr) : base(ptr)
-        {
-        }
+        public LovenseRemote(IntPtr ptr) : base(ptr) { }
     }
 
     public class Toy
@@ -218,7 +220,7 @@ namespace WengaPort.Modules
             this.token = token;
             this.id = id;
             this.name = name;
-            button = new QMSingleButton(LovenseRemote.menu, x++, 1, $"[name] \nNo\nHand", delegate () {
+            button = new QMSingleButton(LovenseRemote.menu, x++, 1, $"[{name}] \nNo\nHand", delegate () {
                 changeHand();
             }, "Change Hand for Trigger Control", null, null);
             Buttons.Add(button.getGameObject());
@@ -227,16 +229,16 @@ namespace WengaPort.Modules
 
         public void setSpeed(float speed)
         {
-            new Thread(() =>
+            speed = (int)(speed * 10);
+            if (speed != lastSpeed)
             {
-                speed = (int)(speed * 10);
-                if (speed != lastSpeed)
+                lastSpeed = speed;
+                new Thread(() =>
                 {
-                    lastSpeed = speed;
                     send((int)speed);
-                }
-            })
-            { IsBackground = true }.Start();
+                })
+                { IsBackground = true }.Start();
+            }
         }
 
         public void changeHand()
@@ -276,10 +278,8 @@ namespace WengaPort.Modules
                 streamWriter.Write("order=%7B%22cate%22%3A%22id%22%2C%22id%22%3A%7B%22" + id + "%22%3A%7B%22v%22%3A" + speed + "%2C%22p%22%3A-1%2C%22r%22%3A-1%7D%7D%7D");
             }
             var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-            }
+            using var streamReader = new StreamReader(httpResponse.GetResponseStream());
+            var result = streamReader.ReadToEnd();
         }
     }
 }

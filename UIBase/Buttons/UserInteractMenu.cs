@@ -108,7 +108,7 @@ namespace WengaPort.Buttons
                     {
                         SpamToggle.setToggleState(false, false);
                     }
-                    if (RPCAndEventBlock.Check(vrcplayer.UserID()))
+                    if (Modules.Photon.RPCBlock.Contains(vrcplayer.UserID()))
                     {
                         RpcToggle.setToggleState(true, false);
                     }
@@ -116,7 +116,7 @@ namespace WengaPort.Buttons
                     {
                         RpcToggle.setToggleState(false, false);
                     }
-                    if (RPCAndEventBlock.EventBlock.Contains(vrcplayer.UserID()))
+                    if (Modules.Photon.EventBlock.Contains(vrcplayer.UserID()))
                     {
                         EventToggle.setToggleState(true, false);
                     }
@@ -187,6 +187,15 @@ namespace WengaPort.Buttons
             }, "Open VRChat Profile");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
+            new QMToggleButton(ThisMenu, 2, 0, "Prefab \nSpam", () =>
+            {
+                ItemHandler.SpamPrefab = true;
+                MelonCoroutines.Start(ItemHandler.PrefabSpam(Utils.QuickMenu.SelectedVRCPlayer()));
+            }, "Disabled", () =>
+            {
+                ItemHandler.SpamPrefab = false;
+            }, "Spam the Player with Prefabs");
+
             HalfButton = new QMSingleButton(ThisMenu, 3, -0.25f, "Drop \nPortal", () =>
             {
                 PortalHandler.DropCrashPortal(Utils.QuickMenu.SelectedVRCPlayer());
@@ -201,36 +210,19 @@ namespace WengaPort.Buttons
 
             RpcToggle = new QMToggleButton(ThisMenu, 4, 0, "Block \nRPC", () =>
             {
-                VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
-                if (!RPCAndEventBlock.Check(instance.UserID()))
-                {
-                    RPCAndEventBlock.AddPlayer(instance.UserID());
-                    File.WriteAllLines("WengaPort\\BlockedEvents.json", RPCAndEventBlock.Block);
-                }
+                Modules.Photon.RPCBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Disabled", () =>
             {
-                VRCPlayer instance = Utils.QuickMenu.SelectedVRCPlayer();
-                if (RPCAndEventBlock.Check(instance.UserID()))
-                {
-                    RPCAndEventBlock.RemovePlayer(instance.UserID());
-                    File.Delete("WengaPort\\BlockedEvents.json");
-                    File.WriteAllLines("WengaPort\\BlockedEvents.json", RPCAndEventBlock.Block);
-                }
-            }, "Block incoming Events/RPCs");
+                Modules.Photon.RPCBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+            }, "Block incoming RPC Events");
 
             EventToggle = new QMToggleButton(ThisMenu, 4, 1, "Block \nEvents", () =>
             {
-                RPCAndEventBlock.EventBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+                Modules.Photon.EventBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Disabled", () =>
             {
-                RPCAndEventBlock.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
-            }, "Block the Player's Photonevents");
-
-            HalfButton = new QMSingleButton(ThisMenu, 2, -0.25f, "Friend \nSpam", () =>
-            {
-                Extensions.APIExtension.ApiBot.BotFriendSpam(Utils.QuickMenu.SelectedPlayer());
-            }, "Friend the Player with API Bots");
-            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
+                Modules.Photon.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+            }, "Block incoming  Photon Events");
 
             SpamToggle = new QMToggleButton(ThisMenu, 3, 1, "Spam \nPortal", () =>
             {
@@ -283,22 +275,6 @@ namespace WengaPort.Buttons
                 AttachmentManager.Reset();
                 Movement.Attachment = false;
             }, "Attach on Head");
-
-            HalfButton = new QMSingleButton(ThisMenu, 2, 0.25f, "Forceclone", () =>
-            {
-                VRCPlayer player = Utils.QuickMenu.SelectedVRCPlayer();
-                if (player.GetAPIAvatar().releaseStatus != "private")
-                {
-                    PlayerExtensions.ChangeAvatar(player.GetAPIAvatar().id);
-                    VRConsole.Log(VRConsole.LogsType.Avatar, $"Forceclone --> {player}");
-                }
-                else
-                {
-                    Logger.WengaLogger("This Avatar is Private");
-                    VRConsole.Log(VRConsole.LogsType.Avatar, "Forceclone --> This Avatar is Private");
-                }
-            }, "Forceclone the Players public Avatar");
-            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 1, 1.75f, "Draw \nCircles", () =>
             {

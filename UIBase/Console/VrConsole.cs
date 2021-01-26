@@ -12,7 +12,6 @@ namespace WengaPort.ConsoleUtils
     class VRConsole
     {
         public static List<string> AllLogsText = new List<string>();
-
         public enum LogsType
         {
             Info,
@@ -30,10 +29,13 @@ namespace WengaPort.ConsoleUtils
             Friend,
             Portal,
             World,
+            Online,
+            Offline,
             Clear
         }
         public static void Log(LogsType Type, string Text)
         {
+            if (string.IsNullOrEmpty(Text)) return;
             string Text2 = "";
             switch (Type)
             {
@@ -69,6 +71,12 @@ namespace WengaPort.ConsoleUtils
                     break;
                 case LogsType.Logout:
                     Text2 = "<color=#4800ff>[" + DateTime.Now.ToShortTimeString() + "] " + "[Logout]:</color>  " + Text;
+                    break;
+                case LogsType.Online:
+                    Text2 = "<color=#77eb34>[" + DateTime.Now.ToShortTimeString() + "] " + "[Online]:</color>  " + Text;
+                    break;
+                case LogsType.Offline:
+                    Text2 = "<color=#eb4634>[" + DateTime.Now.ToShortTimeString() + "] " + "[Offline]:</color>  " + Text;
                     break;
                 case LogsType.Ban:
                     Text2 = "<color=#c20000>[" + DateTime.Now.ToShortTimeString() + "] " + "[Ban]:</color>  " + Text;

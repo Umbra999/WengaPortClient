@@ -48,6 +48,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<AvatarHider>();
             ClassInjector.RegisterTypeInIl2Cpp<KeyBindHandler>();
             ClassInjector.RegisterTypeInIl2Cpp<GlobalDynamicBones>();
+            ClassInjector.RegisterTypeInIl2Cpp<CanHearList>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -78,7 +79,6 @@ namespace WengaPort.MainLoader
                 case 1:
                     break;
                 default:
-                    MelonCoroutines.Start(NoClipping.SetNearClipPlane(0.001f));
                     if (APIUser.CurrentUser.id == "usr_50ec3de0-63f9-4bfd-803b-9ae1d7c2bbb9")
                     {
                         BotOrbit.StartBot();
@@ -206,55 +206,6 @@ namespace WengaPort.MainLoader
                     RoomTime += Time.deltaTime;
                     inviteDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
                     reqDot.GetComponent<Image>().color = HSBColor.ToColor(new HSBColor(Mathf.PingPong(Time.time / 2f, 1f), 1f, 1f));
-                    if (Modules.Photon.DisconnectToggle)
-                    {
-                        DCDelay += Time.deltaTime;
-                        if (DCDelay >= 0.2f)
-                        {
-                            Modules.Photon.DisconnectLobby();
-                            DCDelay = 0f;
-                        }
-                    }
-                    if (Modules.Photon.DebugSpamToggle)
-                    {
-                        Modules.Photon.PortalDebugSpam();
-                    }
-
-                    if (CameraHandler.AnnoyingCam)
-                    {
-                        DCDelay += Time.deltaTime;
-                        if (DCDelay >= 1.2f)
-                        {
-                            CameraHandler.PictureRPC(Utils.CurrentUser.GetVRC_Player());
-                            DCDelay = 0f;
-                        }
-                    }
-
-                    if (RoomCleaner.MirrorSpam)
-                    {
-                        delaySpamMirrors += Time.deltaTime;
-                        if (delaySpamMirrors >= 0.7f)
-                        {
-                            RoomCleaner.SpamMirrors();
-                            delaySpamMirrors = 0f;
-                        }
-                    }
-
-                    if (Modules.Photon.EmojiSpam)
-                    {
-                        int i = 29;
-                        Modules.Photon.EmojiRPC(i);
-                    }
-
-                    if (ItemHandler.AutoDropItems)
-                    {
-                        DropDelay += Time.deltaTime;
-                        if (DropDelay > 1f)
-                        {
-                            ItemHandler.DropItems();
-                            DropDelay = 0f;
-                        }
-                    }
 
                     if (menu != null && menu.active && !button.interactable)
                     {
@@ -284,9 +235,6 @@ namespace WengaPort.MainLoader
         }
         public float Delay = 0f;
         public float PlateDelay = 0f;
-        public float delaySpamMirrors = 0f;   
-        public float DCDelay = 0f;
-        public float DropDelay = 0f;
         public float LoadingDelay = 0f;
         public static float RoomTime = 0f;
 
@@ -352,6 +300,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<Movement>();
             Client.AddComponent<LovenseRemote>();
             Client.AddComponent<PlayerList>();
+            Client.AddComponent<CanHearList>();
             Client.AddComponent<ThirdPerson>();
             Client.AddComponent<AvatarFavs>();
             Client.AddComponent<AttachmentManager>();

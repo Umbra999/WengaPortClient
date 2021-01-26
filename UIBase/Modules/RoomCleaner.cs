@@ -36,19 +36,23 @@ namespace WengaPort.Modules
 		}
 
 		public static bool MirrorSpam = false;
-		public static void SpamMirrors()
+		public static IEnumerator SpamMirrors()
 		{
-			try
-			{
-				List<VRC_Trigger> list = (from s in ItemHandler.World_Triggers where s.interactText.ToLower().Contains("mirror") || s.name.ToLower().Contains("mirror") select s).ToList<VRC_Trigger>();
-				foreach (VRC_Trigger vrc_Trigger in list)
+			for (; ; )
+            {
+				if (!MirrorSpam || RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
+				try
 				{
-					vrc_Trigger.TakesOwnershipIfNecessary.ToString();
-					vrc_Trigger.Interact();
+					List<VRC_Trigger> list = (from s in ItemHandler.World_Triggers where s.interactText.ToLower().Contains("mirror") || s.name.ToLower().Contains("mirror") select s).ToList<VRC_Trigger>();
+					foreach (VRC_Trigger vrc_Trigger in list)
+					{
+						vrc_Trigger.TakesOwnershipIfNecessary.ToString();
+						vrc_Trigger.Interact();
+					}
 				}
+				catch { }
+				yield return new WaitForSeconds(1);
 			}
-			catch
-			{ }
 		}
 	}
 }

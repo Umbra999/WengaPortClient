@@ -8,6 +8,7 @@ using Photon.Pun;
 using RootMotion.FinalIK;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -291,6 +292,7 @@ namespace WengaPort.Extensions
         private static void OnJoinedRoom()
         {
             MelonCoroutines.Start(CacheManager.UpdateDirectoriesBackground());
+            MelonCoroutines.Start(NoClipping.SetNearClipPlane(0.001f));
             if (LoginDelay)
             {
                 LoginDelay = false;
@@ -317,12 +319,24 @@ namespace WengaPort.Extensions
 
                 APIUser apiUser = __instance.field_Private_Player_0.field_Private_APIUser_0;
                 var AvatarGameobject = __0;
-                if (CrashAvatars.Contains(AvatarID) && player.UserID() != Utils.CurrentUser.UserID())
+
+                if (AvatarGameobject.GetComponentsInChildren<AudioSource>(true).Count >= 500 && player.UserID() != Utils.CurrentUser.UserID())
                 {
-                    player.prop_VRCAvatarManager_0.gameObject.SetActive(false);
                     UnityEngine.Object.DestroyImmediate(AvatarGameobject);
-                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
-                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar {Avatar.name} [{Avatar.releaseStatus}]");
+                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Audiocrash");
+                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Audiocrash");
+                }
+                else if (AvatarGameobject.GetComponentsInChildren<SkinnedMeshRenderer>(true).Count >= 1000 && player.UserID() != Utils.CurrentUser.UserID())
+                {
+                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
+                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Materialcrash");
+                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Materialcrash");
+                }
+                else if (AvatarGameobject.GetComponentsInChildren<ParticleSystem>(true).Count >= 1000 && player.UserID() != Utils.CurrentUser.UserID())
+                {
+                    UnityEngine.Object.DestroyImmediate(AvatarGameobject);
+                    Logger.WengaLogger($"[Room] [Avatar] {player.DisplayName()} -> Particlecrash");
+                    VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> Particlecrash");
                 }
                 else
                 {
@@ -330,7 +344,10 @@ namespace WengaPort.Extensions
                     VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                     GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
                     GlobalDynamicBones.OptimizeBone(AvatarGameobject);
-                    GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
+                    if (GlobalDynamicBones.AntiSpawnToggle)
+                    {
+                        GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
+                    }
                     GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
                 }
             }
@@ -349,9 +366,10 @@ namespace WengaPort.Extensions
             Imports.Hook((System.IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
             Logger.WengaLogger($"[HWID] Before {MainHWID}");
             Logger.WengaLogger($"[HWID] After {SpoofHWID}");
-            if (SpoofHWID == null)
+            if (SpoofHWID == null || SpoofHWID == MainHWID)
             {
                 Logger.WengaLogger("Failed to spoof HWID");
+                Process.GetCurrentProcess().Kill();
             }
         }
         static string SpoofHWID;
@@ -409,7 +427,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                PlayerList.IsAllowedClient();
+                //PlayerList.IsAllowedClient();
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
                 Utils.VRCUiManager.QueHudMessage($"<color=lime>[+] {__0.DisplayName()}</color>");
@@ -541,7 +559,12 @@ namespace WengaPort.Extensions
         public static bool EventDelay = false;
         public static bool HideCamera = false;
 
-        private static byte[] IgnoreCodes = new byte[]
+        private static readonly byte[] BotIgnoreCodes = new byte[]
+        {
+            7,206,201,226,202,254,4,5,1,33,230,255,3,253
+        };
+
+        private static readonly byte[] IgnoreCodes = new byte[]
         {
             1,7,8,9,206,201,226
         };
@@ -571,134 +594,124 @@ namespace WengaPort.Extensions
                 {
                     Logger.WengaLogger($"[PhotonEvent] {__0.Code}");
                 }
-                switch (__0.Code)   
+                if (!BotIgnoreCodes.Contains(__0.Code) && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot() && !EventDelay)
                 {
-                    case 33:
-                        object Data = Utils.Serialization.FromIL2CPPToManaged<object>(__0.Parameters);
-                        if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"10\": false,"))
-                        {
-                            JObject jObject = JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented));
-                            var jo = JObject.Parse(jObject.ToString());
-                            var id = jo["245"]["1"].ToString();
-
-                            var ParsedID = Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).GetAPIUser().DisplayName();
-                            if (ParsedID == null)
-                            {
-                                ParsedID = "?";
-                            }
-
-                            Logger.WengaLogger($"[Moderation] {ParsedID} unblocked you");
-                            VRConsole.Log(VRConsole.LogsType.Block, $"{ParsedID} --> Unblocked You");
-                            PlayerList.BlockList.Remove(Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).UserID());
-                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
-                            {
-                                Logger.WengaLogger($"[Moderation] {ParsedID} unmuted you");
-                                VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Unmuted You");
-                            }
-                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
-                            {
-                                Logger.WengaLogger($"[Moderation] {ParsedID} muted you");
-                                VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Muted You");
-                            }
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"10\": true,"))
-                        {
-                            JObject jObject = JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented));
-                            var jo = JObject.Parse(jObject.ToString());
-                            var id = jo["245"]["1"].ToString();
-
-                            var ParsedID = Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).GetAPIUser().DisplayName();
-                            if (ParsedID == null)
-                            {
-                                ParsedID = "?";
-                            }
-
-                            Logger.WengaLogger($"[Moderation] {ParsedID} blocked you");
-                            VRConsole.Log(VRConsole.LogsType.Block, $"{ParsedID} --> Blocked You");
-                            PlayerList.BlockList.Add(Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).UserID());
-                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
-                            {
-                                Logger.WengaLogger($"[Moderation] {ParsedID} unmuted you");
-                                VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Unmuted You");
-                            }
-                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
-                            {
-                                Logger.WengaLogger($"[Moderation] {ParsedID} muted you");
-                                VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Muted You");
-                            }
-                            return !AntiBlock;
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("You have been warned"))
-                        {
-                            Logger.WengaLogger($"[Moderation] The Room Owner warned you");
-                            VRConsole.Log(VRConsole.LogsType.Warn, $"RoomOwner --> Warn You");
-                            return false;
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("A vote kick has been"))
-                        {
-                            Logger.WengaLogger("[Moderation] Someone votekick Someone");
-                            VRConsole.Log(VRConsole.LogsType.Votekick, $"[?] --> [?]");
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("Unable to start a vote to kick"))
-                        {
-                            Logger.WengaLogger("[Moderation] Failed at Votekick");
-                            VRConsole.Log(VRConsole.LogsType.Votekick, $"Failed at Votekick");
-                            return false;
-                        }
-                        else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"0\": 8"))
-                        {
-                            Logger.WengaLogger("[Moderation] The Room Owner ForceMicOff You");
-                            VRConsole.Log(VRConsole.LogsType.Voice, $"RoomOwner --> MicOff You");
-                            return false;
-                        }
-                        break;
-                    case 2:
-                        object Data2 = Utils.Serialization.FromIL2CPPToManaged<object>(__0.Parameters);
-                        if (Newtonsoft.Json.JsonConvert.SerializeObject(Data2, Newtonsoft.Json.Formatting.Indented).Contains("You have been kicked"))
-                        {
-                            Logger.WengaLogger("[Moderation] RoomOwner kicked you");
-                            VRConsole.Log(VRConsole.LogsType.Kick, $"RoomOwner --> You");
-                            return false;
-                        }
-                        break;
-                    case 1:
-                        Il2CppStructArray<byte> il2CppStructArray2 = new Il2CppStructArray<byte>(__0.CustomData.Pointer);
-                        bool flag4 = il2CppStructArray2.Length > 1700;
-                        if (flag4)
-                        {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event {il2CppStructArray2.Length}");
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented USpeak Event {il2CppStructArray2.Length}");
-                            return false;
-                        }
-                        break;
-                    case 209:
-                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
-                        {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event [209]");
-                            return false;
-                        }
-                        break;
-                    case 210:
-                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
-                        {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event [210]");
-                            return false;
-                        }
-                        break;
-                    case 6:
-                        if (!EventDelay && Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).GetVRCPlayer().GetIsBot())
-                        {
-                            Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
-                            VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event [6]");
-                            return false;
-                        }
-                        break;
-                    default:
-                        break;
+                    Logger.WengaLogger($"[Room] [Protection] Prevented PhotonEvent {__0.Code} from {Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()}");
+                    VRConsole.Log(VRConsole.LogsType.Protection, $"{Utils.PlayerManager.GetPlayer(__0.Sender).DisplayName()} --> Bot Event [{__0.Code}]");
+                    return false;
                 }
-                if (RPCAndEventBlock.EventBlock.Contains(Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).UserID()))
+                else
+                {
+                    switch (__0.Code)
+                    {
+                        case 33:
+                            object Data = Utils.Serialization.FromIL2CPPToManaged<object>(__0.Parameters);
+                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"10\": false,"))
+                            {
+                                JObject jObject = JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented));
+                                var jo = JObject.Parse(jObject.ToString());
+                                var id = jo["245"]["1"].ToString();
+
+                                var ParsedID = Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).GetAPIUser().DisplayName();
+                                if (ParsedID == null)
+                                {
+                                    ParsedID = "?";
+                                }
+
+                                Logger.WengaLogger($"[Moderation] {ParsedID} unblocked you");
+                                VRConsole.Log(VRConsole.LogsType.Block, $"{ParsedID} --> Unblocked You");
+                                PlayerList.BlockList.Remove(Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).UserID());
+                                if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
+                                {
+                                    Logger.WengaLogger($"[Moderation] {ParsedID} unmuted you");
+                                    VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Unmuted You");
+                                }
+                                else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
+                                {
+                                    Logger.WengaLogger($"[Moderation] {ParsedID} muted you");
+                                    VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Muted You");
+                                }
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"10\": true,"))
+                            {
+                                JObject jObject = JObject.Parse(Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented));
+                                var jo = JObject.Parse(jObject.ToString());
+                                var id = jo["245"]["1"].ToString();
+
+                                var ParsedID = Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).GetAPIUser().DisplayName();
+                                if (ParsedID == null)
+                                {
+                                    ParsedID = "?";
+                                }
+
+                                Logger.WengaLogger($"[Moderation] {ParsedID} blocked you");
+                                VRConsole.Log(VRConsole.LogsType.Block, $"{ParsedID} --> Blocked You");
+                                PlayerList.BlockList.Add(Utils.PlayerManager.GetPlayerWithPlayerID(int.Parse(id)).UserID());
+                                if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": false"))
+                                {
+                                    Logger.WengaLogger($"[Moderation] {ParsedID} unmuted you");
+                                    VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Unmuted You");
+                                }
+                                else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"11\": true"))
+                                {
+                                    Logger.WengaLogger($"[Moderation] {ParsedID} muted you");
+                                    VRConsole.Log(VRConsole.LogsType.Voice, $"{ParsedID} --> Muted You");
+                                }
+                                return !AntiBlock;
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("You have been warned"))
+                            {
+                                Logger.WengaLogger($"[Moderation] The Room Owner warned you");
+                                VRConsole.Log(VRConsole.LogsType.Warn, $"RoomOwner --> Warn You");
+                                return false;
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("A vote kick has been"))
+                            {
+                                Logger.WengaLogger("[Moderation] Someone votekick Someone");
+                                VRConsole.Log(VRConsole.LogsType.Votekick, $"[?] --> [?]");
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("Unable to start a vote to kick"))
+                            {
+                                Logger.WengaLogger("[Moderation] Failed at Votekick");
+                                VRConsole.Log(VRConsole.LogsType.Votekick, $"Failed at Votekick");
+                                return false;
+                            }
+                            else if (Newtonsoft.Json.JsonConvert.SerializeObject(Data, Newtonsoft.Json.Formatting.Indented).Contains("\"0\": 8"))
+                            {
+                                Logger.WengaLogger("[Moderation] The Room Owner ForceMicOff You");
+                                VRConsole.Log(VRConsole.LogsType.Voice, $"RoomOwner --> MicOff You");
+                                return false;
+                            }
+                            break;
+                        case 2:
+                            object Data2 = Utils.Serialization.FromIL2CPPToManaged<object>(__0.Parameters);
+                            if (Newtonsoft.Json.JsonConvert.SerializeObject(Data2, Newtonsoft.Json.Formatting.Indented).Contains("You have been kicked"))
+                            {
+                                Logger.WengaLogger("[Moderation] RoomOwner kicked you");
+                                VRConsole.Log(VRConsole.LogsType.Kick, $"RoomOwner --> You");
+                                return false;
+                            }
+                            break;
+                        case 1:
+                            Il2CppStructArray<byte> il2CppStructArray2 = new Il2CppStructArray<byte>(__0.CustomData.Pointer);
+                            bool flag4 = il2CppStructArray2.Length > 1700;
+                            if (flag4)
+                            {
+                                Logger.WengaLogger($"[Room] [Protection] Prevented USpeak Event {il2CppStructArray2.Length}");
+                                VRConsole.Log(VRConsole.LogsType.Protection, $"Prevented USpeak Event {il2CppStructArray2.Length}");
+                                return false;
+                            }
+                            break;
+                        case 223:
+                            Logger.WengaLogger("[223] Authenticate on server-side");
+                            break;
+                        case 255:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                if (Modules.Photon.EventBlock.Contains(Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).UserID()))
                 {
                     return false;
                 }
@@ -755,7 +768,18 @@ namespace WengaPort.Extensions
                 {
                     text4 = text4 + "[" + Il2CppSystem.Convert.ToString(value) + "]";
                 }
-                if (__1.ParameterObject.name != "USpeak" && __1.ParameterString != "SetTimerRPC" && RPCLog)
+                if (instance.GetVRCPlayer().GetIsBot() || Modules.Photon.RPCBlock.Contains(instance.UserID()))
+                {
+                    System.Console.ForegroundColor = System.ConsoleColor.Red;
+                    MelonConsole.SetColor(System.ConsoleColor.Red);
+                    System.Console.WriteLine(string.Concat(new string[]
+                    {
+                        "\n[BLOCKED RPC] \nPLAYER: ",text," \nEXECUTED:", __1.ParameterString, " \nOBJECT: ", __1.ParameterObject.name," [", __2.ToString(),"](",__3.ToString(),"/",__4.ToString(),")"
+                    }));
+                    System.Console.ResetColor();
+                    return false;
+                }
+                else if (__1.ParameterObject.name != "USpeak" && __1.ParameterString != "SetTimerRPC" && RPCLog)
                 {
                     System.Console.ForegroundColor = System.ConsoleColor.Magenta;
                     MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
@@ -767,19 +791,7 @@ namespace WengaPort.Extensions
                     System.Console.ResetColor();
                     MelonConsole.SetColor(System.ConsoleColor.White);
                 }
-                bool flag = instance.GetVRCPlayer().GetIsBot() || RPCAndEventBlock.Check(instance.UserID());
-                if (flag)
-                {
-                    System.Console.ForegroundColor = System.ConsoleColor.Red;
-                    MelonConsole.SetColor(System.ConsoleColor.Red);
-                    System.Console.WriteLine(string.Concat(new string[]
-                    {
-                        "\n[BLOCKED RPC] \nPLAYER: ",text," \nEXECUTED:", __1.ParameterString, " \nOBJECT: ", __1.ParameterObject.name," [", __2.ToString(),"](",__3.ToString(),"/",__4.ToString(),")"
-                    }));
-                    System.Console.ResetColor();
-                    return false;
-                }
-
+                
                 if (__1.ParameterObject != null)
                 {
                     if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && IsNaN(__1.ParameterObject.transform.position))
@@ -851,11 +863,23 @@ namespace WengaPort.Extensions
                             break;
 
                         case "PlayEmoteRPC":
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Il2CppSystem.Convert.ToInt32(text4) < 0 || Il2CppSystem.Convert.ToInt32(text4) > 8))
+                            {
+                                Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emote");
+                                VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emote");
+                                return false;
+                            }
                             //VRConsole.Log(VRConsole.LogsType.Info,$" {text} --> Emote");
                             Logger.WengaLogger($"[Room] [Info] {text} played Emote");
                             break;
 
                         case "SpawnEmojiRPC":
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Il2CppSystem.Convert.ToInt32(text4) < 0|| Il2CppSystem.Convert.ToInt32(text4) > 57))
+                            {
+                                Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emoji");
+                                VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emoji");
+                                return false;
+                            }
                             VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Emoji");
                             Logger.WengaLogger($"[Room] [Info] {text} played Emoji");
                             break;
@@ -867,11 +891,8 @@ namespace WengaPort.Extensions
                                 Logger.WengaLogger($"[Room] [Protection] Prevented {text} from Instantiating Objects at Infinity");
                                 return false;
                             }
-                            else
-                            {
-                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Instantiate Object");
-                                Logger.WengaLogger($"[Room] [Info] {text} instantiated Object");
-                            }
+                            VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Instantiate Object");
+                            Logger.WengaLogger($"[Room] [Info] {text} instantiated Object");
                             break;
 
                         case "ChangeVisibility":
@@ -890,6 +911,18 @@ namespace WengaPort.Extensions
                                 Logger.WengaLogger($"[Room] [Info] {text} hide the Camera");
                             }
                             break;
+                        case "InteractWithStationRPC":
+                            if (text4.Contains("True"))
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Chair used");
+                                Logger.WengaLogger($"[Room] [Info] {text} used a Chair");
+                            }
+                            else if (text4.Contains("False"))
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Chair unused");
+                                Logger.WengaLogger($"[Room] [Info] {text} unused a Chair");
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -902,14 +935,14 @@ namespace WengaPort.Extensions
                         Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Always Event [{__1.EventType}]");
                         return false;
                     }
-                    else if (__1.ParameterString.Length >= 200)
+                    else if (__1.ParameterString.Length >= 100)
                     {
                         VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Always Event [{__1.EventType}]");
                         Logger.WengaLogger($"[Room] [Protection] Prevented {text} from using Event Disconnect Exploit [{__1.EventType}]");
                         return false;
                     }
                 }
-                if (senderID != APIUser.CurrentUser.id && __1.EventType == VrcEventType.SetGameObjectActive && AntiWorldTrigger)
+                if (senderID != APIUser.CurrentUser.id && AntiWorldTrigger && (__1.EventType == VrcEventType.SetGameObjectActive || __1.EventType == VrcEventType.AnimationBool))
                 {
                     if (__2 == 0 || __2 == VrcBroadcastType.AlwaysUnbuffered || __2 == VrcBroadcastType.AlwaysBufferOne)
                     {

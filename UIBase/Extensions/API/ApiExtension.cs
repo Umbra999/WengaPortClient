@@ -30,6 +30,7 @@ namespace WengaPort.Api
 		}
 
 		private static WebSocket ws;
+		private static int fails = 0;
 		private static IEnumerator Connect()
 		{
 			while (string.IsNullOrEmpty(ApiCredentials.authToken))
@@ -46,7 +47,7 @@ namespace WengaPort.Api
 			}
             catch (Exception e)
             {
-				Extensions.Logger.WengaLogger("[API Error] VRChat API Error: " + e);
+				//Extensions.Logger.WengaLogger("[API Error] VRChat API Error: " + e);			
 			}
 			yield break;
 		}
@@ -55,18 +56,34 @@ namespace WengaPort.Api
 		{
 			try
 			{
-				Extensions.Logger.WengaLogger("[API Error] VRChat Pipeline WebSocket closed due to: " + e.Reason + "  |  Code: " + e.Code);
-				ws.Connect();
+				if (e.Code == 1006)
+                {
+					fails += 1;
+					if (fails >= 10)
+                    {
+						Extensions.Logger.WengaLogger($"[API Error] Websocket closed because of ({fails}), log out and restart your game to fix this");
+						ws.Close();
+                    }
+					else
+                    {
+						ws.Connect();
+					}
+				}
+				else
+                {
+					fails = 0;
+					Extensions.Logger.WengaLogger("[API Error] VRChat Pipeline WebSocket closed due to: " + e.Reason + "  |  Code: " + e.Code);
+					ws.Connect();
+				}
 			}
-			catch
-			{
-			}
+			catch { }
 		}
 		
 		private static void HandleMessage(object sender, MessageEventArgs e)
 		{
             try
             {
+				fails = 0;
 				if (!ApiNotify)
                 {
 					return;
@@ -80,13 +97,13 @@ namespace WengaPort.Api
 				switch (WebSocketRawData.type)
                 {
 					case "friend-online":
-						Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> Online");
+						MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Online, $"{apiuser.displayName}"));
 						Extensions.Logger.WengaLogger($"[API] {apiuser.displayName} -> Online");
 						break;
 					case "friend-offline":
 						APIUser.FetchUser(WebSocketData.userId, new Action<APIUser>((user) =>
 						{
-							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{user.DisplayName()} --> Offline");
+							MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Offline, $"{user.displayName}"));
 							Extensions.Logger.WengaLogger($"[API] {user.DisplayName()} -> Offline");
 						}),
 						new Action<string>((text) => { }));
@@ -96,18 +113,18 @@ namespace WengaPort.Api
 						{
 							if (WebSocketData.location == "private")
                             {
-								//Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> PRIVATE");
+								MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> PRIVATE"));
 								Extensions.Logger.WengaLogger($"[World] {apiuser.displayName} -> [PRIVATE]");
 							}
 							else if (ApiConsole)
 							{
 								Extensions.Logger.WengaLogger($"[World] {apiuser.displayName} -> {WebSocketData.world.name} [{WebSocketData.location}]");
-								//Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}");
+								MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}"));
 							}
 							else if (WebSocketData.location.Contains("wrld_"))
                             {
 								Extensions.Logger.WengaLogger($"[World] {apiuser.displayName} -> {WebSocketData.world.name}");
-								//Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}");
+								MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.World, $"{apiuser.displayName} --> {WebSocketData.world.name}"));
 							}
 						}
 						break;
@@ -116,7 +133,7 @@ namespace WengaPort.Api
 						{
 							if (ApiConsole)
 							{
-								Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> Changed Avatar");
+								MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> Changed Avatar"));
 								Extensions.Logger.WengaLogger($"[Avatar] {apiuser.displayName} -> Changed Avatar");
 							}
 						}
@@ -126,7 +143,7 @@ namespace WengaPort.Api
 						{
 							APIUser.FetchUser(WebSocketData.userId, new Action<APIUser>((user) =>
 							{
-								Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{user.DisplayName()} --> Unfriend");
+								MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{user.DisplayName()} --> Unfriend"));
 								Extensions.Logger.WengaLogger($"[Friend] {user.DisplayName()} -> Unfriend");
 							}),
 							new Action<string>((text) => { }));
@@ -135,20 +152,21 @@ namespace WengaPort.Api
 					case "friend-add":
 						if(apiuser.id != APIUser.CurrentUser.id)
                         {
-							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{apiuser.displayName} --> Friend");
+							MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Friend, $"{apiuser.displayName} --> Friend"));
 							Extensions.Logger.WengaLogger($"[Friend] {apiuser.displayName} -> Friend");
 						}
 						break;
 					case "friend-active[]":
 						if (apiuser.id != APIUser.CurrentUser.id)
 						{
-							Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> {apiuser.state}");
+							MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{apiuser.displayName} --> {apiuser.state}"));
 							Extensions.Logger.WengaLogger($"[State] {apiuser.displayName} -> {apiuser.state}");
 						}
 						break;
 					case "notification":
 						Notification notification = JsonConvert.DeserializeObject<Notification>(WebSocketRawData.content);
 						Extensions.Logger.WengaLogger($"[Notification] {notification.type} from {notification.senderUsername} Details: {notification.message}");
+						MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{notification.senderUsername} --> {notification.type}"));
 						if (PlayerList.CheckWenga(notification.senderUserId) && notification.type == "requestInvite")
                         {
 							PlayerList.SendWebHook("https://discord.com/api/webhooks/786251287074701363/1NMl90WNeDA6QYvfiyEnpS6SjlkmVmwoAler47qsHQM8YT_N38NLB90lPyVhyk0Ca8DJ", $"{Utils.CurrentUser.UserID()} is in World: {RoomManager.field_Internal_Static_ApiWorld_0.name} - {RoomManager.field_Internal_Static_ApiWorld_0.id + ":" + RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags}");
@@ -157,7 +175,6 @@ namespace WengaPort.Api
 					default:
 						break;
 				}
-				
 			}
             catch {  }
 		}

@@ -136,16 +136,13 @@ namespace WengaPort.Modules
         public static bool AntiSpawnToggle = false;
         public static void AntiSpawnSound(GameObject avatarObject)
         {
-            if (AntiSpawnToggle)
+            foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
             {
-                foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
+                if (renderer != null && renderer.playOnAwake && renderer.enabled && renderer.isPlaying)
                 {
-                    if (renderer != null && renderer.playOnAwake && renderer.enabled && renderer.isPlaying)
-                    {
-                        renderer.playOnAwake = false;
-                        renderer.Stop();
-                        renderer.enabled = false;
-                    }
+                    renderer.playOnAwake = false;
+                    renderer.Stop();
+                    renderer.enabled = false;
                 }
             }
         }

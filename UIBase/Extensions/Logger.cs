@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -19,15 +20,25 @@ namespace WengaPort.Extensions
             Console.WriteLine("[" + DateTime.Now.ToShortTimeString() + "]" + " [WengaPort] " + obj);
         }
 
-        public static void WebsocketLogger(VRConsole.LogsType LogType, object obj)
+        public static IEnumerator WebsocketLogger(VRConsole.LogsType LogType, object obj)
         {
-            try
+            if (obj == null)
             {
-                File.WriteAllText("WengaPort\\Websocket.txt", obj.ToString());
-                VRConsole.Log(LogType, File.ReadAllText("WengaPort\\Websocket.txt"));
+                yield break;
             }
-            catch
-            { }
+            while (ConvertWebsocket) yield return new WaitForSeconds(1);
+            ConvertWebsocket = true;
+            yield return new WaitForSeconds(1);
+            ConvertWebsocket = false;
+            WebsocketOutput.Add(obj);
+            foreach (object message in WebsocketOutput)
+            {
+                VRConsole.Log(LogType, message.ToString());
+            }
+            WebsocketOutput.Clear();
         }
+        public static List<object> WebsocketOutput = new List<object>();
+
+        public static bool ConvertWebsocket = false;
     }
 }

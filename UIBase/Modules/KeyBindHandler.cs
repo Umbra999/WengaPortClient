@@ -47,6 +47,16 @@ namespace WengaPort.Modules
                     Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible = !Resources.FindObjectsOfTypeAll<DebugLogGui>().First().visible;
                 }
 
+                else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha9))
+                {
+                    Resources.FindObjectsOfTypeAll<VRCNetworkInfoGUI>().First().field_Private_Boolean_0 = !Resources.FindObjectsOfTypeAll<VRCNetworkInfoGUI>().First().field_Private_Boolean_0;
+                }
+
+                else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha8))
+                {
+                    Resources.FindObjectsOfTypeAll<VRCNetworkGraphGUI>().First().field_Private_Boolean_0 = !Resources.FindObjectsOfTypeAll<VRCNetworkGraphGUI>().First().field_Private_Boolean_0;
+                }
+
                 else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.X))
                 {
                     if (AntiMenuOverrender.AntiOverrenderToggle)

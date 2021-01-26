@@ -22,8 +22,8 @@ namespace WengaPort.Modules
         {
             float num = posy;
             Transform parent = Utils.QuickMenu.transform.Find("ShortcutMenu");
-            PlayerCount = new MenuText(parent, posx, -500f, "Playerlist: ");
-            for (int i = 0; i <= 32; i++)
+            PlayerCount = new MenuText(parent, posx, -500f, "<b>Playerlist: </b>");
+            for (int i = 0; i <= 38; i++)
             {
                 MenuText item = new MenuText(parent, posx, posy, "");
                 Logs.Add(item);
@@ -40,23 +40,21 @@ namespace WengaPort.Modules
                 foreach (Player Player in Utils.PlayerManager.GetAllPlayers().ToArray())
                 {
                     string Text;
-                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().isSupporter ? "<color=#b66b25>[V+]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player) + " [Q] " + PlayerExtensions.GetQualitySymbols(Player.GetVRCPlayer());
+                    Text = (PlayerExtensions.GetAPIUser(Player).hasModerationPowers ? "<color=#850700>[MOD]</color> " : "") + (GeneralWrappers.GetIsBot(Player) ? "<color=#a33333>[BOT]</color> " : "") + (BlockList.Contains(Player.UserID()) ? "<color=#424242>[B]</color> " : "") + (PlayerExtensions.IsFriend(Player) ? "<color=#ebc400>[F]</color> " : "") + (PlayerExtensions.GetIsMaster(Player) ? "<color=#3c1769>[M]</color> " : "") + (Player.GetAPIUser().isSupporter ? "<color=#b66b25>[V+]</color> " : "") + (Player.GetAPIUser().IsOnMobile ? "<color=#27b02d>[Q]</color> " : "") + (Player.GetVRCPlayerApi().IsUserInVR() ? "<color=#00d4f0>[VR]</color> " : "<color=#00d4f0>[D]</color> ") + "<color=#00d4f0>" + Player.DisplayName() + "</color>" + " [P] " + GeneralWrappers.GetPingColored(Player) + " [F] " + GeneralWrappers.GetFramesColored(Player);
                     Players.Insert(0, Text);
-                    UpdateText();
-                    PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
                 }
+                UpdateText();
+                PlayerCount.SetText(string.Format("<b>In Room: {0}</b>", Players.Count));
             }
-            catch
-            { }
+            catch { }
         }
         public float PlayerDelay = 0f;
         public void Update()
         {
             PlayerDelay += Time.deltaTime;
-            if (PlayerDelay > 3f)
+            if (PlayerDelay > 2f)
             {
-                var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                if (Shortcut.gameObject.active == true)
+                if (Utils.QuickMenu.transform.Find("ShortcutMenu").gameObject.active == true)
                 {
                     AddPlayerToList();
                 }
@@ -241,7 +239,7 @@ namespace WengaPort.Modules
 
         public static MenuText PlayerCount;
 
-        public static float posx = -1300;
+        public static float posx = -1220;
 
         public static float posy = -400f;
 

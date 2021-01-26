@@ -120,12 +120,6 @@ namespace WengaPort.Buttons
             }, "Bring all Pickups to you");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
-            HalfButton = new QMSingleButton(ThisMenu, 0, 1.75f, "Add\nFriends", () =>
-            {
-                MelonCoroutines.Start(Modules.Photon.FriendBackup());
-            }, "Add Friends from a txt file");
-            HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
-
             new QMToggleButton(ThisMenu, 1, 1, "ESP", () =>
             {
                 ESP.ESPEnabled = true;

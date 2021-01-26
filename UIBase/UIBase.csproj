@@ -457,7 +457,6 @@
     <Compile Include="Buttons\UserInteractMenu.cs" />
     <Compile Include="Buttons\MediaMenu.cs" />
     <Compile Include="Console\VrConsole.cs" />
-    <Compile Include="Extensions\API\ApiBot.cs" />
     <Compile Include="Extensions\API\ApiExtension.cs" />
     <Compile Include="Extensions\API\ApiObjects.cs" />
     <Compile Include="Extensions\API\WebSocketObject.cs" />
@@ -469,7 +468,6 @@
     <Compile Include="Extensions\PatchManager.cs" />
     <Compile Include="Extensions\PlayerExtension.cs" />
     <Compile Include="Extensions\QMInfo.cs" />
-    <Compile Include="Extensions\RPCAndEventBlock.cs" />
     <Compile Include="Extensions\ScrollMenu.cs" />
     <Compile Include="Extensions\VRCUIManagerExtension.cs" />
     <Compile Include="FoldersManager\Create.cs" />
@@ -485,9 +483,11 @@
     <Compile Include="Modules\AvatarHider.cs" />
     <Compile Include="Modules\Bot\BotOrbit.cs" />
     <Compile Include="Modules\CameraHandler.cs" />
+    <Compile Include="Modules\CanHearList.cs" />
     <Compile Include="Modules\ESP.cs" />
     <Compile Include="Modules\GlobalDynamicBones.cs" />
     <Compile Include="Modules\KeyBindHandler.cs" />
+    <Compile Include="Modules\Lewdify.cs" />
     <Compile Include="Modules\LovenseRemote.cs" />
     <Compile Include="Modules\Moderations.cs" />
     <Compile Include="Modules\Movement.cs" />

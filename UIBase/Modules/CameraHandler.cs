@@ -107,7 +107,7 @@ namespace WengaPort.Modules
 		private static float _zoomMultiplier = 6f;
 		public static void Zoom()
         {
-			if (Input.GetKey(KeyCode.LeftAlt) && _enableZoom && !_isZoomed)
+			if (Input.GetKey(KeyCode.LeftAlt) && _enableZoom && !_isZoomed && !Input.GetKey(KeyCode.Tab))
 			{
 				_isZoomed = true;
 				_beforeZoomFOV = 60f;
@@ -116,7 +116,7 @@ namespace WengaPort.Modules
 			}
 			else
 			{
-				if (Input.GetKeyUp(KeyCode.LeftAlt) && _enableZoom && _isZoomed)
+				if (Input.GetKeyUp(KeyCode.LeftAlt) && _enableZoom && _isZoomed || !Application.isFocused)
 				{
 					_isZoomed = false;
 					_FOV = _beforeZoomFOV;
@@ -173,8 +173,9 @@ namespace WengaPort.Modules
 			instance.prop_EnumPublicSealedvaNoSmLo4vUnique_0 = EnumPublicSealedvaNoSmLo4vUnique.Look_At;
 			instance.prop_EnumPublicSealedvaAtLoWoCO5vUnique_0 = EnumPublicSealedvaAtLoWoCO5vUnique.World;
 			yield return new WaitForSeconds(0.5f);
-			instance.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
-			instance.field_Private_Vector3_0 = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+			instance.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+			instance.field_Private_Vector3_0 = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
+			instance.transform.rotation = new Quaternion(float.NaN, float.NaN, float.NaN, float.NaN);
 			instance.field_Internal_UserCameraIndicator_0.Speaker.enabled = false;
 			instance.photoCaptureCooldown = 0f;
 			yield return new WaitForSeconds(0.5f);
@@ -183,8 +184,9 @@ namespace WengaPort.Modules
 				TakePicture(int.MaxValue);
 			}
 			yield return new WaitForSeconds(5.5f);
-			instance.transform.position = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
-			instance.field_Private_Vector3_0 = new Vector3(999 * 999 * 999, 999 * 999 * 999, 999 * 999 * 999);
+			instance.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue);
+			instance.field_Private_Vector3_0 = new Vector3(int.MinValue, int.MinValue, int.MinValue);
+			instance.transform.rotation = new Quaternion(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity);
 			yield return new WaitForSeconds(4f);
 			instance.StopAllCoroutines();
 			yield return new WaitForSeconds(0.5f);
@@ -361,7 +363,7 @@ namespace WengaPort.Modules
                 {
 					yield break;
                 }
-				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MaxValue, int.MaxValue, int.MaxValue) * 268, Quaternion.identity);
+				GameObject InfPortal2 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MaxValue, int.MaxValue, int.MaxValue) * 268, new Quaternion(float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity, float.NegativeInfinity));
 				InfPortal2.transform.position = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue) * 268;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal2, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
@@ -369,12 +371,12 @@ namespace WengaPort.Modules
 					(Il2CppSystem.String)Photon.RandomNumberString(4),
 					new Il2CppSystem.Int32
 					{
-						m_value = new System.Random().Next(0,5)
+						m_value = int.MinValue
 					}.BoxIl2CppObject()
 				});
 				InfPortal2.SetActive(false);
 				yield return new WaitForSeconds(4);
-				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MinValue, int.MinValue, int.MinValue) * 268, Quaternion.identity);
+				GameObject InfPortal3 = Networking.Instantiate(VRC_EventHandler.VrcBroadcastType.Always, "Portals/PortalInternalDynamic", new Vector3(int.MinValue, int.MinValue, int.MinValue) * 268, new Quaternion(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity));
 				InfPortal3.transform.position = new Vector3(int.MinValue, int.MinValue, int.MinValue) * 268;
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal3, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
@@ -382,7 +384,7 @@ namespace WengaPort.Modules
 					(Il2CppSystem.String)Photon.RandomNumberString(4),
 					new Il2CppSystem.Int32
 					{
-						m_value = new System.Random().Next(0,5)
+						m_value = int.MinValue
 					}.BoxIl2CppObject()
 				});
 				InfPortal3.SetActive(false);

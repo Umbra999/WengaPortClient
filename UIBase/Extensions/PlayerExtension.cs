@@ -130,6 +130,16 @@ namespace WengaPort.Modules
 				}
 			}.ChangeToSelectedAvatar();
 		}
+		public static GameObject GetAvatar(this VRCAvatarManager Instance)
+		{
+			if (Instance.prop_GameObject_0 != null)
+				return Instance.prop_GameObject_0;
+			if (Instance.field_Private_GameObject_1 != null)
+				return Instance.field_Private_GameObject_1;
+			if (Instance.field_Private_GameObject_2 != null)
+				return Instance.field_Private_GameObject_2;
+			return null;
+		}
 
 		public static VRCPlayerApi GetVRCPlayerApi(this VRCPlayer Instance)
 		{
