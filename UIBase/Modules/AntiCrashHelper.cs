@@ -21,14 +21,6 @@ namespace DayClientML2.Modules.Misc
     {
         public static void Hook()
         {
-            var instance = Harmony.HarmonyInstance.Create("DaysAntiCrash");
-            var matchingMethods = typeof(AssetManagement)
-                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Where(it =>
-                    it.Name.StartsWith("Method_Public_Static_Object_Object_Vector3_Quaternion_Boolean_Boolean_Boolean_") && it.GetParameters().Length == 6).ToList();
-            foreach (var method in matchingMethods)
-            {
-                instance.Patch(method, new Harmony.HarmonyMethod(typeof(AntiCrashHelper).GetMethod("ObjectInstantiatePatch")));
-            }
             unsafe
             {
                 var originalMethodPointer = *(IntPtr*)(IntPtr)UnhollowerUtils
@@ -76,6 +68,14 @@ namespace DayClientML2.Modules.Misc
                 *methodInfoCopy = *originalMethodInfo;
 
                 ourInvokeMethodInfo = (IntPtr)methodInfoCopy;
+            }
+            var instance = Harmony.HarmonyInstance.Create("DaysAntiCrash");
+            var matchingMethods = typeof(AssetManagement)
+                .GetMethods(BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly).Where(it =>
+                    it.Name.StartsWith("Method_Public_Static_Object_Object_Vector3_Quaternion_Boolean_Boolean_Boolean_") && it.GetParameters().Length == 6).ToList();
+            foreach (var method in matchingMethods)
+            {
+                instance.Patch(method, new Harmony.HarmonyMethod(typeof(AntiCrashHelper).GetMethod("ObjectInstantiatePatch", BindingFlags.NonPublic | BindingFlags.Static)));
             }
         }
         private static bool ObjectInstantiatePatch(ref UnityEngine.Object __0)//,ref Vector3 __1, ref Quaternion __2, ref bool __3, ref bool __4,ref bool __5)//, ref UnityEngine.Object __result)
