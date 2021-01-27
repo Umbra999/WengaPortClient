@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using UnityEngine;
-using ExitGames.Client.Photon;
 using VRC.SDKBase;
 using WengaPort.Extensions;
 

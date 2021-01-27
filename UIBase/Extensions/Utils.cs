@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using VRC;
-using VRC.Core;
 using VRC.UserCamera;
-using Transmtn.DTO.Notifications;
 using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
 using System.Collections.Generic;
 using UnhollowerRuntimeLib.XrefScans;

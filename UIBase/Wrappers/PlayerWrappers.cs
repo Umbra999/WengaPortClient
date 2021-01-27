@@ -1,5 +1,4 @@
-﻿using ExitGames.Client.Photon;
-using UnityEngine;
+﻿using UnityEngine;
 using VRC;
 using VRC.Core;
 using VRC.SDKBase;

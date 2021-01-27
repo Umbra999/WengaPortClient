@@ -1,16 +1,12 @@
 ﻿using System;
 using UnityEngine;
 using VRC;
-using MelonLoader;
 using System.Collections;
-using VRC.Core;
 using System.Collections.Generic;
 using WengaPort.Wrappers;
 using VRCSDK2;
 using VRC.SDKBase;
-using System.Threading;
 using System.Linq;
-using System.Threading.Tasks;
 using UnityEngine.Rendering.PostProcessing;
 using WengaPort.Extensions;
 using static VRC.SDKBase.VRC_EventHandler;

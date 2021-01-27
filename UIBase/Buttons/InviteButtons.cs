@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using MelonLoader;
 using WengaPort.Api;
 using WengaPort.Modules;
-using VRC.Core;
 using WengaPort.Extensions;
 using System.Windows.Forms;
 

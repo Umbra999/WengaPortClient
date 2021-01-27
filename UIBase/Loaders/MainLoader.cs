@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System;
 using WengaPort.Loaders;
 using WengaPort.Buttons;
-using VRC.Core;
 using WengaPort.Modules;
 using UnityEngine;
 using WengaPort.Wrappers;
@@ -11,13 +10,8 @@ using WengaPort.Extensions;
 using VRC;
 using VRCSDK2;
 using System.Linq;
-using System.Collections.Generic;
 using DiscordRichPresence;
-using System.IO;
-using System.Net;
-using System.Threading;
 using UnityEngine.UI;
-using Logger = WengaPort.Extensions.Logger;
 using WengaPort.ConsoleUtils;
 using UnhollowerRuntimeLib;
 using UnityEngine.Rendering.PostProcessing;
@@ -31,7 +25,7 @@ namespace WengaPort.MainLoader
         {
             FoldersManager.Create.Initialize();
             OnStart();
-            Console.Title = $"WengaPort Loading...";
+            Console.Title = "WengaPort Loading...";
             PatchManager.QuestIni();
             PatchManager.PatchSafety();
             ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
@@ -50,6 +44,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<GlobalDynamicBones>();
             ClassInjector.RegisterTypeInIl2Cpp<CanHearList>();
             ClassInjector.RegisterTypeInIl2Cpp<OnGui>();
+            ClassInjector.RegisterTypeInIl2Cpp<Api.ApiExtension>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -64,12 +59,7 @@ namespace WengaPort.MainLoader
             GlobalDynamicBones.currentWorldDynamicBoneColliders.Clear();
             GlobalDynamicBones.currentWorldDynamicBones.Clear();
             PlayerList.BlockList.Clear();
-            new Thread(delegate ()
-            {
-                PatchManager.EventDelay = true;
-                Thread.Sleep(9000);
-                PatchManager.EventDelay = false;
-            }).Start();
+            MelonCoroutines.Start(PatchManager.EventDelayer());
         }
 
         public override void OnLevelWasInitialized(int level) // Runs when a Scene has Initialized.
@@ -302,6 +292,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<OnGui>();
             Client.AddComponent<Modules.Reupload.ReuploaderButtons>();
             Client.AddComponent<Modules.Reupload.ApiFileHelper>();
+            Client.AddComponent<Api.ApiExtension>();
         }
         GameObject menu;
         GameObject inviteDot;

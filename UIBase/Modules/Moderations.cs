@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Transmtn.DTO.Notifications;
-using UnityEngine;
-using VRC;
 using VRC.Core;
-using VRC.SDKBase;
-using WengaPort.ConsoleUtils;
-using WengaPort.Extensions;
-using WengaPort.Wrappers;
-using UnityEngine.UI;
 using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
 using Logger = WengaPort.Extensions.Logger;
 

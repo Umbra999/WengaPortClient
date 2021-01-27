@@ -1,13 +1,9 @@
 ﻿using ExitGames.Client.Photon;
 using Harmony;
-using Il2CppSystem;
 using Il2CppSystem.Collections;
 using MelonLoader;
 using Newtonsoft.Json.Linq;
-using Photon.Pun;
 using RootMotion.FinalIK;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -592,6 +588,14 @@ namespace WengaPort.Extensions
         public static bool BlockPlayer = false;
         public static bool EventDelay = false;
         public static bool HideCamera = false;
+
+        public static System.Collections.IEnumerator EventDelayer()
+        {
+            EventDelay = true;
+            yield return new WaitForSeconds(10);
+            EventDelay = false;
+            yield break;
+        }
 
         private static readonly byte[] BotIgnoreCodes = new byte[]
         {

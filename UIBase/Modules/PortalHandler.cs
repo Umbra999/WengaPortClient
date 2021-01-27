@@ -4,7 +4,6 @@ using Il2CppSystem;
 using MelonLoader;
 using UnityEngine;
 using VRC;
-using VRC.Core;
 using VRC.SDKBase;
 
 namespace WengaPort.Modules

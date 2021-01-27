@@ -1,5 +1,4 @@
-﻿using MelonLoader;
-using System;
+﻿using System;
 using System.Net;
 using VRC.Core;
 

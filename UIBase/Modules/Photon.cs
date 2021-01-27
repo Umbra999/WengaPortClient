@@ -1,8 +1,4 @@
-﻿using System;
-using WengaPort.Extensions;
-using ExitGames.Client.Photon;
-using Harmony;
-using Il2CppSystem;
+﻿using ExitGames.Client.Photon;
 using Photon.Pun;
 using UnhollowerBaseLib;
 using UnityEngine;
@@ -12,14 +8,10 @@ using RootMotion.FinalIK;
 using RealisticEyeMovements;
 using System.Linq;
 using System.Collections;
-using WengaPort.Api;
 using System.Threading;
 using WengaPort.Wrappers;
 using static VRC.SDKBase.VRC_EventHandler;
-using VRC.Udon;
-using VRC.Udon.Common.Interfaces;
 using System.IO;
-using Transmtn.DTO.Notifications;
 using VRC.Core;
 using System.Collections.Generic;
 

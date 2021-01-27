@@ -1,12 +1,10 @@
-﻿using MelonLoader;
-using Newtonsoft.Json.Linq;
+﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
-using System.Web.WebPages;
 using System.Windows.Forms;
 using UnityEngine;
 using WengaPort.Api;

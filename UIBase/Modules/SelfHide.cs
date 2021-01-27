@@ -1,20 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using ExitGames.Client.Photon;
-using Harmony;
-using Il2CppSystem;
-using Il2CppSystem.Collections.Generic;
-using Photon.Pun;
-using UnhollowerBaseLib;
-using UnityEngine;
-using VRC;
-using VRC.Core;
-using VRC.SDKBase;
-using VRCSDK2;
-using MelonLoader;
+﻿using UnityEngine;
 
 namespace WengaPort.Modules
 {

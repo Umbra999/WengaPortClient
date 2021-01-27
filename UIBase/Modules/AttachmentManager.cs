@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace WengaPort.Modules
@@ -26,20 +22,11 @@ namespace WengaPort.Modules
         {
             TransformParent = Instance.gameObject.transform.GetComponentInChildren<Animator>().GetBoneTransform(bone);
         }
-        internal static void SetOffset(Vector3 Offset)
-        {
-            XOffset = Offset.x;
-            YOffset = Offset.y;
-            ZOffset = Offset.z;
-        }
         internal static void Reset()
         {
             TransformParent = null;
         }
         private static Transform TransformParent;
-        private static float XOffset = 0;
-        private static float YOffset = 0;
-        private static float ZOffset = 0;
         public AttachmentManager(IntPtr ptr) : base(ptr) { }
     }
 }

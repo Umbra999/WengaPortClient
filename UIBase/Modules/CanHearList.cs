@@ -5,14 +5,6 @@ using System.Linq;
 using UnityEngine;
 using VRC;
 using WengaPort.Wrappers;
-using UnityEngine.UI;
-using VRC.Core;
-using System.Net;
-using WengaPort.Extensions;
-using System.Diagnostics;
-using System.Collections.Specialized;
-using System.Collections;
-using TMPro;
 
 namespace WengaPort.Modules
 {

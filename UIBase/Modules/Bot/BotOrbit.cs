@@ -1,15 +1,9 @@
 ﻿using MelonLoader;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
-using VRC.Core;
 using VRC.SDKBase;
 using WengaPort.Wrappers;
 

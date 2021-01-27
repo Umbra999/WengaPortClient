@@ -1,21 +1,17 @@
 ﻿using Harmony;
-using Il2CppSystem.Text;
 using MelonLoader;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using UnhollowerRuntimeLib;
 using UnityEngine;
-using UnityEngine.UI;
 using VRC;
 using VRC.Core;
 using VRC.SDKBase;
 using WengaPort.Extensions;
-using WengaPort.Modules;
 using WengaPort.Wrappers;
 
 namespace WengaPort.Modules

@@ -14,7 +14,7 @@ namespace WengaPort.Loaders
             ButtonsMainColor.Initialize2();
             ButtonsMainColor.Initialize3();
             AntiMenuOverrender.UIInit();
-            AvatarHider.AvatatSpoofInit();
+            AvatarHider.AvatarSpoofInit();
             WorldButton.Setup();
             WorldDownloadStatus.Setup();
             Nameplates.OnUI();

@@ -1,16 +1,12 @@
 ﻿using Harmony;
-using MelonLoader;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using VRC;
 using WengaPort.Buttons;
 using WengaPort.Extensions;
-using WengaPort.Modules;
 
 namespace WengaPort.Modules
 {
@@ -161,7 +157,6 @@ namespace WengaPort.Modules
                 SetLayerRecursively(otherTransform, newLayer, match);
             }
         }
-
         public AntiMenuOverrender(IntPtr ptr) : base(ptr) { }
     }
 }

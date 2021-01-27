@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using UnityEngine;
 using UnityEngine.UI;
-using VRC;
-using VRC.Core;
-using VRC.SDKBase;
-using WengaPort.Extensions;
-using WengaPort.FoldersManager;
 using WengaPort.Modules;
 using WengaPort.Wrappers;
 using Button = UnityEngine.UI.Button;

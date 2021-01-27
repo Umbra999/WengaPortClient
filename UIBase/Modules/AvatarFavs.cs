@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 using MelonLoader;
 using System.Collections;
 using VRC.Core;
-using UnhollowerBaseLib;
 using VRC.UI;
 using WengaPort.Utility;
-using WengaPort.Modules;
 using WengaPort.Api;
 using WengaPort.Api.Object;
 using System.IO;

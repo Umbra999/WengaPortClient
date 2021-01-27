@@ -1,10 +1,6 @@
 ﻿using MelonLoader;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using VRC;
 using WengaPort.Wrappers;
@@ -54,7 +50,7 @@ namespace WengaPort.Modules
         }
         public float HideDelay = 0f;
 
-        public static void AvatatSpoofInit()
+        public static void AvatarSpoofInit()
         {
             GameObject.Find("UserInterface/MenuContent/Screens/Avatar/Change Button").GetComponent<UnityEngine.UI.Button>().onClick.AddListener(new Action(() =>
             {

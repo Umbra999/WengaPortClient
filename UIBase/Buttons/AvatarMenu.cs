@@ -1,14 +1,5 @@
-﻿using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using UnityEngine;
-using VRC;
-using VRC.Core;
 using WengaPort.Api;
 using WengaPort.ConsoleUtils;
 using WengaPort.Modules;

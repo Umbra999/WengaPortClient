@@ -11,9 +11,7 @@ using System.Windows.Forms;
 using VRC.SDKBase;
 using WengaPort.Extensions;
 using static VRC.SDKBase.VRC_EventHandler;
-using UnityEngine.UI;
 using VRC.Udon;
-using WengaPort.ConsoleUtils;
 
 namespace WengaPort.Buttons
 {

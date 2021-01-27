@@ -145,9 +145,7 @@ namespace WengaPort.Modules
 		internal static float Fov = 75f;
 
 		public static int CameraSetup;
-		public ThirdPerson(IntPtr ptr) : base(ptr)
-		{
-		}
+		public ThirdPerson(IntPtr ptr) : base(ptr) { }
 	}
 }
 

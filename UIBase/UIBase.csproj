@@ -495,7 +495,7 @@
     <Compile Include="Modules\Movement.cs" />
     <Compile Include="Modules\Headlight.cs" />
     <Compile Include="Modules\ItemHandler.cs" />
-    <Compile Include="Modules\MenuText.cs" />
+    <Compile Include="Extensions\MenuText.cs" />
     <Compile Include="Modules\Nameplates\GDBUser.cs" />
     <Compile Include="Modules\Nameplates\NameplateHandler.cs" />
     <Compile Include="Modules\Nameplates\NameplateHelper.cs" />

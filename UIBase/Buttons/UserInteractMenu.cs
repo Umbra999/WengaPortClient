@@ -1,25 +1,13 @@
 ﻿using UnityEngine;
 using MelonLoader;
-using System.Linq;
 using WengaPort.Api;
 using System.Diagnostics;
 using WengaPort.Modules;
-using DiskWars;
 using WengaPort.Wrappers;
 using System.Collections.Generic;
 using WengaPort.Extensions;
-using System.IO;
-using VRC.Core;
-using VRCSDK2;
 using VRC.SDKBase;
-using System;
-using VRC;
-using VRC.UI;
-using Logger = WengaPort.Extensions.Logger;
 using static VRC.SDKBase.VRC_EventHandler;
-using WengaPort.ConsoleUtils;
-using WengaPort.FoldersManager;
-using VRC.Udon;
 
 namespace WengaPort.Buttons
 {

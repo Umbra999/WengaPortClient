@@ -1,21 +1,12 @@
 ﻿using WengaPort.Api;
 using WengaPort.Wrappers;
 using UnityEngine;
-using UnityEngine.UI;
 using WengaPort.Modules;
-using System;
-using VRC.UI;
 using VRC;
-using VRC.Core;
 using VRC.SDKBase;
 using VRCSDK2;
 using WengaPort.Extensions;
-using RootMotion.FinalIK;
 using System.Windows.Forms;
-using static WengaPort.Buttons.SocialMenu;
-using System.Linq;
-using Logger = WengaPort.Extensions.Logger;
-using MelonLoader;
 
 namespace WengaPort.Buttons
 {

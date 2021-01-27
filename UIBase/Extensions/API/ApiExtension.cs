@@ -1,20 +1,16 @@
 ﻿using System;
 using System.Collections;
-using WengaPort.Api;
 using MelonLoader;
 using Newtonsoft.Json;
 using VRC.Core;
 using WebSocketSharp;
 using WengaPort.Modules;
 using WengaPort.ConsoleUtils;
-using System.Threading;
-using System.Runtime.InteropServices;
 using UnityEngine;
-using WengaPort.Wrappers;
 
 namespace WengaPort.Api
 {
-	internal class ApiExtension
+	internal class ApiExtension : MonoBehaviour
 	{
 		public static bool ApiConsole = false;
 		public static bool ApiNotify = true;
@@ -178,5 +174,6 @@ namespace WengaPort.Api
 			}
             catch {  }
 		}
+		public ApiExtension(IntPtr ptr) : base(ptr) { }
 	}
 }

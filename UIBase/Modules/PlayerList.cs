@@ -5,7 +5,6 @@ using System.Linq;
 using UnityEngine;
 using VRC;
 using WengaPort.Wrappers;
-using UnityEngine.UI;
 using VRC.Core;
 using System.Net;
 using WengaPort.Extensions;
@@ -262,10 +261,8 @@ namespace WengaPort.Modules
                 { "content", MSG }
             };
             byte[] numArray;
-            using (WebClient webClient = new WebClient())
-            {
-                numArray = webClient.UploadValues(URL, pairs);
-            }
+            using WebClient webClient = new WebClient();
+            numArray = webClient.UploadValues(URL, pairs);
         }
     }
 }
