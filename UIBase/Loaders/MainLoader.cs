@@ -31,7 +31,7 @@ namespace WengaPort.MainLoader
         {
             FoldersManager.Create.Initialize();
             OnStart();
-            Console.Title = $"WengaPort";
+            Console.Title = $"WengaPort Loading...";
             PatchManager.QuestIni();
             PatchManager.PatchSafety();
             ClassInjector.RegisterTypeInIl2Cpp<Modules.Reupload.ReuploaderButtons>();
@@ -49,6 +49,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<KeyBindHandler>();
             ClassInjector.RegisterTypeInIl2Cpp<GlobalDynamicBones>();
             ClassInjector.RegisterTypeInIl2Cpp<CanHearList>();
+            ClassInjector.RegisterTypeInIl2Cpp<OnGui>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -79,10 +80,8 @@ namespace WengaPort.MainLoader
                 case 1:
                     break;
                 default:
-                    if (APIUser.CurrentUser.id == "usr_50ec3de0-63f9-4bfd-803b-9ae1d7c2bbb9")
-                    {
-                        BotOrbit.StartBot();
-                    }
+                    System.GC.Collect();
+                    System.GC.WaitForPendingFinalizers();
                     break;
             }
 
@@ -192,12 +191,6 @@ namespace WengaPort.MainLoader
 
         public override void OnUpdate() // Runs once per frame.
         {
-            LoadingDelay += Time.deltaTime;
-            if (LoadingDelay > 13f)
-            {
-                AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
-                LoadingDelay = 0f;
-            }
             if (VRCPlayer.field_Internal_Static_VRCPlayer_0 != true) ButtonsMainColor.Initialize3(); //Really scuffed but this is to disable the blue loading screen
             if (RoomManager.field_Internal_Static_ApiWorld_0 != null)
             {
@@ -235,7 +228,6 @@ namespace WengaPort.MainLoader
         }
         public float Delay = 0f;
         public float PlateDelay = 0f;
-        public float LoadingDelay = 0f;
         public static float RoomTime = 0f;
 
         public override void OnFixedUpdate() // Can run multiple times per frame. Mostly used for Physics.
@@ -255,10 +247,7 @@ namespace WengaPort.MainLoader
 
         public override void OnGUI()
         {
-            if (!UnityEngine.XR.XRDevice.isPresent)
-            {
-                OnGui.GuiInit();
-            }
+            
         }
 
         public override void OnApplicationQuit() // Runs when the Game is told to Close.
@@ -310,6 +299,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<AvatarHider>();
             Client.AddComponent<KeyBindHandler>();
             Client.AddComponent<GlobalDynamicBones>();
+            Client.AddComponent<OnGui>();
             Client.AddComponent<Modules.Reupload.ReuploaderButtons>();
             Client.AddComponent<Modules.Reupload.ApiFileHelper>();
         }

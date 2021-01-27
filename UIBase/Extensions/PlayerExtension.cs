@@ -238,15 +238,15 @@ namespace WengaPort.Modules
 			{
 				result = "Admin User";
 			}
-			else if (Instance.hasVIPAccess || (Instance.tags.Contains("system_legend") && Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
+			else if (Instance.hasVIPAccess || Instance.tags.Contains("system_legend") || (Instance.tags.Contains("system_legend") && Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
 			{
 				result = "Legend";
 			}
-			else if (Instance.hasLegendTrustLevel || (Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_trusted")))
+			else if (Instance.hasLegendTrustLevel || (Instance.tags.Contains("system_trust_legend") && Instance.tags.Contains("system_trust_veteran")))
 			{
 				result = "Veteran";
 			}
-			else if (Instance.hasVeteranTrustLevel)
+			else if (Instance.hasVeteranTrustLevel || Instance.tags.Contains("system_trust_veteran"))
 			{
 				result = "Trusted";
 			}

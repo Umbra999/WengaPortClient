@@ -439,7 +439,7 @@ namespace WengaPort.Modules.Reupload
                                 CheckFile(filecheck, apiFile_2, "Preparing file for upload...", "Generating signature hash");
                                 bool_0 = true;
                                 string_5 = "";
-                                string text2 = System.Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(tempFileName)));
+                                string text2 = Convert.ToBase64String(MD5.Create().ComputeHash(File.ReadAllBytes(tempFileName)));
                                 bool_0 = false;
                                 while (bool_0)
                                 {
@@ -879,7 +879,7 @@ namespace WengaPort.Modules.Reupload
             {
                 stream = new GZipStream(string_0, 262144);
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 action_1?.Invoke("Couldn't read file: " + string_0 + "\n" + ex.Message);
                 yield break;
@@ -938,7 +938,7 @@ namespace WengaPort.Modules.Reupload
                     tarInputStream2.Close();
                     tarOutputStream.Close();
                 }
-                catch (System.Exception ex3)
+                catch (Exception ex3)
                 {
                     stream?.Close();
                     gZipStream?.Close();
@@ -953,7 +953,7 @@ namespace WengaPort.Modules.Reupload
                     byte[] buffer = new byte[262144];
                     StreamUtils.Copy(stream, gZipStream, buffer);
                 }
-                catch (System.Exception ex4)
+                catch (Exception ex4)
                 {
                     stream?.Close();
                     gZipStream?.Close();
@@ -968,7 +968,7 @@ namespace WengaPort.Modules.Reupload
             action_0?.Invoke(GEnum0.Success);
         }
 
-        public IEnumerator method_2(string string_0, string string_1, System.Action action_0, System.Action<string> action_1)
+        public IEnumerator method_2(string string_0, string string_1, Action action_0, Action<string> action_1)
         {
             VRC.Core.Logger.Log("CreateFileSignature: " + string_0 + " => " + string_1, DebugLevel.All);
             yield return null;
@@ -978,7 +978,7 @@ namespace WengaPort.Modules.Reupload
             {
                 stream = Librsync.ComputeSignature(File.OpenRead(string_0));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 action_1?.Invoke("Couldn't open input file: " + ex.Message);
                 yield break;
@@ -988,19 +988,19 @@ namespace WengaPort.Modules.Reupload
             {
                 fileStream = File.Open(string_1, FileMode.Create, FileAccess.Write);
             }
-            catch (System.Exception ex2)
+            catch (Exception ex2)
             {
                 action_1?.Invoke("Couldn't create output file: " + ex2.Message);
                 yield break;
             }
             while (true)
             {
-                System.IAsyncResult asyncResult;
+                IAsyncResult asyncResult;
                 try
                 {
                     asyncResult = stream.BeginRead(array, 0, array.Length, null, null);
                 }
-                catch (System.Exception ex3)
+                catch (Exception ex3)
                 {
                     action_1?.Invoke("Couldn't read file: " + ex3.Message);
                     yield break;
@@ -1014,7 +1014,7 @@ namespace WengaPort.Modules.Reupload
                 {
                     num = stream.EndRead(asyncResult);
                 }
-                catch (System.Exception ex4)
+                catch (Exception ex4)
                 {
                     action_1?.Invoke("Couldn't read file: " + ex4.Message);
                     yield break;
@@ -1023,12 +1023,12 @@ namespace WengaPort.Modules.Reupload
                 {
                     break;
                 }
-                System.IAsyncResult asyncResult2;
+                IAsyncResult asyncResult2;
                 try
                 {
                     asyncResult2 = fileStream.BeginWrite(array, 0, num, null, null);
                 }
-                catch (System.Exception ex5)
+                catch (Exception ex5)
                 {
                     action_1?.Invoke("Couldn't write file: " + ex5.Message);
                     yield break;
@@ -1041,7 +1041,7 @@ namespace WengaPort.Modules.Reupload
                 {
                     fileStream.EndWrite(asyncResult2);
                 }
-                catch (System.Exception ex6)
+                catch (Exception ex6)
                 {
                     action_1?.Invoke("Couldn't write file: " + ex6.Message);
                     yield break;
@@ -1063,7 +1063,7 @@ namespace WengaPort.Modules.Reupload
             {
                 stream = Librsync.ComputeDelta(File.OpenRead(string_1), File.OpenRead(string_0));
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 action_1?.Invoke("Couldn't open input file: " + ex.Message);
                 yield break;
@@ -1073,19 +1073,19 @@ namespace WengaPort.Modules.Reupload
             {
                 fileStream = File.Open(string_2, FileMode.Create, FileAccess.Write);
             }
-            catch (System.Exception ex2)
+            catch (Exception ex2)
             {
                 action_1?.Invoke("Couldn't create output file: " + ex2.Message);
                 yield break;
             }
             while (true)
             {
-                System.IAsyncResult asyncResult;
+                IAsyncResult asyncResult;
                 try
                 {
                     asyncResult = stream.BeginRead(array, 0, array.Length, null, null);
                 }
-                catch (System.Exception ex3)
+                catch (Exception ex3)
                 {
                     action_1?.Invoke("Couldn't read file: " + ex3.Message);
                     yield break;
@@ -1099,7 +1099,7 @@ namespace WengaPort.Modules.Reupload
                 {
                     num = stream.EndRead(asyncResult);
                 }
-                catch (System.Exception ex4)
+                catch (Exception ex4)
                 {
                     action_1?.Invoke("Couldn't read file: " + ex4.Message);
                     yield break;
@@ -1108,12 +1108,12 @@ namespace WengaPort.Modules.Reupload
                 {
                     break;
                 }
-                System.IAsyncResult asyncResult2;
+                IAsyncResult asyncResult2;
                 try
                 {
                     asyncResult2 = fileStream.BeginWrite(array, 0, num, null, null);
                 }
-                catch (System.Exception ex5)
+                catch (Exception ex5)
                 {
                     action_1?.Invoke("Couldn't write file: " + ex5.Message);
                     yield break;
@@ -1126,7 +1126,7 @@ namespace WengaPort.Modules.Reupload
                 {
                     fileStream.EndWrite(asyncResult2);
                 }
-                catch (System.Exception ex6)
+                catch (Exception ex6)
                 {
                     action_1?.Invoke("Couldn't write file: " + ex6.Message);
                     yield break;
@@ -1204,9 +1204,7 @@ namespace WengaPort.Modules.Reupload
                         Directory.Delete(tempFolderPath, recursive: true);
                     }
                 }
-                catch (System.Exception)
-                {
-                }
+                catch { }
                 yield return null;
             }
         }

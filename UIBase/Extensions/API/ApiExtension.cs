@@ -47,7 +47,7 @@ namespace WengaPort.Api
 			}
             catch (Exception e)
             {
-				//Extensions.Logger.WengaLogger("[API Error] VRChat API Error: " + e);			
+				Extensions.Logger.WengaLogger("[API Error] VRChat API Error: " + e);			
 			}
 			yield break;
 		}

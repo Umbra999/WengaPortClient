@@ -243,7 +243,7 @@ namespace WengaPort.Modules.Reupload
                                                 Extensions.Logger.WengaLogger("Uploading VRCA...");
                                                 ApiFileHelper.upload(PackedBundle, null, AvatarAssetBundle, OnUploadVrcaAsyncSuccess, OnUploadVrcaAsyncFailure, delegate (ApiFile imageBundle,  string string_0, string string_1, float UploadingStatus)
                                                 {
-                                                    Extensions.Logger.WengaLogger($"VRCA Uploading Progress: {UploadingStatus * 100}%");
+                                                    Extensions.Logger.WengaLogger($"VRCA Uploading Progress: {Math.Round(UploadingStatus * 100, 2, MidpointRounding.AwayFromZero)}%");
                                                 }, (ApiFile File) => false);
                                             });
                                         }
@@ -283,7 +283,7 @@ namespace WengaPort.Modules.Reupload
                         Extensions.Logger.WengaLogger("Uploading Image...");
                         ApiFileHelper.upload(image, null, avatar.GetFileURL(), OnUploadVrcaAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float Progress)
                         {
-                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Progress * 100}%");
+                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Math.Round(Progress * 100, 2, MidpointRounding.AwayFromZero)}%");
                         }, (ApiFile Assets) => false);
                     });
                 }
@@ -296,7 +296,7 @@ namespace WengaPort.Modules.Reupload
                         Extensions.Logger.WengaLogger("Uploading Image...");
                         ApiFileHelper.upload(image, null, avatar.GetFileURL(), OnUploadVrcaAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile apiFile_0, string string_0, string string_1, float Progress)
                         {
-                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Progress * 100}%");
+                            Extensions.Logger.WengaLogger($"Avatar Image Uploading: {Math.Round(Progress * 100, 2, MidpointRounding.AwayFromZero)}%");
                         }, (ApiFile Assets) => false);
                     });
                 }
@@ -410,7 +410,7 @@ namespace WengaPort.Modules.Reupload
                                                 Extensions.Logger.WengaLogger("Uploading VRCW...");
                                                 ApiFileHelper.upload(PackedBundle, null, WorldAsset, OnUploadVrcwAsyncSuccess, OnUploadVrcwAsyncFailure, delegate (ApiFile imageBundle,  string string_0, string string_1, float UploadingStatus)
                                                 {
-                                                    Extensions.Logger.WengaLogger($"VRCW Uploading Progress: {UploadingStatus * 100}%");
+                                                    Extensions.Logger.WengaLogger($"VRCW Uploading Progress: {Math.Round(UploadingStatus * 100, 2, MidpointRounding.AwayFromZero)}%");
                                                 }, (ApiFile File) => false);
                                             });
                                         }
@@ -449,7 +449,7 @@ namespace WengaPort.Modules.Reupload
                         Extensions.Logger.WengaLogger("Uploading Image...");
                         ApiFileHelper.upload(Image, null, AssetBundle, OnUploadVrcwAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile world, string ImageUrl, string AssetUrl, float progress)
                         {
-                            Extensions.Logger.WengaLogger($"World Image Uploading: {progress * 100}%");
+                            Extensions.Logger.WengaLogger($"World Image Uploading: {Math.Round(progress * 100, 2, MidpointRounding.AwayFromZero)}%");
                         }, (ApiFile worlddone) => false);
                     });
                 }
@@ -462,7 +462,7 @@ namespace WengaPort.Modules.Reupload
                         Extensions.Logger.WengaLogger("Uploading Image...");
                         ApiFileHelper.upload(Image, null, AssetBundle, OnUploadVrcwAsynSuccess, OnUploadImageAsyncFailure, delegate (ApiFile world, string ImageUrl, string AssetUrl, float progress)
                         {
-                            Extensions.Logger.WengaLogger($"World Image Uploading: {progress * 100}%");
+                            Extensions.Logger.WengaLogger($"World Image Uploading: {Math.Round(progress * 100, 2, MidpointRounding.AwayFromZero)}%");
                         }, (ApiFile worlddone) => false);
                     });
                 }

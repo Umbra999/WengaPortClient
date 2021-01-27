@@ -254,9 +254,7 @@ namespace WengaPort.Modules
 
         public static List<string> BlockList = new List<string>();
         
-        public PlayerList(IntPtr ptr) : base(ptr)
-        {
-        }
+        public PlayerList(IntPtr ptr) : base(ptr) { }
         public static void SendWebHook(string URL, string MSG)
         {
             NameValueCollection pairs = new NameValueCollection()

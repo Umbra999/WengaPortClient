@@ -183,6 +183,7 @@ namespace WengaPort.Buttons
             var rightHand = cursorManager.handRightCursor;
             AdjustParticleSystems(leftHand.gameObject);
             AdjustParticleSystems(rightHand.gameObject);
+            Console.Title = "WengaPort";
         }
         internal static void AdjustParticleSystems(GameObject cursorRoot)
         {
@@ -191,43 +192,6 @@ namespace WengaPort.Buttons
             var startParticle = cursorRoot.transform.Find("plasma_beam_muzzle_blue");
             endSparks.GetComponent<ParticleSystem>().enableEmission = false;
             startParticle.GetComponent<ParticleSystem>().enableEmission = false;
-        }
-
-        public static IEnumerator TrustRankFix()
-        {
-            yield return new WaitForSeconds(6);
-            GameObject QMRankTextOn = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/TRUSTED/ON/Text_ShowTrustRank (1)").gameObject;
-            GameObject QMRankTextOff = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/TRUSTED/OFF/Text_ShowTrustRank (2)").gameObject;
-            GameObject QMRankTextOn2 = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/KNOWN/ON/Text_ShowTrustRank (1)").gameObject;
-            GameObject QMRankTextOff2 = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/KNOWN/OFF/Text_ShowTrustRank (3)").gameObject;
-            switch (Utils.CurrentUser.GetAPIUser().GetRank().ToLower())
-            {
-                case "veteran":
-                    QMRankTextOn.GetComponent<Text>().color = Color.yellow;
-                    QMRankTextOff.GetComponent<Text>().color = Color.yellow;
-                    QMRankTextOn.SetText("Veteran User");
-                    QMRankTextOff.SetText("Veteran User");
-                    yield break;
-                case "legend":
-                    QMRankTextOn.GetComponent<Text>().color = Color.white;
-                    QMRankTextOff.GetComponent<Text>().color = Color.white;
-                    QMRankTextOn.SetText("Legend User");
-                    QMRankTextOff.SetText("Legend User");
-                    yield break;
-                case "trusted":
-                    QMRankTextOn.GetComponent<Text>().color = new Color(0.87f, 0f, 0.5f);
-                    QMRankTextOff.GetComponent<Text>().color = new Color(0.87f, 0f, 0.5f);
-                    QMRankTextOn.SetText("Trusted User");
-                    QMRankTextOff.SetText("Trusted User");
-                    yield break;
-                case "known":
-                    QMRankTextOn2.GetComponent<Text>().color = new Color(0.92f, 0.37f, 0f);
-                    QMRankTextOff2.GetComponent<Text>().color = new Color(0.92f, 0.37f, 0f);
-                    QMRankTextOn.SetText("Known User");
-                    QMRankTextOff.SetText("Known User");
-                    yield break;
-            }
-            yield break;
         }
     }
 }

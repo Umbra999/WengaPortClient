@@ -93,6 +93,11 @@ namespace WengaPort.FoldersManager
             {
                 Directory.CreateDirectory("WengaPort\\Photon");
             }
+            if (!File.Exists("WengaPort\\Photon\\Worlds.txt"))
+            {
+                using WebClient webClient = new WebClient();
+                webClient.DownloadFile("https://cdn.discordapp.com/attachments/797668950883565638/804006055633616906/Worlds.txt", Path.Combine(System.Environment.CurrentDirectory, "WengaPort/Photon/Worlds.txt"));
+            }
             if (Directory.Exists(filePath))
             {
                 if (GetDirectorySize(filePath) >= 17947937170)

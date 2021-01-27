@@ -78,6 +78,15 @@ namespace WengaPort.Buttons
             {
                 PatchManager.OperationLog = false;
             }, "Toggle Operation Logging");
+
+            new QMToggleButton(ThisMenu, 3, 1, "World \nTravel", () =>
+            {
+                Modules.Photon.WorldTravel = true;
+                MelonCoroutines.Start(Modules.Photon.RankUp());
+            }, "Disabled", () =>
+            {
+                Modules.Photon.WorldTravel = false;
+            }, "Spoof your location to different worlds");
         }
     }
 }

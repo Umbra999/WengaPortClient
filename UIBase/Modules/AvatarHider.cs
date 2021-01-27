@@ -13,8 +13,17 @@ namespace WengaPort.Modules
 {
     class AvatarHider : MonoBehaviour
     {
+        public float LoadingDelay = 0f;
         public void Update()
         {
+            LoadingDelay += Time.deltaTime;
+            if (LoadingDelay > 13f)
+            {
+                AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                LoadingDelay = 0f;
+            }
             HideDelay += Time.deltaTime;
             if (HideDelay > 2f)
             {

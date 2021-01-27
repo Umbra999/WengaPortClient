@@ -121,6 +121,7 @@ namespace WengaPort.Extensions
             WorldButton.UpdateText(__0);
         }
 
+        public static bool NeedRankPatch = true;
         private static void TextPatch(ref string __result, ref Text __instance)
         {
             if (__instance == null) return;
@@ -132,13 +133,58 @@ namespace WengaPort.Extensions
                     var list = __instance.GetComponentInParent<UiVRCList>();
                     __result = $"{__result} [{list.field_Private_GridLayoutGroup_0.rectChildren.Count}]";
                 }
+                if (__result == "Back")
+                {
+                    __result = __result.Replace("Back", "<---");
+                }
+                if (NeedRankPatch && (__result.Contains("Known User") || __result.Contains("Trusted User")))
+                {
+                    var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
+                    if (Shortcut.gameObject.active == true)
+                    {
+                        NeedRankPatch = false;
+                        GameObject QMRankTextOn = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/TRUSTED/ON/Text_ShowTrustRank (1)").gameObject;
+                        GameObject QMRankTextOff = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/TRUSTED/OFF/Text_ShowTrustRank (2)").gameObject;
+                        switch (Utils.CurrentUser.GetAPIUser().GetRank().ToLower())
+                        {
+                            case "veteran":
+                                QMRankTextOn.GetComponent<Text>().color = Color.yellow;
+                                QMRankTextOff.GetComponent<Text>().color = Color.yellow;
+                                __result = __result.Replace("Known User", "Veteran User");
+                                __result = __result.Replace("Trusted User", "Veteran User");
+                                break;
+                            case "legend":
+                                QMRankTextOn.GetComponent<Text>().color = Color.white;
+                                QMRankTextOff.GetComponent<Text>().color = Color.white;
+                                __result = __result.Replace("Known User", "Legend User");
+                                __result = __result.Replace("Trusted User", "Legend User");
+                                break;
+                            case "known":
+                                GameObject QMRankTextOn2 = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/KNOWN/ON/Text_ShowTrustRank (1)").gameObject;
+                                GameObject QMRankTextOff2 = Utils.QuickMenu.transform.Find("ShortcutMenu/Toggle_States_ShowTrustRank_Colors/KNOWN/OFF/Text_ShowTrustRank (3)").gameObject;
+                                QMRankTextOn2.GetComponent<Text>().color = new Color(0.92f, 0.37f, 0f);
+                                QMRankTextOff2.GetComponent<Text>().color = new Color(0.92f, 0.37f, 0f);
+                                break;
+                            case "trusted":
+                                QMRankTextOn.GetComponent<Text>().color = new Color(0.87f, 0f, 0.5f);
+                                QMRankTextOff.GetComponent<Text>().color = new Color(0.87f, 0f, 0.5f);
+                                break;
+                        }
+                    } 
+                }
+                //if (__result.Contains(APIUser.CurrentUser.id))
+                //{
+                //    __result = __result.Replace(APIUser.CurrentUser.id, "Your UserID");
+                //}
+                //if (__result == APIUser.CurrentUser.displayName)
+                //{
+                //    __result = __result.Replace(APIUser.CurrentUser.displayName, $"You");
+                //}
+                //Logger.WengaLogger(__result);
             }
             catch { }
             return;
-            if (__result.Contains(APIUser.CurrentUser.displayName))
-            {
-                __result = __result.Replace(APIUser.CurrentUser.displayName, "");
-            }
+            
             if (__result.Contains(APIUser.CurrentUser.id))
             {
                 __result = __result.Replace(APIUser.CurrentUser.id, "");
@@ -217,6 +263,13 @@ namespace WengaPort.Extensions
                     __result = "android";
                 }
             }
+        }
+
+        public static System.Collections.IEnumerator QuestSpoofDelay()
+        {
+            yield return new WaitForSeconds(4);
+            QuestSpoof = false;
+            yield break;
         }
 
         private static bool CalculatePerformance() => false;
@@ -298,10 +351,9 @@ namespace WengaPort.Extensions
             if (LoginDelay)
             {
                 LoginDelay = false;
-                QuestSpoof = false;
+                MelonCoroutines.Start(QuestSpoofDelay());
                 ExploitMenu.ButtonToggles();
                 Api.ApiExtension.Start();
-                MelonCoroutines.Start(UIChanges.TrustRankFix());
             }
         }
 
@@ -346,7 +398,8 @@ namespace WengaPort.Extensions
             var mainmethod = IL2CPP.il2cpp_resolve_icall("UnityEngine.SystemInfo::GetDeviceUniqueIdentifier");
             Imports.Hook((System.IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
             Logger.WengaLogger($"[HWID] Before {MainHWID}");
-            Logger.WengaLogger($"[HWID] After {SpoofHWID}");
+            Logger.WengaLogger($"[HWID] Spoofing {SpoofHWID}");
+            Logger.WengaLogger($"[HWID] After {SystemInfo.deviceUniqueIdentifier}");
             if (SpoofHWID == null || SpoofHWID == MainHWID)
             {
                 Logger.WengaLogger("Failed to spoof HWID");
@@ -550,18 +603,6 @@ namespace WengaPort.Extensions
             1,7,8,9,206,201,226
         };
 
-        private static List<string> CrashAvatars = new List<string>()
-        {
-            "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab",
-            "avtr_90da2bda-d2c9-4a17-954c-7bd66cf0b9e6",
-            "avtr_f9f09b3c-98ef-4329-8046-e5f2e284390f",
-            "avtr_ce9c4c0a-f646-48c6-8856-a53b8d7b9bf4",
-            "avtr_6862b583-c4f7-4f62-af2b-9eb299990f0c",
-            "avtr_479a8b49-1b9d-46f7-9741-66a00f0cba4b",
-            "avtr_89c9fef0-5881-4f07-8eec-c49be1e0a0c1",
-            "avtr_27e7f966-3f69-43f4-8ad7-c226f987fcf2"
-        };
-
         private static bool OnEvent(ref EventData __0)
         {
             try
@@ -683,11 +724,6 @@ namespace WengaPort.Extensions
                                 return false;
                             }
                             break;
-                        case 223:
-                            Logger.WengaLogger("[223] Authenticate on server-side");
-                            break;
-                        case 255:
-                            break;
                         default:
                             break;
                     }
@@ -745,9 +781,11 @@ namespace WengaPort.Extensions
                 catch
                 { }
                 string text4 = "";
+                string text4clean = "";
                 foreach (Il2CppSystem.Object value in array)
                 {
-                    text4 = text4 + "[" + Il2CppSystem.Convert.ToString(value) + "]";
+                    text4clean = Il2CppSystem.Convert.ToString(value);
+                    text4 = "[" + Il2CppSystem.Convert.ToString(value) + "]";
                 }
                 if (instance.GetVRCPlayer().GetIsBot() || Modules.Photon.RPCBlock.Contains(instance.UserID()))
                 {
@@ -766,9 +804,9 @@ namespace WengaPort.Extensions
                     MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
 
                     System.Console.WriteLine(string.Format("\n[RPC] \nPLAYER: {0} \nOBJECT: {1}  \nEXECUTED: {2} \nFOR: {3} \nType: {4} [{5}] L: {6}", new object[]
-                        {
-                                    text,__1.ParameterObject.name,__1.ParameterString,(player == null) ? text4 : text3,__1.EventType,__2,array.Length
-                        }));
+                    {
+                        text,__1.ParameterObject.name,__1.ParameterString,(player == null) ? text4 : text3,__1.EventType,__2,array.Length
+                    }));
                     System.Console.ResetColor();
                     MelonConsole.SetColor(System.ConsoleColor.White);
                 }
@@ -818,11 +856,7 @@ namespace WengaPort.Extensions
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
-                            if (PortalHandler.AntiPortal && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
-                            {
-                                return false;
-                            }
-                            else if (!__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (!text4.Contains("wrld_") || PortalHandler.AntiPortal || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
                             {
                                 return false;
                             }
@@ -844,7 +878,7 @@ namespace WengaPort.Extensions
                             break;
 
                         case "PlayEmoteRPC":
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Il2CppSystem.Convert.ToInt32(text4) < 0 || Il2CppSystem.Convert.ToInt32(text4) > 8))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (System.Convert.ToInt32(text4clean) < 0 || System.Convert.ToInt32(text4clean) > 8))
                             {
                                 Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emote");
                                 VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emote");
@@ -855,7 +889,7 @@ namespace WengaPort.Extensions
                             break;
 
                         case "SpawnEmojiRPC":
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Il2CppSystem.Convert.ToInt32(text4) < 0|| Il2CppSystem.Convert.ToInt32(text4) > 57))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (System.Convert.ToInt32(text4clean) < 0 || System.Convert.ToInt32(text4clean) > 57))
                             {
                                 Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emoji");
                                 VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emoji");
@@ -866,7 +900,7 @@ namespace WengaPort.Extensions
                             break;
 
                         case "_InstantiateObject":
-                            if (text4.Contains("Infinity") && __0.field_Private_APIUser_0.id != APIUser.CurrentUser.id)
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && text4.Contains("Infinity"))
                             {
                                 VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> Instantiate Infinity-Objects");
                                 Logger.WengaLogger($"[Room] [Protection] Prevented {text} from Instantiating Objects at Infinity");
@@ -891,6 +925,11 @@ namespace WengaPort.Extensions
                                 VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Camera Hide");
                                 Logger.WengaLogger($"[Room] [Info] {text} hide the Camera");
                             }
+                            else if (text4 == null)
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> null Camera");
+                                Logger.WengaLogger($"[Room] [Info] {text} used a null Camera");
+                            }
                             break;
                         case "InteractWithStationRPC":
                             if (text4.Contains("True"))
@@ -902,6 +941,12 @@ namespace WengaPort.Extensions
                             {
                                 VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Chair unused");
                                 Logger.WengaLogger($"[Room] [Info] {text} unused a Chair");
+                            }
+                            else if (text4 == null)
+                            {
+                                VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> null Chair");
+                                Logger.WengaLogger($"[Room] [Info] {text} used a null Chair");
+                                return false;
                             }
                             break;
                         default:

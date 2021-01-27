@@ -67,12 +67,40 @@ namespace WengaPort.Modules
                 }
 				for (int i = 0; i < 2; i++)
 				{
-                    EmojiRPC(int.MinValue);			
-                    EmojiRPC(int.MinValue);
+					EmojiRPC(int.MinValue);
+					EmojiRPC(int.MinValue);
 					EmojiRPC(int.MinValue);
 				}
                 yield return new WaitForEndOfFrame();
 			}
+		}
+
+		public static string[] WorldArray;
+		public static bool WorldTravel = false;
+		public static IEnumerator RankUp()
+		{
+			if (WorldArray == null)
+			{
+				WorldArray = File.ReadAllLines("WengaPort\\Photon\\Worlds.txt");
+			}
+			for (; ; )
+			{
+				if (!WorldTravel) yield break;
+				string World = WorldArray[new System.Random().Next(0, WorldArray.Length - 1)];
+				int RandString = new System.Random().Next(0, 10000);
+				Join(World, $"{RandString}");
+				yield return new WaitForSeconds(1);
+			}
+			yield break;
+		}
+
+		public static void Join(string WorldID, string InstanceID)
+		{
+			Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object> DickTionary = new Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>();
+			DickTionary.Add("userId", APIUser.CurrentUser.id);
+			DickTionary.Add("worldId", $"{WorldID}:{InstanceID}");
+            API.SendPutRequest("joins", null, DickTionary, null);
+            API.SendPutRequest("visits", null, DickTionary, null);
 		}
 
 		public static void EmoteRPC(int i)

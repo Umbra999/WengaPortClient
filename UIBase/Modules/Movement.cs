@@ -300,7 +300,7 @@ namespace WengaPort.Modules
 
         public static Vector3 gravity = Physics.gravity;
         private static VRCPlayer currentPlayer;
-        private static Transform transform;
+        private static new Transform transform;
         public static bool isInVR;
         public static bool Rotate = false;
         public static float FlySpeed = 4.2f;

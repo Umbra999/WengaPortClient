@@ -95,9 +95,7 @@ namespace WengaPort.Extensions
                 {
                     AvatarProcesser.ProcessAvatar(AvatarObject, avatarManager);
                 }
-                catch
-                {
-                }
+                catch { }
                 AvatarObject.SetActive(wasawake);
             }
             catch { }

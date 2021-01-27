@@ -29,8 +29,8 @@ namespace WengaPort.Modules
 
         public static bool Enabled = true;
 
-        public static int MaxAudio = 350;
-        public static int MaxParticleSystems = 750;
+        public static int MaxAudio = 200;
+        public static int MaxParticleSystems = 600;
         public static int MaxLights = 350;
         public static int MaxAnimators = 500;
         public static int MaxRidgitBodys = 500;
