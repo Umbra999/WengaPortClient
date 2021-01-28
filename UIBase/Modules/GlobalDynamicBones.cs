@@ -128,20 +128,6 @@ namespace WengaPort.Modules
             }
         }
 
-        public static bool AntiSpawnToggle = false;
-        public static void AntiSpawnSound(GameObject avatarObject)
-        {
-            foreach (AudioSource renderer in avatarObject.GetComponentsInChildren<AudioSource>(true))
-            {
-                if (renderer != null && renderer.playOnAwake && renderer.enabled && renderer.isPlaying)
-                {
-                    renderer.playOnAwake = false;
-                    renderer.Stop();
-                    renderer.enabled = false;
-                }
-            }
-        }
-
         public static void DisableAvatarFeatures(GameObject avatarObject, VRCPlayer player)
         {
             if (DisabledAudios.Contains(player.UserID()))

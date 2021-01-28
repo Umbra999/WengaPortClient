@@ -5,6 +5,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Windows.Forms;
 using Logger = WengaPort.Extensions.Logger;
+using WengaPort.Modules;
 
 namespace WengaPort.Buttons
 {
@@ -61,13 +62,13 @@ namespace WengaPort.Buttons
             new QMSingleButton(ThisMenu, 4, 0, "Desync", () =>
             {
                 Ini.SetBool("Toggles", "Desync", true);
-                Modules.Photon.EmojiRPC(29);
+                PhotonModule.EmojiRPC(29);
             }, "Desync the World");
 
             new QMSingleButton(ThisMenu, 4, 1, "Desync \nMaster", () =>
             {
                 Ini.SetBool("Toggles", "DesyncMaster", true);
-                Modules.Photon.EmojiRPC(29);
+                PhotonModule.EmojiRPC(29);
             }, "Desync the Masterclient");
         }
     }

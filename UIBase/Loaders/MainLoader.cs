@@ -45,6 +45,7 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<CanHearList>();
             ClassInjector.RegisterTypeInIl2Cpp<OnGui>();
             ClassInjector.RegisterTypeInIl2Cpp<Api.ApiExtension>();
+            ClassInjector.RegisterTypeInIl2Cpp<DiscordManager>();
         }
 
         public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
@@ -70,8 +71,8 @@ namespace WengaPort.MainLoader
                 case 1:
                     break;
                 default:
-                    System.GC.Collect();
-                    System.GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
                     break;
             }
 
@@ -198,7 +199,6 @@ namespace WengaPort.MainLoader
                     Delay += Time.deltaTime;
                     if (Delay > 4f)
                     {
-                        DiscordManager.Update();
                         if (PortalHandler.kosstrings.Count > 0)
                         {
                             foreach (Player player in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0.ToArray())
@@ -212,8 +212,7 @@ namespace WengaPort.MainLoader
                         Delay = 0f;
                     }
                 }
-                catch
-                { }
+                catch { }
             }
         }
         public float Delay = 0f;
@@ -293,6 +292,7 @@ namespace WengaPort.MainLoader
             Client.AddComponent<Modules.Reupload.ReuploaderButtons>();
             Client.AddComponent<Modules.Reupload.ApiFileHelper>();
             Client.AddComponent<Api.ApiExtension>();
+            Client.AddComponent<DiscordManager>();
         }
         GameObject menu;
         GameObject inviteDot;

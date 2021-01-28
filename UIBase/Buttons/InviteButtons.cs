@@ -18,7 +18,7 @@ namespace WengaPort.Buttons
         {
             PortalToInvite = new QMSingleButton("ShortcutMenu", 4, 0, "Drop\nPortal", new Action(() =>
             {
-                string ID = "";
+                string ID = string.Empty;
                 Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>.Enumerator enumerator = Utils.QuickMenu.Notification().details.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
@@ -37,7 +37,7 @@ namespace WengaPort.Buttons
             {
                 if (PhotonMenu.Ini.GetBool("Toggles", "Bot", true))
                 {
-                    string ID = "";
+                    string ID = string.Empty;
                     Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>.Enumerator enumerator = Utils.QuickMenu.Notification().details.GetEnumerator();
                     while (enumerator.MoveNext())
                     {
@@ -60,7 +60,7 @@ namespace WengaPort.Buttons
 
             PortalToInvite = new QMSingleButton("ShortcutMenu", 3, 1, "Copy\nWorldID", new Action(() =>
             {
-                string ID = "";
+                string ID = string.Empty;
                 Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>.Enumerator enumerator = Utils.QuickMenu.Notification().details.GetEnumerator();
                 while (enumerator.MoveNext())
                 {

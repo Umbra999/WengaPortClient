@@ -8,7 +8,7 @@ namespace WengaPort.Extensions
     {
         public QMInfo(Transform Parent, string text, float Pos_X, float Pos_Y, float Scale_X, float Scale_Y, bool infoIcon = true)
         {
-            InfoGameObject = UnityEngine.Object.Instantiate(Utils.QuickMenu.transform.Find("/UserInterface/QuickMenu/UserIconMenu/Info").gameObject, Parent);
+            InfoGameObject = Object.Instantiate(Utils.QuickMenu.transform.Find("/UserInterface/QuickMenu/UserIconMenu/Info").gameObject, Parent);
             InfoGameObject.name = $"QMInfo_{Pos_X}_{Pos_Y}";
             InfoIconObject = InfoGameObject.transform.Find("InfoIcon").gameObject;
             TextObject = InfoGameObject.transform.Find("Text").gameObject;

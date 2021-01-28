@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 namespace WengaPort.Modules
 {
-    internal static class Photon
+    internal static class PhotonModule
     {
 		public static bool EmojiSpam = false;
 		public static void EmojiRPC(int i)
@@ -160,7 +160,7 @@ namespace WengaPort.Modules
 				if (Toggle)
 				{
 					Serialize = true;
-					Capsule = UnityEngine.Object.Instantiate(Utils.CurrentUser.prop_VRCAvatarManager_0.prop_GameObject_0, null, true);
+					Capsule = Object.Instantiate(Utils.CurrentUser.prop_VRCAvatarManager_0.prop_GameObject_0, null, true);
 					Animator component = Capsule.GetComponent<Animator>();
 					if (component != null && component.isHuman)
 					{
@@ -191,7 +191,7 @@ namespace WengaPort.Modules
 		private static string RandomString(int length)
 		{
 			char[] array = "abcdefghlijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789".ToArray();
-			string text = "";
+			string text = string.Empty;
 			Il2CppSystem.Random random = new Il2CppSystem.Random(new Il2CppSystem.Random().Next(length));
 			for (int i = 0; i < length; i++)
 			{
@@ -202,7 +202,7 @@ namespace WengaPort.Modules
 
 		public static string RandomNumberString(int length)
 		{
-			string text = "";
+			string text = string.Empty;
 			for (int i = 0; i < length; i++)
 			{
 				text += new System.Random().Next(0, int.MaxValue).ToString("X8");

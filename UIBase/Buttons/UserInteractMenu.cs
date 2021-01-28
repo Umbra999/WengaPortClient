@@ -96,7 +96,7 @@ namespace WengaPort.Buttons
                     {
                         SpamToggle.setToggleState(false, false);
                     }
-                    if (Modules.Photon.RPCBlock.Contains(vrcplayer.UserID()))
+                    if (PhotonModule.RPCBlock.Contains(vrcplayer.UserID()))
                     {
                         RpcToggle.setToggleState(true, false);
                     }
@@ -104,7 +104,7 @@ namespace WengaPort.Buttons
                     {
                         RpcToggle.setToggleState(false, false);
                     }
-                    if (Modules.Photon.EventBlock.Contains(vrcplayer.UserID()))
+                    if (PhotonModule.EventBlock.Contains(vrcplayer.UserID()))
                     {
                         EventToggle.setToggleState(true, false);
                     }
@@ -198,18 +198,18 @@ namespace WengaPort.Buttons
 
             RpcToggle = new QMToggleButton(ThisMenu, 4, 0, "Block \nRPC", () =>
             {
-                Modules.Photon.RPCBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+                PhotonModule.RPCBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Disabled", () =>
             {
-                Modules.Photon.RPCBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+                PhotonModule.RPCBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Block incoming RPC Events");
 
             EventToggle = new QMToggleButton(ThisMenu, 4, 1, "Block \nEvents", () =>
             {
-                Modules.Photon.EventBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+                PhotonModule.EventBlock.Add(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Disabled", () =>
             {
-                Modules.Photon.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
+                PhotonModule.EventBlock.Remove(Utils.QuickMenu.SelectedVRCPlayer().UserID());
             }, "Block incoming  Photon Events");
 
             SpamToggle = new QMToggleButton(ThisMenu, 3, 1, "Spam \nPortal", () =>
@@ -230,20 +230,20 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton(ThisMenu, 3, 1.75f, "Audio \nCrash", () =>
             {
-                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_ce9c4c0a-f646-48c6-8856-a53b8d7b9bf4"));
-            }, "Crash the Player with a Audiocrash Avatar");
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_b3eb302c-20c5-46f7-b687-ead0d75f0ea9"));
+            }, "Crash the Player with a Audio Overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 3, 2.25f, "Material \nCrash", () =>
             {
                 MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab"));
-            }, "Crash the Player with a Materialcrash Avatar");
+            }, "Crash the Player with a Material Overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 4, 2.25f, "IK \nCrash", () =>
             {
-                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_118b95c4-dfa2-423a-86cf-c97a40b9a70d"));
-            }, "Crash the Player with a Stack overflow Avatar");
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_896652cf-b111-45e1-8ed5-12725420bdd0"));
+            }, "Crash the Player with a IK Script Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 4, 1.75f, "Item \nLag", () =>

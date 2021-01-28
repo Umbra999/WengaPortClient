@@ -32,7 +32,7 @@ namespace WengaPort.ConsoleUtils
         public static void Log(LogsType Type, string Text)
         {
             if (string.IsNullOrEmpty(Text)) return;
-            string Text2 = "";
+            string Text2 = string.Empty;
             switch (Type)
             {
                 case LogsType.Info:

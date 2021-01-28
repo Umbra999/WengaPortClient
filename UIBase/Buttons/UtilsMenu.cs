@@ -45,18 +45,18 @@ namespace WengaPort.Buttons
 
             new QMToggleButton(ThisMenu, 4, 0, "Serialize", () =>
             {
-                Modules.Photon.CustomSerialize(true);
+                PhotonModule.CustomSerialize(true);
             }, "Disabled", () =>
             {
-                Modules.Photon.CustomSerialize(false);
+                PhotonModule.CustomSerialize(false);
             }, "Dont send any Movement");
 
             new QMToggleButton(ThisMenu, 3, 1, "Lock \nInstance", () =>
             {
-                Modules.Photon.LockInstance = true;
+                PhotonModule.LockInstance = true;
             }, "Disabled", () =>
             {
-                Modules.Photon.LockInstance = false;
+                PhotonModule.LockInstance = false;
             }, "Lock the Instance as Master");
 
             HalfButton = new QMSingleButton(ThisMenu, 3, 2.25f, "Portal \nby ID", () =>

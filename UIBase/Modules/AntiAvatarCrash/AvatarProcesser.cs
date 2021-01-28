@@ -9,7 +9,7 @@ using Logger = WengaPort.Extensions.Logger;
 
 namespace WengaPort.Modules
 {
-    static class AvatarProcesser
+    internal static class AvatarProcesser
     {
         private static readonly PriorityQueue<GameObjectWithPriorityData> ourBfsQueue = new PriorityQueue<GameObjectWithPriorityData>(GameObjectWithPriorityData.IsActiveDepthNumChildrenComparer);
 
@@ -26,7 +26,7 @@ namespace WengaPort.Modules
 
         public static int MaxAudio = 200;
         public static int MaxParticleSystems = 600;
-        public static int MaxLights = 350;
+        public static int MaxLights = 300;
         public static int MaxAnimators = 500;
         public static int MaxRidgitBodys = 500;
         public static int MaxColliders = 3000;
@@ -34,7 +34,7 @@ namespace WengaPort.Modules
         public static int MaxMaterialslots = 250;
         public static int MaxComponents = 5000;
         public static int MaxClothVerticies = 50000;
-        public static int MaxParticles = 350000;
+        public static int MaxParticles = 320000;
         public static int MaxPolys = 1500000;
         public static int MaxTransforms = 5000;
 
@@ -91,7 +91,7 @@ namespace WengaPort.Modules
             AvatarObject.SetActive(true);
             if (destroyedObjects != 0)
             {
-                Logger.WengaLogger($"[Anti Crash] {avatar.name} | {player.DisplayName()} | Destroyed: {destroyedObjects} | Scan Time: {start.ElapsedMilliseconds} MS");
+                Logger.WengaLogger($"[Room] [Anti Crash] {avatar.name} | {player.DisplayName()} | Destroyed: {destroyedObjects} | Scan Time: {start.ElapsedMilliseconds} MS");
                 VRConsole.Log(VRConsole.LogsType.Protection, $"{player.DisplayName()} --> CrashAvatar");
             }
             start.Stop();
@@ -103,7 +103,7 @@ namespace WengaPort.Modules
             if (seenAudioSources > MaxAudio)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
             if (!SpawnSound)
             {
@@ -167,7 +167,7 @@ namespace WengaPort.Modules
             if (seenAnimators > MaxAnimators)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
         private static void Check(this Light instance, ref int scannedObjects, ref int destroyedObjects,ref int seenLights)
@@ -177,7 +177,7 @@ namespace WengaPort.Modules
             if (seenLights > MaxLights)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
         private static void Check(this ParticleSystem instance, ref int scannedObjects, ref int destroyedObjects,ref int seenParticles)
@@ -187,7 +187,7 @@ namespace WengaPort.Modules
             if (seenParticles > MaxParticleSystems)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
             if(instance.maxParticles > MaxParticles)
             {
@@ -206,7 +206,7 @@ namespace WengaPort.Modules
             {
                 seenClothVertices -= numVertices;
                 destroyedObjects++;
-                UnityEngine.Object.DestroyImmediate(instance, true);
+                Object.DestroyImmediate(instance, true);
             }
         }
         private static void Check(this Rigidbody instance, ref int scannedObjects, ref int destroyedObjects, ref int seenRigidbodies)
@@ -216,7 +216,7 @@ namespace WengaPort.Modules
             if (seenRigidbodies > MaxRidgitBodys)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
         private static void Check(this IConstraint instance, ref int scannedObjects, ref int destroyedObjects, ref int seenContrains)
@@ -225,7 +225,7 @@ namespace WengaPort.Modules
             seenContrains++;
             if (seenContrains > MaxConstraints)
             {
-                UnityEngine.Object.DestroyImmediate(instance.Cast<Behaviour>(), true);
+                Object.DestroyImmediate(instance.Cast<Behaviour>(), true);
                 destroyedObjects++;
             }
         }
@@ -236,7 +236,7 @@ namespace WengaPort.Modules
             if (seenColliders > MaxColliders)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
         private static void Check(this Transform instance, ref int scannedObjects, ref int destroyedObjects, ref int seenTransforms,Animator avataranimator)
@@ -246,7 +246,7 @@ namespace WengaPort.Modules
             if (avataranimator != null && seenTransforms > MaxTransforms && !avataranimator.IsBoneTransform(instance))
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
         private static void Check(this Component instance, ref int scannedObjects, ref int destroyedObjects, ref int seenComponents)
@@ -256,7 +256,7 @@ namespace WengaPort.Modules
             if (seenComponents > MaxComponents)
             {
                 destroyedObjects++;
-                UnityEngine.Object.Destroy(instance);
+                Object.Destroy(instance);
             }
         }
 

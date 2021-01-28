@@ -21,7 +21,7 @@ namespace WengaPort.Buttons
             {
                 try
                 {
-                    Modules.Photon.Forcemute = true;
+                    PhotonModule.Forcemute = true;
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         InteractMenu.HearOffPlayers.Add(instance.GetVRCPlayer().UserID());
@@ -34,7 +34,7 @@ namespace WengaPort.Buttons
             {
                 try
                 {
-                    Modules.Photon.Forcemute = false;
+                    PhotonModule.Forcemute = false;
                     foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
                     {
                         InteractMenu.HearOffPlayers.Remove(instance.GetVRCPlayer().UserID());
@@ -142,14 +142,14 @@ namespace WengaPort.Buttons
 
             new QMToggleButton(ThisMenu, 5, 1, "Anti \nSpawnsound", () =>
             {
-                GlobalDynamicBones.AntiSpawnToggle = true;
+                AvatarProcesser.SpawnSound = false;
                 foreach (Player p in Utils.PlayerManager.GetAllPlayers())
                 {
                     PlayerExtensions.ReloadAvatar(p);
                 }
             }, "Disabled", () =>
             {
-                GlobalDynamicBones.AntiSpawnToggle = false;
+                AvatarProcesser.SpawnSound = true;
                 foreach (Player p in Utils.PlayerManager.GetAllPlayers())
                 {
                     PlayerExtensions.ReloadAvatar(p);

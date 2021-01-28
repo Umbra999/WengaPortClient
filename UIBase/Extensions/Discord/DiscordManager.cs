@@ -12,12 +12,12 @@ using WengaPort;
 
 namespace DiscordRichPresence
 {
-    internal static class DiscordManager
+    class DiscordManager : MonoBehaviour
     {
         private static DiscordRpc.RichPresence presence;
         private static DiscordRpc.EventHandlers eventHandlers;
         private static bool running = false;
-        private static string roomId = "";
+        private static string roomId = string.Empty;
         public static void Init()
         {
             eventHandlers = default;
@@ -39,7 +39,7 @@ namespace DiscordRichPresence
             presence.partySize = 0;
             presence.partyMax = 0;
             presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            presence.partyId = "";
+            presence.partyId = string.Empty;
             presence.largeImageText = "WengaPort";
 
             try
@@ -67,16 +67,16 @@ namespace DiscordRichPresence
             if (!worldAndRoomId.Equals(""))
             {
                 presence.state = "[World Hidden]";
-                presence.partyId = "";
+                presence.partyId = string.Empty;
                 presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             }
             else
             {
                 presence.state = "[Loading Screen]";
-                presence.partyId = "";
+                presence.partyId = string.Empty;
                 presence.partyMax = 0;
                 presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                presence.joinSecret = "";
+                presence.joinSecret = string.Empty;
             }
             DiscordRpc.UpdatePresence(ref presence);
             return presence.joinSecret;
@@ -99,9 +99,10 @@ namespace DiscordRichPresence
             RoomChanged("", "", "", 0, 0);
         }
 
-        public static void Update()
+        public void Update()
         {
-            if (!running)
+            Delay += Time.deltaTime;
+            if (!running || Delay < 4f)
             {
                 return;
             }
@@ -125,8 +126,9 @@ namespace DiscordRichPresence
                     RoomChanged("", "", "", ApiWorldInstance.AccessType.InviteOnly, 0);
                 }
             }
+            Delay = 0f;
         }
-
+        public float Delay = 0f;
 
         public static void OnApplicationQuit()
         {
@@ -136,18 +138,6 @@ namespace DiscordRichPresence
             }
             DiscordRpc.Shutdown();
         }
-
-
-        public static string GenerateRandomString(int length)
-        {
-            string text = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-            char[] array = new char[length];
-            System.Random random = new System.Random();
-            for (int i = 0; i < length; i++)
-            {
-                array[i] = text[random.Next(text.Length)];
-            }
-            return new string(array);
-        }
+        public DiscordManager(IntPtr ptr) : base(ptr) { }
     }
 }

@@ -71,7 +71,6 @@ namespace WengaPort.Modules
             VRC.Core.API.SendPutRequest($"avatars/{AviSpoofID}/select");
             long endTime = DateTime.Now.Ticks;
         }
-
         public AvatarHider(IntPtr ptr) : base(ptr) { }
     }
 }

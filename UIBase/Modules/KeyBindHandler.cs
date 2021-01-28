@@ -35,8 +35,8 @@ namespace WengaPort.Modules
 
                 else if (Input.GetKeyDown(KeyCode.Mouse2))
                 {
-                    Photon.EmojiRPC(29);
-                    Photon.EmoteRPC(3);
+                    PhotonModule.EmojiRPC(29);
+                    PhotonModule.EmoteRPC(3);
                 }
 
                 else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha0))

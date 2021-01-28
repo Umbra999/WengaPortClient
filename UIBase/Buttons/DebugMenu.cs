@@ -2,6 +2,7 @@
 using MelonLoader;
 using WengaPort.Api;
 using WengaPort.Extensions;
+using WengaPort.Modules;
 
 namespace WengaPort.Buttons
 {
@@ -67,11 +68,11 @@ namespace WengaPort.Buttons
 
             new QMToggleButton(ThisMenu, 3, 1, "World \nTravel", () =>
             {
-                Modules.Photon.WorldTravel = true;
-                MelonCoroutines.Start(Modules.Photon.RankUp());
+                PhotonModule.WorldTravel = true;
+                MelonCoroutines.Start(PhotonModule.RankUp());
             }, "Disabled", () =>
             {
-                Modules.Photon.WorldTravel = false;
+                PhotonModule.WorldTravel = false;
             }, "Spoof your location to different worlds");
         }
     }

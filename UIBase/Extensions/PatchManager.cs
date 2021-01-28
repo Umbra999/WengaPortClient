@@ -323,11 +323,6 @@ namespace WengaPort.Extensions
             }
         }
 
-        private static void FakeQuality(ref short __result)
-        {
-            Logger.WengaLogger(__result);
-        }
-
         private static void FakeFrames(ref float __result)
         {
             if (FrameSpoof)
@@ -374,10 +369,6 @@ namespace WengaPort.Extensions
                 VRConsole.Log(VRConsole.LogsType.Avatar, $"{player.DisplayName()} --> {Avatar.name} [{Avatar.releaseStatus}]");
                 GlobalDynamicBones.ProcessDynamicBones(AvatarGameobject, player);
                 GlobalDynamicBones.OptimizeBone(AvatarGameobject);
-                if (GlobalDynamicBones.AntiSpawnToggle)
-                {
-                    GlobalDynamicBones.AntiSpawnSound(AvatarGameobject);
-                }
                 GlobalDynamicBones.DisableAvatarFeatures(AvatarGameobject, player);
             }
             catch { }
@@ -417,21 +408,21 @@ namespace WengaPort.Extensions
                 switch (__0)
                 {
                     case 202:
-                        return !Modules.Photon.Invisible;
+                        return !PhotonModule.Invisible;
                     case 254:
-                        return !Modules.Photon.Invisible;
+                        return !PhotonModule.Invisible;
                     case 7:
-                        return !Modules.Photon.Serialize;
+                        return !PhotonModule.Serialize;
                     case 206:
-                        return !Modules.Photon.Serialize;
+                        return !PhotonModule.Serialize;
                     case 201:
-                        return !Modules.Photon.Serialize;
+                        return !PhotonModule.Serialize;
                     case 4:
-                        return !Modules.Photon.LockInstance;
+                        return !PhotonModule.LockInstance;
                     case 5:
-                        return !Modules.Photon.LockInstance;
+                        return !PhotonModule.LockInstance;
                     case 1:
-                        return !Modules.Photon.Forcemute;
+                        return !PhotonModule.Forcemute;
                     default:
                         break;
                 }
@@ -450,7 +441,6 @@ namespace WengaPort.Extensions
             }
             catch { }
         }
-
         public static bool LoginDelay = true;
 
         private static void OnPlayerJoin(Player __0)
@@ -732,7 +722,7 @@ namespace WengaPort.Extensions
                             break;
                     }
                 }
-                if (Modules.Photon.EventBlock.Contains(Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).UserID()))
+                if (PhotonModule.EventBlock.Contains(Utils.PlayerManager.GetPlayerWithPlayerID(__0.Sender).UserID()))
                 {
                     return false;
                 }
@@ -770,8 +760,8 @@ namespace WengaPort.Extensions
                     array = new Il2CppSystem.Object[0];
                 }
                 Player player = null;
-                string a2 = "";
-                string text3 = "";
+                string a2 = string.Empty;
+                string text3 = string.Empty;
                 try
                 {
                     player = Utils.PlayerManager.GetPlayer(Il2CppSystem.Convert.ToString(array[0]));
@@ -782,16 +772,15 @@ namespace WengaPort.Extensions
                     }
                     a2 = player.UserID();
                 }
-                catch
-                { }
-                string text4 = "";
-                string text4clean = "";
+                catch { }
+                string text4 = string.Empty;
+                string text4clean = string.Empty;
                 foreach (Il2CppSystem.Object value in array)
                 {
                     text4clean = Il2CppSystem.Convert.ToString(value);
                     text4 = "[" + Il2CppSystem.Convert.ToString(value) + "]";
                 }
-                if (instance.GetVRCPlayer().GetIsBot() || Modules.Photon.RPCBlock.Contains(instance.UserID()))
+                if (instance.GetVRCPlayer().GetIsBot() || PhotonModule.RPCBlock.Contains(instance.UserID()))
                 {
                     System.Console.ForegroundColor = System.ConsoleColor.Red;
                     MelonConsole.SetColor(System.ConsoleColor.Red);
@@ -860,7 +849,7 @@ namespace WengaPort.Extensions
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (!text4.Contains("wrld_") || PortalHandler.AntiPortal || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (PortalHandler.AntiPortal || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
                             {
                                 return false;
                             }

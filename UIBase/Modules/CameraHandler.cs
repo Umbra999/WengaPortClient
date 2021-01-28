@@ -91,13 +91,6 @@ namespace WengaPort.Modules
 		}
 
 		public static bool CameraLag = false;
-		public static void DesyncV3()
-		{
-			PictureRPC(Utils.CurrentUser.GetPlayer());
-			Photon.EmojiRPC(29);
-			for (int i = 0; i < 20; i++)
-				TakePicture(int.MaxValue);
-		}
 
 		private static bool _isZoomed;
 		private static bool _enableZoom = true;
@@ -165,7 +158,7 @@ namespace WengaPort.Modules
 
 		internal static IEnumerator CameraCrash()
 		{
-			Photon.EmojiRPC(29);
+			PhotonModule.EmojiRPC(29);
 			Extensions.Logger.WengaLogger("[CamCrash] Start");
 			UserCameraController instance = Utils.UserCameraController;
 			instance.prop_EnumPublicSealedvaOfPhVi4vUnique_0 = EnumPublicSealedvaOfPhVi4vUnique.Photo;
@@ -367,7 +360,7 @@ namespace WengaPort.Modules
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal2, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
 					(Il2CppSystem.String)"wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc",
-					(Il2CppSystem.String)Photon.RandomNumberString(4),
+					(Il2CppSystem.String)PhotonModule.RandomNumberString(4),
 					new Il2CppSystem.Int32
 					{
 						m_value = int.MinValue
@@ -380,7 +373,7 @@ namespace WengaPort.Modules
 				Networking.RPC(RPC.Destination.AllBufferOne, InfPortal3, "ConfigurePortal", new Il2CppSystem.Object[]
 				{
 					(Il2CppSystem.String)"wrld_5b89c79e-c340-4510-be1b-476e9fcdedcc",
-					(Il2CppSystem.String)Photon.RandomNumberString(4),
+					(Il2CppSystem.String)PhotonModule.RandomNumberString(4),
 					new Il2CppSystem.Int32
 					{
 						m_value = int.MinValue
