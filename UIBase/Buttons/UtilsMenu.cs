@@ -222,7 +222,7 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton(ThisMenu, 5, 1.25f, "Infinit \nTimer", () =>
             {
-                foreach (PortalInternal portalInternal in UnityEngine.Object.FindObjectsOfType<PortalInternal>())
+                foreach (PortalInternal portalInternal in Object.FindObjectsOfType<PortalInternal>())
                 {
                     portalInternal.SetTimerRPC(float.NegativeInfinity, Utils.CurrentUser.GetPlayer());
                 }
@@ -231,7 +231,7 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton(ThisMenu, 5, 1.75f, "Interact \nAll", () =>
             {
-                foreach (VRC.SDKBase.VRC_Trigger vrc_Trigger in UnityEngine.Object.FindObjectsOfType<VRC.SDKBase.VRC_Trigger>())
+                foreach (VRC.SDKBase.VRC_Trigger vrc_Trigger in Object.FindObjectsOfType<VRC.SDKBase.VRC_Trigger>())
                 {
                     vrc_Trigger.TakesOwnershipIfNecessary.ToString();
                     vrc_Trigger.Interact();

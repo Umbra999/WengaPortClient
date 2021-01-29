@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using DiscordRichPresence;
+using UnityEngine;
 using WengaPort.Buttons;
 using WengaPort.Extensions;
 using WengaPort.Modules;
@@ -14,6 +15,7 @@ namespace WengaPort.Loaders
             ButtonsMainColor.Initialize2();
             ButtonsMainColor.Initialize3();
             AntiMenuOverrender.UIInit();
+            DiscordManager.Init();
             AvatarHider.AvatarSpoofInit();
             WorldButton.Setup();
             WorldDownloadStatus.Setup();

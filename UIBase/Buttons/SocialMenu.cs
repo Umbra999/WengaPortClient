@@ -12,6 +12,12 @@ using UnityEngine.UI;
 using WengaPort.FoldersManager;
 using VRC.SDKBase;
 using VRC;
+using System.Collections;
+using Newtonsoft.Json;
+using MelonLoader;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace WengaPort.Buttons
 {
@@ -19,15 +25,9 @@ namespace WengaPort.Buttons
     {
         public static void Initialize()
         {
-            new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Teleport", 585f, -280f, new Action(() =>
+            new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Avatar Author", 585f, -280f, new Action(() =>
             {
-                try
-                {
-                    APIUser apiuser = Utils.VRCUiManager.SelectedAPIUser();
-                    Player p = Utils.PlayerManager.GetPlayer(apiuser.UserID());
-                    Utils.CurrentUser.transform.position = p.transform.position;
-                }
-                catch { }
+                GetAvatarFromSocial();
             }));
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Drop Portal", -100f, -280f, new Action(() =>
@@ -106,5 +106,48 @@ namespace WengaPort.Buttons
                 }));
             }
         }
+        public static void GetAvatarFromSocial()
+        {
+            void OnSuccess(APIUser user)
+            {
+                GameObject gameObject = GameObject.Find("UserInterface/MenuContent/Screens/UserInfo");
+                VRCUiPage vrcUiPage = gameObject.GetComponent<VRCUiPage>();
+                VRCUiManager.prop_VRCUiManager_0.Method_Public_VRCUiPage_VRCUiPage_0(vrcUiPage);
+                vrcUiPage.Cast<PageUserInfo>().Method_Public_Void_APIUser_PDM_0(user);
+            }
+            if (PatchManager.avatarLink == null) return;
+            else if (!PatchManager.canGet)
+            {
+                Extensions.Logger.WengaLogger("You have to wait a bit before making a API call again");
+                return;
+            }
+            MelonCoroutines.Start(APIDelay());
+
+            WebRequest request = WebRequest.Create(PatchManager.avatarLink);
+            WebResponse response = request.GetResponse();
+            if (((HttpWebResponse)response).StatusCode != HttpStatusCode.OK) return;
+            using (StreamReader streamReader = new StreamReader(response.GetResponseStream()))
+            {
+                JObject jsonData = (JObject)JsonSerializer.CreateDefault().Deserialize(streamReader, typeof(JObject));
+
+                JsonData requestedData = jsonData.ToObject<JsonData>();
+                //Extensions.Logger.WengaLogger(JsonConvert.SerializeObject(jsonData, Formatting.Indented));
+                APIUser.FetchUser(requestedData.ownerId, new Action<APIUser>(OnSuccess), new Action<string>((thing) => { }));
+            }
+
+            response.Close();
+        }
+        public static IEnumerator APIDelay()
+        {
+            PatchManager.canGet = false;
+            yield return new WaitForSeconds(35);
+            PatchManager.canGet = true;
+            yield break;
+        }
+    }
+    public class JsonData
+    {
+        [JsonProperty("ownerId")]
+        public string ownerId;
     }
 }

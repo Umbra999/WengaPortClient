@@ -113,7 +113,7 @@ namespace WengaPort.Modules
                         {
                             componentsInChild.GetComponent<Animator>().enabled = false;
                         }
-                        UnityEngine.Object.Destroy(componentsInChild.transform.parent.gameObject);
+                        Object.Destroy(componentsInChild.transform.parent.gameObject);
                     }
                 }
             }
@@ -157,7 +157,7 @@ namespace WengaPort.Modules
                         else if (componentsInChild2.GetComponent<Animator>() != null)
                         {
                             componentsInChild2.GetComponent<Animator>().enabled = false;
-                            UnityEngine.Object.Destroy(componentsInChild2.transform.parent.gameObject);
+                            Object.Destroy(componentsInChild2.transform.parent.gameObject);
                         }
                     }
                 }

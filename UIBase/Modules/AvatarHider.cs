@@ -63,13 +63,11 @@ namespace WengaPort.Modules
 
         private static IEnumerator AvatarSpoof()
         {
-            long startTime = DateTime.Now.Ticks;
             do
             {
-                yield return new WaitForSeconds(5F);
+                yield return new WaitForSeconds(5f);
             } while (Utils.CurrentUser.GetAPIAvatar().id == AviSpoofID);
             VRC.Core.API.SendPutRequest($"avatars/{AviSpoofID}/select");
-            long endTime = DateTime.Now.Ticks;
         }
         public AvatarHider(IntPtr ptr) : base(ptr) { }
     }

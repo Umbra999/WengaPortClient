@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using WengaPort.Api;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Extensions
 {
@@ -77,7 +78,7 @@ namespace WengaPort.Extensions
                 if (QMButtons != null)
                 {
                     foreach (var item in QMButtons)
-                        UnityEngine.Object.Destroy(item.ButtonBase.getGameObject());
+                        Object.Destroy(item.ButtonBase.getGameObject());
                     QMButtons.Clear();
                 }
                 Posx = 1;

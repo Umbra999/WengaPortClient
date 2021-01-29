@@ -12,6 +12,7 @@ using WengaPort.Modules;
 using AMEnumA = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObVRAc1GaApAcObBoUnique;
 using AMEnumB = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObGaVRApBoBoObBoObUnique;
 using AMEnumC = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObVRAc1GaApAcObObUnique;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Extensions
 {
@@ -76,7 +77,7 @@ namespace WengaPort.Extensions
                 instance.Patch(method, new Harmony.HarmonyMethod(typeof(AntiCrashHelper).GetMethod("ObjectInstantiatePatch", BindingFlags.NonPublic | BindingFlags.Static)));
             }
         }
-        private static bool ObjectInstantiatePatch(ref UnityEngine.Object __0)//,ref Vector3 __1, ref Quaternion __2, ref bool __3, ref bool __4,ref bool __5)//, ref UnityEngine.Object __result)
+        private static bool ObjectInstantiatePatch(ref Object __0)//,ref Vector3 __1, ref Quaternion __2, ref bool __3, ref bool __4,ref bool __5)//, ref Object __result)
         {
             try
             {

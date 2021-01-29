@@ -1,23 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using VRC;
 using VRC.Core;
-using MelonLoader;
 using UnityEngine;
-using WengaPort;
 
 namespace DiscordRichPresence
 {
-    class DiscordManager : MonoBehaviour
+    internal class DiscordManager : MonoBehaviour
     {
         private static DiscordRpc.RichPresence presence;
         private static DiscordRpc.EventHandlers eventHandlers;
         private static bool running = false;
-        private static string roomId = string.Empty;
+        private static string roomId = "";
         public static void Init()
         {
             eventHandlers = default;
@@ -39,7 +31,7 @@ namespace DiscordRichPresence
             presence.partySize = 0;
             presence.partyMax = 0;
             presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-            presence.partyId = string.Empty;
+            presence.partyId = "";
             presence.largeImageText = "WengaPort";
 
             try
@@ -49,7 +41,7 @@ namespace DiscordRichPresence
                 DiscordRpc.Initialize("770056934236880897", ref eventHandlers, true, optionalSteamId);
                 DiscordRpc.UpdatePresence(ref presence);
                 running = true;
-                WengaPort.Extensions.Logger.WengaLogger("[WengaPort Discord] RichPresence Init");
+                WengaPort.Extensions.Logger.WengaLogger("[WengaPort] Discord Presence Init");
             }
             catch (Exception arg)
             {
@@ -67,16 +59,16 @@ namespace DiscordRichPresence
             if (!worldAndRoomId.Equals(""))
             {
                 presence.state = "[World Hidden]";
-                presence.partyId = string.Empty;
+                presence.partyId = "";
                 presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
             }
             else
             {
                 presence.state = "[Loading Screen]";
-                presence.partyId = string.Empty;
+                presence.partyId = "";
                 presence.partyMax = 0;
                 presence.startTimestamp = (long)DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1)).TotalSeconds;
-                presence.joinSecret = string.Empty;
+                presence.joinSecret = "";
             }
             DiscordRpc.UpdatePresence(ref presence);
             return presence.joinSecret;
@@ -106,6 +98,7 @@ namespace DiscordRichPresence
             {
                 return;
             }
+            Delay = 0f;
             APIUser currentUser2 = APIUser.CurrentUser;
             UserChanged(((currentUser2 != null) ? currentUser2.displayName : null) ?? "");
             string text = "";
@@ -126,7 +119,6 @@ namespace DiscordRichPresence
                     RoomChanged("", "", "", ApiWorldInstance.AccessType.InviteOnly, 0);
                 }
             }
-            Delay = 0f;
         }
         public float Delay = 0f;
 

@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnhollowerBaseLib;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Utility
 {
@@ -29,16 +30,16 @@ namespace WengaPort.Utility
                 {
                     case MenuButtonType.PlaylistButton:
                         GameObject original = GameObject.Find("MenuContent/Screens/UserInfo/User Panel/Playlists/PlaylistsButton");
-                        Button = UnityEngine.Object.Instantiate(original, original.transform);
+                        Button = Object.Instantiate(original, original.transform);
                         break;
 
                     case MenuButtonType.AvatarFavButton:
                         GameObject gameObject = GameObject.Find("/UserInterface/MenuContent/Screens/Avatar/Favorite Button");
-                        Button = UnityEngine.Object.Instantiate(gameObject, gameObject.transform.parent);
+                        Button = Object.Instantiate(gameObject, gameObject.transform.parent);
                         break;
                     case MenuButtonType.ReportButton:
                         GameObject bigbutton = GameObject.Find("/UserInterface/MenuContent/Screens/WorldInfo/FavoriteButton");
-                        Button = UnityEngine.Object.Instantiate(bigbutton, bigbutton.transform.parent);
+                        Button = Object.Instantiate(bigbutton, bigbutton.transform.parent);
                         break;
                 }
             }
@@ -91,7 +92,7 @@ namespace WengaPort.Utility
                 bool flag2 = component.name == "Icon_New";
 
                 if (flag2)
-                    UnityEngine.Object.DestroyImmediate(component);
+                    Object.DestroyImmediate(component);
             }
         }
 

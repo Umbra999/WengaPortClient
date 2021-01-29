@@ -9,6 +9,7 @@ using VRC.UI;
 using WengaPort.Api;
 using UnityEngine.UI;
 using WengaPort.Modules;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Extensions
 {
@@ -33,7 +34,7 @@ namespace WengaPort.Extensions
 		{
 			var hudRoot = GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud");
 			var requestedParent = hudRoot.transform.Find("NotificationDotParent");
-			var indicator = UnityEngine.Object.Instantiate(hudRoot.transform.Find("NotificationDotParent/NotificationDot").gameObject, requestedParent, false).Cast<GameObject>();
+			var indicator = Object.Instantiate(hudRoot.transform.Find("NotificationDotParent/NotificationDot").gameObject, requestedParent, false).Cast<GameObject>();
 			indicator.name = "NotifyDot-" + name;
 			indicator.SetActive(true);
 			indicator.transform.localPosition += Vector3.right * offset;

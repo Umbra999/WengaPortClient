@@ -181,7 +181,7 @@ namespace WengaPort.Modules
 				}
 				else
 				{
-					UnityEngine.Object.Destroy(Capsule);
+                    Object.Destroy(Capsule);
 					Serialize = false;
 				}
 			}

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using WengaPort.Modules;
 using WengaPort.Wrappers;
 using Button = UnityEngine.UI.Button;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Buttons
 {
@@ -145,25 +146,25 @@ namespace WengaPort.Buttons
             TitleText.GetComponent<Text>().text = "WengaPort";
             EarlyAccess.GetComponent<Text>().text = "WengaPort";
 
-            UnityEngine.Object.Destroy(Ads1);
-            UnityEngine.Object.Destroy(Ads2);
-            UnityEngine.Object.Destroy(Ads5);
-            UnityEngine.Object.Destroy(InteractReport);
-            UnityEngine.Object.Destroy(MicTextButton);
-            UnityEngine.Object.Destroy(FirstPanel);
-            UnityEngine.Object.Destroy(SecondPanel);
-            UnityEngine.Object.Destroy(ThirdPanel);
-            UnityEngine.Object.Destroy(FivePanel);
-            UnityEngine.Object.Destroy(SixPanel);
-            UnityEngine.Object.Destroy(SevenPanel);
-            UnityEngine.Object.Destroy(EightPanel);
-            UnityEngine.Object.Destroy(NinePanel);
-            UnityEngine.Object.Destroy(TenPanel);
-            UnityEngine.Object.Destroy(ElevenPanel);
-            UnityEngine.Object.Destroy(QMReportWorldButton);
-            UnityEngine.Object.Destroy(FrameText);
-            UnityEngine.Object.Destroy(PingText);
-            UnityEngine.Object.Destroy(NameText);
+            Object.Destroy(Ads1);
+            Object.Destroy(Ads2);
+            Object.Destroy(Ads5);
+            Object.Destroy(InteractReport);
+            Object.Destroy(MicTextButton);
+            Object.Destroy(FirstPanel);
+            Object.Destroy(SecondPanel);
+            Object.Destroy(ThirdPanel);
+            Object.Destroy(FivePanel);
+            Object.Destroy(SixPanel);
+            Object.Destroy(SevenPanel);
+            Object.Destroy(EightPanel);
+            Object.Destroy(NinePanel);
+            Object.Destroy(TenPanel);
+            Object.Destroy(ElevenPanel);
+            Object.Destroy(QMReportWorldButton);
+            Object.Destroy(FrameText);
+            Object.Destroy(PingText);
+            Object.Destroy(NameText);
             Ads3.transform.SetParent(UIElementsMenu.transform);
             Ads4.transform.SetParent(UIElementsMenu.transform);
             FourthPanel.transform.localScale = new Vector3(0, 0, 0);

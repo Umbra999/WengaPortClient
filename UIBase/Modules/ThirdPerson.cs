@@ -36,7 +36,7 @@ namespace WengaPort.Modules
 				gameObject.GetComponent<Camera>().fieldOfView = Fov;
 				TPCameraBack = gameObject;
 				GameObject gameObject3 = GameObject.CreatePrimitive(PrimitiveType.Cube);
-				UnityEngine.Object.Destroy(gameObject3.GetComponent<MeshRenderer>());
+                Destroy(gameObject3.GetComponent<MeshRenderer>());
 				gameObject3.transform.localScale = referenceCamera.transform.localScale;
 				Rigidbody rigidbody2 = gameObject3.AddComponent<Rigidbody>();
 				rigidbody2.isKinematic = true;

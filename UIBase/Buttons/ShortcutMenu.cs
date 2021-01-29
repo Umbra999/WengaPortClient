@@ -12,6 +12,7 @@ using VRC.SDKBase;
 using WengaPort.Extensions;
 using static VRC.SDKBase.VRC_EventHandler;
 using VRC.Udon;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Buttons
 {
@@ -112,7 +113,7 @@ namespace WengaPort.Buttons
             UdonTriggers.getMainButton().setActive(false);
             UdonObjects.SetAction(delegate
             {
-                foreach (var Udon in UnityEngine.Object.FindObjectsOfType<UdonBehaviour>())
+                foreach (var Udon in Object.FindObjectsOfType<UdonBehaviour>())
                 {
                     UdonObjects.Add(new QMSingleButton(UdonExploits, 0, 0, Udon.gameObject.name, delegate
                     {
@@ -135,7 +136,7 @@ namespace WengaPort.Buttons
             ScrollMenu TriggerObjects = new ScrollMenu(TriggerMenu);
             TriggerObjects.SetAction(delegate
             {
-                foreach (var Trigger in UnityEngine.Object.FindObjectsOfType<VRC_Trigger>())
+                foreach (var Trigger in Object.FindObjectsOfType<VRC_Trigger>())
                 {
                     TriggerObjects.Add(new QMSingleButton(TriggerMenu, 0, 0, Trigger.gameObject.name, delegate
                     {
@@ -198,7 +199,7 @@ namespace WengaPort.Buttons
             new QMToggleButton(PrefabsPage, 4, 0, "Disable \nItems", () =>
             {
                 ItemHandler.ItemToggle = true;
-                foreach (VRCSDK2.VRC_Pickup item in UnityEngine.Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
+                foreach (VRCSDK2.VRC_Pickup item in Object.FindObjectsOfType<VRCSDK2.VRC_Pickup>())
                 {
                     ItemHandler.World_Pickups.Add(item);
                     item.gameObject.SetActive(false);

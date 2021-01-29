@@ -5,6 +5,7 @@ using MelonLoader;
 using UnityEngine;
 using VRC;
 using VRC.SDKBase;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Modules
 {
@@ -17,7 +18,7 @@ namespace WengaPort.Modules
             {
                 if (array[i].gameObject.activeInHierarchy && !(array[i].gameObject.GetComponentInParent<VRC_PortalMarker>() != null))
                 {
-                    UnityEngine.Object.Destroy(array[i].gameObject);
+                    Object.Destroy(array[i].gameObject);
                 }
             }
         }
@@ -85,10 +86,10 @@ namespace WengaPort.Modules
             Networking.RPC(destination, gameObject2, text, array);
         }
 
-        public static IEnumerator DestroyDelayed(float seconds, UnityEngine.Object obj)
+        public static IEnumerator DestroyDelayed(float seconds, Object obj)
         {
             yield return new WaitForSeconds(seconds);
-            UnityEngine.Object.Destroy(obj);
+            Object.Destroy(obj);
             yield break;
         }
         public static List<string> kosstrings = new List<string>();

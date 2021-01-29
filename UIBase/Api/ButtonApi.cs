@@ -7,7 +7,6 @@ using UnhollowerRuntimeLib;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-using VRC.UI;
 
 namespace WengaPort.Api
 {

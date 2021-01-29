@@ -4,6 +4,7 @@ using Il2CppSystem.Collections;
 using MelonLoader;
 using Newtonsoft.Json.Linq;
 using RootMotion.FinalIK;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -46,6 +47,7 @@ namespace WengaPort.Extensions
                 Instance.Patch(typeof(ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique).GetMethod("OnEvent"), GetPatch("OnEvent"), null);
                 Instance.Patch(AccessTools.Method(typeof(API), "SendPutRequest", null, null), GetPatch("RequestPatch"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(PostOffice), "Put", null, null), GetPatch("ReceivedNotificationPatch"), null, null);
+                Instance.Patch(AccessTools.Method(typeof(MenuController), "Method_Public_Void_APIUser_0"), postfix: new HarmonyMethod(typeof(PatchManager).GetMethod("OnUserInfoOpen", BindingFlags.Static | BindingFlags.Public)));
                 Instance.Patch(typeof(PortalTrigger).GetMethod(nameof(PortalTrigger.OnTriggerEnter), BindingFlags.Public | BindingFlags.Instance), GetPatch("EnterPortalPrefix"), null, null);
                 Instance.Patch(typeof(PhotonPeerPublicPo1Di2ByObTyUnique).GetMethod("Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_0"), GetPatch("OpRaiseEventPrefix"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(VRC_EventDispatcherRFC), "Method_Public_Void_Player_VrcEvent_VrcBroadcastType_Int32_Single_0", null, null), GetPatch("CaughtEventPatch"), null, null);
@@ -75,7 +77,7 @@ namespace WengaPort.Extensions
                 Logger.WengaLogger("[Patches] Network Hooks");
                 Logger.WengaLogger("[Patches] HWID Spoof");
             }
-            catch (System.Exception arg)
+            catch (Exception arg)
             {
                 Logger.WengaLogger(string.Format("[Patches] Failed Patching \n{0}", arg));
             }
@@ -86,7 +88,7 @@ namespace WengaPort.Extensions
                     if (methods[i].Name == "Method_Public_Static_IEnumerator_String_GameObject_AvatarPerformanceStats_0" || methods[i].Name == "Method_Public_Static_IEnumerator_GameObject_AvatarPerformanceStats_EnumPublicSealedvaNoExGoMePoVe7vUnique_MulticastDelegateNPublicSealedVoUnique_0" || methods[i].Name == "Method_Public_Static_Void_String_GameObject_AvatarPerformanceStats_0")
                         Instance.Patch(methods[i], GetPatch("CalculatePerformance"), null, null);
             }
-            catch (System.Exception e)
+            catch (Exception e)
             {
                 Logger.WengaLogger("Failed to patch Performance Scanners: " + e);
             }
@@ -96,9 +98,9 @@ namespace WengaPort.Extensions
         private static bool SeenFire;
         private static bool AFiredFirst;
 
-        public static event System.Action<Player> OnJoin;
+        public static event Action<Player> OnJoin;
 
-        public static event System.Action<Player> OnLeave;
+        public static event Action<Player> OnLeave;
 
         private static bool IsValid(ref IKSolverHeuristic __instance, ref bool __result)
         {
@@ -110,6 +112,24 @@ namespace WengaPort.Extensions
                 return false;
             }
             return true;
+        }
+
+        public static Uri avatarLink;
+        public static APIUser currentUserSocial;
+        public static bool canGet = true;
+        public static void OnUserInfoOpen(MenuController __instance)
+        {
+            currentUserSocial = __instance.activeUser;
+            avatarLink = new Uri(currentUserSocial.currentAvatarImageUrl);
+
+            string adjustedLink = string.Format("https://{0}", avatarLink.Authority);
+
+            for (int i = 0; i < avatarLink.Segments.Length - 2; i++)
+            {
+                adjustedLink += avatarLink.Segments[i];
+            }
+
+            avatarLink = new Uri(adjustedLink.Trim("/".ToCharArray()));
         }
 
         private static void SetupWorldPage(ref ApiWorld __0)
@@ -128,10 +148,6 @@ namespace WengaPort.Extensions
                 {
                     var list = __instance.GetComponentInParent<UiVRCList>();
                     __result = $"{__result} [{list.field_Private_GridLayoutGroup_0.rectChildren.Count}]";
-                }
-                if (__result == "Back")
-                {
-                    __result = __result.Replace("Back", "<---");
                 }
                 if (NeedRankPatch && (__result.Contains("Known User") || __result.Contains("Trusted User")))
                 {
@@ -168,23 +184,9 @@ namespace WengaPort.Extensions
                         }
                     } 
                 }
-                //if (__result.Contains(APIUser.CurrentUser.id))
-                //{
-                //    __result = __result.Replace(APIUser.CurrentUser.id, "Your UserID");
-                //}
-                //if (__result == APIUser.CurrentUser.displayName)
-                //{
-                //    __result = __result.Replace(APIUser.CurrentUser.displayName, $"You");
-                //}
-                //Logger.WengaLogger(__result);
             }
             catch { }
             return;
-            
-            if (__result.Contains(APIUser.CurrentUser.id))
-            {
-                __result = __result.Replace(APIUser.CurrentUser.id, "");
-            }
         }
 
         public static bool OperationLog = false;
@@ -221,11 +223,11 @@ namespace WengaPort.Extensions
                     return false;
                 }
                 {
-                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name} \n by {dropper}", "Yes", new System.Action(() =>
+                    Utils.VRCUiPopupManager.Alert("Enter Portal", $"{portalInternal.field_Private_ApiWorld_0.name} \n by {dropper}", "Yes", new Action(() =>
                     {
                         Networking.GoToRoom(portalInternal.field_Private_ApiWorld_0.id + ":" + portalInternal.field_Private_String_1);
                         Utils.VRCUiPopupManager.HideCurrentPopUp();
-                    }), "No", new System.Action(() =>
+                    }), "No", new Action(() =>
                     {
                         Utils.VRCUiPopupManager.HideCurrentPopUp();
                     }));
@@ -307,7 +309,7 @@ namespace WengaPort.Extensions
             OnLeave += OnPlayerLeft;
         }
 
-        private static void AddDelegate(ObjectPublicHa1UnT1Unique<Player> field, System.Action<Player> eventHandlerA)
+        private static void AddDelegate(ObjectPublicHa1UnT1Unique<Player> field, Action<Player> eventHandlerA)
         {
             field.field_Private_HashSet_1_UnityAction_1_T_0.Add(eventHandlerA);
         }
@@ -383,7 +385,7 @@ namespace WengaPort.Extensions
             random.NextBytes(array);
             SpoofHWID = string.Join("", from it in array select it.ToString("x2"));
             var mainmethod = IL2CPP.il2cpp_resolve_icall("UnityEngine.SystemInfo::GetDeviceUniqueIdentifier");
-            Imports.Hook((System.IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
+            Imports.Hook((IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
             Logger.WengaLogger($"[HWID] Before {MainHWID}");
             Logger.WengaLogger($"[HWID] Spoofing {SpoofHWID}");
             Logger.WengaLogger($"[HWID] After {SystemInfo.deviceUniqueIdentifier}");
@@ -396,7 +398,7 @@ namespace WengaPort.Extensions
         static string SpoofHWID;
         static string MainHWID;
 
-        public static System.IntPtr FakeDeviceID()
+        public static IntPtr FakeDeviceID()
         {
             return new Il2CppSystem.Object(IL2CPP.ManagedStringToIl2Cpp(SpoofHWID)).Pointer;
         }
@@ -524,7 +526,7 @@ namespace WengaPort.Extensions
                     maskProperties(__0, 251);
                 }
             }
-            catch (System.Exception value)
+            catch (Exception value)
             {
                 Logger.WengaLogger(value);
             }
@@ -569,7 +571,7 @@ namespace WengaPort.Extensions
                     }
                 }
             }
-            catch (System.Exception value)
+            catch (Exception value)
             {
                 Logger.WengaLogger(value);
             }
@@ -782,26 +784,26 @@ namespace WengaPort.Extensions
                 }
                 if (instance.GetVRCPlayer().GetIsBot() || PhotonModule.RPCBlock.Contains(instance.UserID()))
                 {
-                    System.Console.ForegroundColor = System.ConsoleColor.Red;
-                    MelonConsole.SetColor(System.ConsoleColor.Red);
-                    System.Console.WriteLine(string.Concat(new string[]
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    MelonConsole.SetColor(ConsoleColor.Red);
+                    Console.WriteLine(string.Concat(new string[]
                     {
                         "\n[BLOCKED RPC] \nPLAYER: ",text," \nEXECUTED:", __1.ParameterString, " \nOBJECT: ", __1.ParameterObject.name," [", __2.ToString(),"](",__3.ToString(),"/",__4.ToString(),")"
                     }));
-                    System.Console.ResetColor();
+                    Console.ResetColor();
                     return false;
                 }
                 else if (__1.ParameterObject.name != "USpeak" && __1.ParameterString != "SetTimerRPC" && RPCLog)
                 {
-                    System.Console.ForegroundColor = System.ConsoleColor.Magenta;
-                    MelonConsole.SetColor(System.ConsoleColor.DarkBlue);
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    MelonConsole.SetColor(ConsoleColor.DarkBlue);
 
-                    System.Console.WriteLine(string.Format("\n[RPC] \nPLAYER: {0} \nOBJECT: {1}  \nEXECUTED: {2} \nFOR: {3} \nType: {4} [{5}] L: {6}", new object[]
+                    Console.WriteLine(string.Format("\n[RPC] \nPLAYER: {0} \nOBJECT: {1}  \nEXECUTED: {2} \nFOR: {3} \nType: {4} [{5}] L: {6}", new object[]
                     {
                         text,__1.ParameterObject.name,__1.ParameterString,(player == null) ? text4 : text3,__1.EventType,__2,array.Length
                     }));
-                    System.Console.ResetColor();
-                    MelonConsole.SetColor(System.ConsoleColor.White);
+                    Console.ResetColor();
+                    MelonConsole.SetColor(ConsoleColor.White);
                 }
                 
                 if (__1.ParameterObject != null)
@@ -849,7 +851,7 @@ namespace WengaPort.Extensions
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (PortalHandler.AntiPortal || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (PortalHandler.AntiPortal || text4clean == "0" || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
                             {
                                 return false;
                             }
@@ -871,7 +873,7 @@ namespace WengaPort.Extensions
                             break;
 
                         case "PlayEmoteRPC":
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (System.Convert.ToInt32(text4clean) < 0 || System.Convert.ToInt32(text4clean) > 8))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Convert.ToInt32(text4clean) < 0 || Convert.ToInt32(text4clean) > 8))
                             {
                                 Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emote");
                                 VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emote");
@@ -882,7 +884,7 @@ namespace WengaPort.Extensions
                             break;
 
                         case "SpawnEmojiRPC":
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (System.Convert.ToInt32(text4clean) < 0 || System.Convert.ToInt32(text4clean) > 57))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (Convert.ToInt32(text4clean) < 0 || Convert.ToInt32(text4clean) > 57))
                             {
                                 Logger.WengaLogger($"[Room] [Protection] {text} played out of Range Emoji");
                                 VRConsole.Log(VRConsole.LogsType.Protection, $"{text} --> out of Range Emoji");

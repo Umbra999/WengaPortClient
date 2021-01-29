@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using VRC.SDKBase;
+using Object = UnityEngine.Object;
 
 namespace WengaPort.Modules
 {
@@ -13,7 +14,7 @@ namespace WengaPort.Modules
 		{
 			try
 			{
-				GameObject gameObject = (from x in UnityEngine.Object.FindObjectsOfType<GameObject>()
+				GameObject gameObject = (from x in Object.FindObjectsOfType<GameObject>()
 										 where x.name == "DrawingManager"
 										 select x).First();
 				Networking.RPC(0, gameObject, "CleanRoomRPC", null);
@@ -25,7 +26,7 @@ namespace WengaPort.Modules
 		}
 		public static void ChangePedestals(string ID)
 		{
-			foreach (VRC_AvatarPedestal vrc_AvatarPedestal in UnityEngine.Object.FindObjectsOfType<VRC_AvatarPedestal>())
+			foreach (VRC_AvatarPedestal vrc_AvatarPedestal in Object.FindObjectsOfType<VRC_AvatarPedestal>())
 			{
 				Networking.RPC(0, vrc_AvatarPedestal.gameObject, "SwitchAvatar", new Il2CppSystem.Object[]
 				{
