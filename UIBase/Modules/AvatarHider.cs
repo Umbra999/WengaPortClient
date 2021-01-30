@@ -16,8 +16,6 @@ namespace WengaPort.Modules
             if (LoadingDelay > 13f)
             {
                 AssetBundleDownloadManager.prop_AssetBundleDownloadManager_0.field_Private_Boolean_0 = false;
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
                 LoadingDelay = 0f;
             }
             HideDelay += Time.deltaTime;

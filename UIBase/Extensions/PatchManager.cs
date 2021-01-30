@@ -449,7 +449,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                //PlayerList.IsAllowedClient();
+                PlayerList.IsAllowedClient();
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
                 Utils.VRCUiManager.QueHudMessage($"<color=lime>[+] {__0.DisplayName()}</color>");
@@ -851,7 +851,7 @@ namespace WengaPort.Extensions
                         case "ConfigurePortal":
                             VRConsole.Log(VRConsole.LogsType.Portal, text + " --> Portaldrop");
                             Logger.WengaLogger($"[Room] [Portal] {text} spawned a Portal");
-                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (PortalHandler.AntiPortal || text4clean == "0" || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
+                            if (__0.field_Private_APIUser_0.id != APIUser.CurrentUser.id && (PortalHandler.AntiPortal || !__0.field_Private_APIUser_0.isFriend && PortalHandler.FriendOnlyPortal))
                             {
                                 return false;
                             }

@@ -291,7 +291,7 @@ namespace WengaPort.Modules
             {
 				BackAvatarID = Utils.CurrentUser.GetAPIAvatar().id;
 				SelfHide.Initialize(true);
-				PlayerExtensions.ChangeAvatar("avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab");
+				PlayerExtensions.ChangeAvatar("avtr_5c66e56a-9fe7-4f62-9c7a-93bf8b75d717");
 			}
 			yield break;
 		}

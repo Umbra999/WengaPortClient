@@ -230,19 +230,19 @@ namespace WengaPort.Buttons
 
             HalfButton = new QMSingleButton(ThisMenu, 3, 1.75f, "Audio \nCrash", () =>
             {
-                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_b3eb302c-20c5-46f7-b687-ead0d75f0ea9"));
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_f8523bb1-a54f-4941-afb9-0e2f2555c706"));
             }, "Crash the Player with a Audio Overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 3, 2.25f, "Material \nCrash", () =>
             {
-                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_72b727e2-40f9-4934-8c49-b8dfd545e2ab"));
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_63299b09-46f1-4192-8e19-d552edae02d3"));
             }, "Crash the Player with a Material Overflow Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
             HalfButton = new QMSingleButton(ThisMenu, 4, 2.25f, "IK \nCrash", () =>
             {
-                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_896652cf-b111-45e1-8ed5-12725420bdd0"));
+                MelonCoroutines.Start(CameraHandler.TargetAvatarCrash(Utils.QuickMenu.SelectedPlayer(), "avtr_5c66e56a-9fe7-4f62-9c7a-93bf8b75d717"));
             }, "Crash the Player with a IK Script Avatar");
             HalfButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(1, 2);
 
