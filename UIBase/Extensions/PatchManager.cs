@@ -449,7 +449,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                PlayerList.IsAllowedClient();
+                //PlayerList.IsAllowedClient();
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
                 Utils.VRCUiManager.QueHudMessage($"<color=lime>[+] {__0.DisplayName()}</color>");
