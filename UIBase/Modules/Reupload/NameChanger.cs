@@ -16,7 +16,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/Avatar").gameObject;
+            GameObject gameObject = vRCUiManager.prop_VRCUiPopupManager_0.transform.Find("Screens/Avatar").gameObject;
             if (!gameObject)
             {
                 return;
@@ -26,7 +26,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            SimpleAvatarPedestal avatar = component.avatar;
+            SimpleAvatarPedestal avatar = component.field_Public_SimpleAvatarPedestal_0;
             if (!avatar)
             {
                 return;
@@ -54,7 +54,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/Avatar").gameObject;
+            GameObject gameObject = vRCUiManager.prop_VRCUiPopupManager_0.transform.Find("Screens/Avatar").gameObject;
             if (!gameObject)
             {
                 return;
@@ -64,7 +64,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            SimpleAvatarPedestal avatar = component.avatar;
+            SimpleAvatarPedestal avatar = component.field_Public_SimpleAvatarPedestal_0;
             if (!avatar)
             {
                 return;
@@ -129,7 +129,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/Avatar").gameObject;
+            GameObject gameObject = vRCUiManager.prop_VRCUiPopupManager_0.transform.Find("Screens/Avatar").gameObject;
             if (!gameObject)
             {
                 return;
@@ -139,7 +139,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            SimpleAvatarPedestal avatar = component.avatar;
+            SimpleAvatarPedestal avatar = component.field_Public_SimpleAvatarPedestal_0;
             if (!avatar)
             {
                 return;
@@ -167,7 +167,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/Avatar").gameObject;
+            GameObject gameObject = vRCUiManager.prop_VRCUiPopupManager_0.transform.Find("Screens/Avatar").gameObject;
             if (!gameObject)
             {
                 return;
@@ -177,7 +177,7 @@ namespace WengaPort.Modules.Reupload
             {
                 return;
             }
-            SimpleAvatarPedestal avatar = component.avatar;
+            SimpleAvatarPedestal avatar = component.field_Public_SimpleAvatarPedestal_0;
             if (!avatar)
             {
                 return;

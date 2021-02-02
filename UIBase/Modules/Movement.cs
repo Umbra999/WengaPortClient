@@ -34,16 +34,16 @@ namespace WengaPort.Modules
 
         public static void IncreaseSpeed()
         {
-            FindObjectOfType<LocomotionInputController>().walkSpeed = 4;
-            FindObjectOfType<LocomotionInputController>().runSpeed = 8;
-            FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
+            //FindObjectOfType<LocomotionInputController>().walkSpeed = 4;
+            //FindObjectOfType<LocomotionInputController>().runSpeed = 8;
+            //FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
         }
 
         public static void DecreaseSpeed()
         {
-            FindObjectOfType<LocomotionInputController>().walkSpeed = 2;
-            FindObjectOfType<LocomotionInputController>().runSpeed = 4;
-            FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
+            //FindObjectOfType<LocomotionInputController>().walkSpeed = 2;
+            //FindObjectOfType<LocomotionInputController>().runSpeed = 4;
+            //FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
         }
 
         public static bool FlyToggle = false;
@@ -193,7 +193,7 @@ namespace WengaPort.Modules
                 }
                 else if (InfJump)
                 {
-                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Single_0 == 1)
+                    if (VRCInputManager.Method_Public_Static_VRCInput_String_0("Jump").prop_Single_0 == 1)
                     {
                         var Jump = Networking.LocalPlayer.GetVelocity();
                         Jump.y = Networking.LocalPlayer.GetJumpImpulse();
@@ -202,7 +202,7 @@ namespace WengaPort.Modules
                 }
                 else if (DoubleJump)
                 {
-                    if (VRCInputManager.Method_Public_Static_ObjectPublicStSiBoSiObBoSiObStSiUnique_String_0("Jump").prop_Boolean_0 && !Networking.LocalPlayer.IsPlayerGrounded())
+                    if (VRCInputManager.Method_Public_Static_VRCInput_String_0("Jump").prop_Boolean_0 && !Networking.LocalPlayer.IsPlayerGrounded())
                     {
                         var Jump = Networking.LocalPlayer.GetVelocity();
                         Jump.y = Networking.LocalPlayer.GetJumpImpulse();

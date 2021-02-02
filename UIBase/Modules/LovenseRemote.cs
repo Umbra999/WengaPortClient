@@ -17,7 +17,6 @@ namespace WengaPort.Modules
         static string findButton = null;
         public static QMNestedButton menu;
         static QMSingleButton addButtonUI;
-        public static GameObject Slider1;
         static KeyCode lockButton;
         static KeyCode holdButton;
         public void Start()
@@ -40,7 +39,7 @@ namespace WengaPort.Modules
                 else
                 {
                     new Toy(idName[0], token, idName[1]);
-                    Text.SetText($"Connected toys: {toys.Count} / 2");
+                    //Text.SetText($"Connected toys: {toys.Count} / 2");
                 }
             }, "Paste the full control key here", null, null);
 
@@ -55,11 +54,11 @@ namespace WengaPort.Modules
                     toy.setSpeed(0);
                 }
                 toys.Clear();
-                Text.SetText($"Connected toys: 0 / 2");
+                //Text.SetText($"Connected toys: 0 / 2");
                 Toy.x = 2;
             }, "Remove all Lovense toys");
 
-            new MenuSlider2(Utils.QuickMenu.transform.Find(menu.getMenuName()), "Intensity", 250, -520, delegate (float value)
+            new QMSlider(Utils.QuickMenu.transform.Find(menu.getMenuName()), "Intensity", 250, -520, delegate (float value)
             {
                 sliderspeed = value;
             }, 0, 100, 0, true);

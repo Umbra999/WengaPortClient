@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using VRC;
 using VRC.UserCamera;
-using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
+using ModerationManager = VRC.Management.ModerationManager;
 using System.Collections.Generic;
 using UnhollowerRuntimeLib.XrefScans;
 using System.Reflection;
@@ -33,7 +33,7 @@ namespace WengaPort.Modules
 		{
 			get
 			{
-				return ModerationManager.prop_ObjectPublicObLi1ApSiLi1ApBoSiUnique_0;
+				return ModerationManager.prop_ModerationManager_0;
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace WengaPort.Modules
 		{
 			get
 			{
-				return VRCVrCamera.field_Private_Static_VRCVrCamera_0.screenCamera;
+				return VRCVrCamera.field_Private_Static_VRCVrCamera_0.field_Public_Camera_0;
 			}
 		}
 

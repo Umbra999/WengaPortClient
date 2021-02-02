@@ -148,8 +148,8 @@ namespace WengaPort.Wrappers
         public static void ShowInputKeyBoard(Il2CppSystem.Action<string, Il2CppSystem.Collections.Generic.List<KeyCode>, Text> InputAction)
         {
             VRCUiPopupManager vrcpopup = GetVRCUiPopupManager();
-            vrcpopup.inputPopup.gameObject.SetActive(true);
-            vrcpopup.inputPopup.Method_Public_Void_String_InputType_String_Action_3_String_List_1_KeyCode_Text_Boolean_PDM_0("Enter Input", InputField.InputType.Standard, "Enter text", InputAction, true);
+            vrcpopup.field_Public_VRCUiPopupInput_1.gameObject.SetActive(true);
+            vrcpopup.field_Public_VRCUiPopupInput_1.Method_Public_Void_String_InputType_String_Action_3_String_List_1_KeyCode_Text_Boolean_PDM_0("Enter Input", InputField.InputType.Standard, "Enter text", InputAction, true);
             GameObject.Find("UserInterface/MenuContent/Popups/InputKeypadPopup").SetActive(true);
         }
 
@@ -167,14 +167,14 @@ namespace WengaPort.Wrappers
         {
             UiToggleButton componentInChildren = tooltip.gameObject.GetComponentInChildren<UiToggleButton>();
 
-            if (componentInChildren != null && !string.IsNullOrEmpty(tooltip.alternateText))
+            if (componentInChildren != null && !string.IsNullOrEmpty(tooltip.field_Public_Text_1.text))
             {
-                string displayText = (!componentInChildren.toggledOn) ? tooltip.alternateText : tooltip.text;
+                string displayText = (!componentInChildren.field_Public_Boolean_0) ? tooltip.field_Public_Text_1.text : tooltip.field_Public_Text_0.text;
                 if (TooltipManager.field_Private_Static_Text_0 != null) //Only return type field of text
                 {
                     TooltipManager.Method_Public_Static_Void_String_1(displayText); //Last function to take string parameter
                 }
-                else if (tooltip != null) tooltip.text = displayText;
+                else if (tooltip != null) tooltip.field_Public_Text_0.text = displayText;
             }
         }
 

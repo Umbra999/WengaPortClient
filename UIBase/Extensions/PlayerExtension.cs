@@ -92,12 +92,12 @@ namespace WengaPort.Modules
 
 		public static void ReloadAvatar(this VRCPlayer Instance)
 		{
-			VRCPlayer.Method_Public_Static_Void_APIUser_PDM_0(Instance.GetAPIUser());
+			VRCPlayer.Method_Public_Static_Void_APIUser_0(Instance.GetAPIUser());
 		}
 
 		public static void ReloadAvatar(this Player Instance)
 		{
-			VRCPlayer.Method_Public_Static_Void_APIUser_PDM_0(Instance.GetAPIUser());
+			VRCPlayer.Method_Public_Static_Void_APIUser_0(Instance.GetAPIUser());
 		}
 
 		public static bool IsFriend(this Player player)
@@ -117,27 +117,18 @@ namespace WengaPort.Modules
 
 		public static void ChangeAvatar(string avatarID)
 		{
-			new PageAvatar
-			{
-				avatar = new SimpleAvatarPedestal
-				{
-					field_Internal_ApiAvatar_0 = new ApiAvatar
-					{
-						id = avatarID
-					}
-				}
-			}.ChangeToSelectedAvatar();
+			//new PageAvatar
+			//{
+			//	avatar = new SimpleAvatarPedestal
+			//	{
+			//		field_Internal_ApiAvatar_0 = new ApiAvatar
+			//		{
+			//			id = avatarID
+			//		}
+			//	}
+			//}.ChangeToSelectedAvatar();
 		}
-		public static GameObject GetAvatar(this VRCAvatarManager Instance)
-		{
-			if (Instance.prop_GameObject_0 != null)
-				return Instance.prop_GameObject_0;
-			if (Instance.field_Private_GameObject_1 != null)
-				return Instance.field_Private_GameObject_1;
-			if (Instance.field_Private_GameObject_2 != null)
-				return Instance.field_Private_GameObject_2;
-			return null;
-		}
+
 
 		public static VRCPlayerApi GetVRCPlayerApi(this VRCPlayer Instance)
 		{

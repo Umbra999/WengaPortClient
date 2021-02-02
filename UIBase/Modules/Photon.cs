@@ -110,44 +110,6 @@ namespace WengaPort.Modules
 			catch { }
 		}
 
-		private static void OpRaiseEvent(byte code, object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
-		{
-			Il2CppSystem.Object Object = Utils.Serialization.FromManagedToIL2CPP<Il2CppSystem.Object>(customObject);
-			OpRaiseEvent(code, Object, RaiseEventOptions, sendOptions);
-		}
-		public static void OpRaiseEvent(byte code, Il2CppSystem.Object customObject, ObjectPublicObByObInByObObUnique RaiseEventOptions, SendOptions sendOptions)
-		{
-			PhotonHandler.
-			 field_Internal_Static_PhotonHandler_0.prop_ObjectPublicIPhotonPeerListenerObStNuStOb1CoObBoDiUnique_0.
-			 Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_0
-			(code,
-			 customObject,
-			 RaiseEventOptions,
-			 sendOptions);
-		}
-
-		public static bool Desync = false;
-		public static IEnumerator PhotonDesyncWorld()
-		{
-			for (; ; )
-			{
-				if (RoomManager.field_Internal_Static_ApiWorld_0 == null || !Desync)
-				{
-					yield break;
-				}
-				OpRaiseEvent(210, new int[] { new System.Random().Next(0, short.MaxValue), Networking.LocalPlayer.playerId }, new ObjectPublicObByObInByObObUnique()
-				{
-					field_Public_EnumPublicSealedvaOtAlMa4vUnique_0 = EnumPublicSealedvaOtAlMa4vUnique.Others,
-				}, SendOptions.SendReliable);
-				OpRaiseEvent(209, new int[] { new System.Random().Next(0, short.MaxValue), Networking.LocalPlayer.playerId }, new ObjectPublicObByObInByObObUnique()
-				{
-					field_Public_EnumPublicSealedvaOtAlMa4vUnique_0 = EnumPublicSealedvaOtAlMa4vUnique.Others,
-				}, SendOptions.SendReliable);
-				yield return new WaitForSeconds(0.01f);
-			}
-			yield break;
-		}
-
 		public static GameObject Capsule = new GameObject();
 		public static bool Serialize = false;
 		public static bool Invisible = false;

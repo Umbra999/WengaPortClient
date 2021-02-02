@@ -9,9 +9,9 @@ using UnhollowerBaseLib.Runtime;
 using UnityEngine;
 using VRC.Core;
 using WengaPort.Modules;
-using AMEnumA = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObVRAc1GaApAcObBoUnique;
-using AMEnumB = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObGaVRApBoBoObBoObUnique;
-using AMEnumC = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObVRAc1GaApAcObObUnique;
+using AMEnumA = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObAcOb1GaondoAconUnique;
+using AMEnumB = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObAcOb1GaonPrAconUnique;
+using AMEnumC = VRCAvatarManager.ObjectNPrivateSealedIEnumerator1ObjectIEnumeratorIDisposableInObGaobApObapBoisfrUnique;
 using Object = UnityEngine.Object;
 
 namespace WengaPort.Extensions
@@ -106,7 +106,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                using (new AvatarManagerCookie(new AMEnumA(thisPtr).field_Public_VRCAvatarManager_0))
+                using (new AvatarManagerCookie(new AMEnumA(thisPtr).__4__this))
                     return SafeInvokeMoveNext(ourMoveNextA, thisPtr);
             }
             catch (Il2CppException ex)
@@ -126,7 +126,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                using (new AvatarManagerCookie(new AMEnumB(thisPtr).field_Public_VRCAvatarManager_0))
+                using (new AvatarManagerCookie(new AMEnumB(thisPtr).__4__this))
                     return SafeInvokeMoveNext(ourMoveNextB, thisPtr);
             }
             catch (Il2CppException ex)
@@ -146,7 +146,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                using (new AvatarManagerCookie(new AMEnumC(thisPtr).field_Public_VRCAvatarManager_0))
+                using (new AvatarManagerCookie(new AMEnumC(thisPtr).__4__this))
                     return SafeInvokeMoveNext(ourMoveNextC, thisPtr);
             }
             catch (Il2CppException ex)

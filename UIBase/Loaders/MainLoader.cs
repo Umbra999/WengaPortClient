@@ -20,7 +20,7 @@ namespace WengaPort.MainLoader
 {
     public class MainLoader : MelonMod
     {
-        public static string Version = "1.0.0";
+        public static string Version = "2.0.0";
         public unsafe override void OnApplicationStart() // Runs after Game Initialization.
         {
             FoldersManager.Create.Initialize();
@@ -46,11 +46,6 @@ namespace WengaPort.MainLoader
             ClassInjector.RegisterTypeInIl2Cpp<OnGui>();
             ClassInjector.RegisterTypeInIl2Cpp<Api.ApiExtension>();
             ClassInjector.RegisterTypeInIl2Cpp<DiscordManager>();
-        }
-
-        public override void OnLevelIsLoading() // Runs when a Scene is Loading or when a Loading Screen is Shown. Currently only runs if the Mod is used in BONEWORKS.
-        {
-
         }
 
         public override void OnLevelWasLoaded(int level) // Runs when a Scene has Loaded.
@@ -256,7 +251,6 @@ namespace WengaPort.MainLoader
         {
             ButtonsLoader.Initialize();
             ModulesLoader.Initialize();
-            PatchManager.JoinInitialize();
             PatchManager.InitPatch();
             VRCPlayer.field_Internal_Static_Color_0 = new Color(255, 0, 0);
             VRCPlayer.field_Internal_Static_Color_1 = new Color(255, 255, 0);

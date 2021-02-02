@@ -50,7 +50,7 @@ namespace WengaPort.Modules
             VRCVrCamera vrCamera = VRCVrCamera.field_Private_Static_VRCVrCamera_0;
             if (!vrCamera)
                 return;
-            Camera screenCamera = vrCamera.screenCamera;
+            Camera screenCamera = vrCamera.field_Public_Camera_0;
             if (!screenCamera)
                 return;
 

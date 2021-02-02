@@ -129,9 +129,8 @@
     <Reference Include="librsync.net">
       <HintPath>D:\Steam\steamapps\common\VRChat\librsync.net.dll</HintPath>
     </Reference>
-    <Reference Include="MelonLoader.ModHandler, Version=0.2.7.2, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.ModHandler.dll</HintPath>
+    <Reference Include="MelonLoader">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\VRChat\MelonLoader\MelonLoader.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure">
@@ -435,7 +434,6 @@
   <ItemGroup>
     <Compile Include="Api\ButtonApi.cs" />
     <Compile Include="Api\ButtonImage.cs" />
-    <Compile Include="Api\MenuSlider2.cs" />
     <Compile Include="Api\Panels.cs" />
     <Compile Include="Api\VRChatAPIObjects.cs" />
     <Compile Include="Api\VRCList.cs" />
@@ -514,13 +512,6 @@
     <Compile Include="Modules\SelfHide.cs" />
     <Compile Include="Extensions\Utils.cs" />
     <Compile Include="Modules\ThirdPerson.cs" />
-    <Compile Include="Modules\WorldDownloader\Cache\CacheManager.cs" />
-    <Compile Include="Modules\WorldDownloader\Constants.cs" />
-    <Compile Include="Modules\WorldDownloader\DownloadManager\WorldDownloadManager.cs" />
-    <Compile Include="Modules\WorldDownloader\ExtensionMethods.cs" />
-    <Compile Include="Modules\WorldDownloader\UI\WorldButton.cs" />
-    <Compile Include="Modules\WorldDownloader\UI\WorldDownloadStatus.cs" />
-    <Compile Include="Modules\WorldDownloader\Utilities.cs" />
     <Compile Include="Wrappers\GeneralWrappers.cs" />
     <Compile Include="Wrappers\PlayerWrappers.cs" />
   </ItemGroup>

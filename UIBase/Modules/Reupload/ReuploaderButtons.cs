@@ -162,13 +162,12 @@ namespace WengaPort.Modules.Reupload
 
         public static void ReuploadWorldAction()
         {
-            ClearOldSession();
             VRCUiManager vRCUiManager = VRCUiManager.prop_VRCUiManager_0;
             if (!vRCUiManager)
             {
                 return;
             }
-            GameObject gameObject = vRCUiManager.menuContent.transform.Find("Screens/WorldInfo").gameObject;
+            GameObject gameObject = vRCUiManager.prop_VRCUiPopupManager_0.transform.Find("Screens/WorldInfo").gameObject;
             if (!gameObject)
             {
                 return;
@@ -190,7 +189,6 @@ namespace WengaPort.Modules.Reupload
 
         public static void ReuploadAvatar(string avatarID)
         {
-            ClearOldSession();
             if (string.IsNullOrEmpty(avatarID))
             {
                 Extensions.Logger.WengaLogger("No AvatarID found");

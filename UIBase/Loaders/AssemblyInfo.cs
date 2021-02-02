@@ -14,5 +14,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("7969d8c5-195f-4219-ac32-e715adbb0f92")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: MelonInfo(typeof(MainLoader), "WengaPort", "", "Wenga", null)]
+[assembly: MelonInfo(typeof(MainLoader), "WengaPort", "2.0", "Wenga", null)]
 [assembly: MelonGame("VRChat", "VRChat")]

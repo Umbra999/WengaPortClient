@@ -11,7 +11,7 @@ namespace WengaPort.Modules
             VRCVrCamera vrCamera = VRCVrCamera.field_Private_Static_VRCVrCamera_0;
             if (!vrCamera)
                 return;
-            Camera screenCamera = vrCamera.screenCamera;
+            Camera screenCamera = vrCamera.field_Public_Camera_0;
             if (!screenCamera)
                 return;
             screenCamera.nearClipPlane = value;
@@ -22,7 +22,7 @@ namespace WengaPort.Modules
             var cameraController = UserCameraController.field_Internal_Static_UserCameraController_0;
             if (cameraController == null)
                 return;
-            Camera cam = cameraController.photoCamera.GetComponent<Camera>();
+            Camera cam = cameraController.field_Internal_UserCameraIndicator_0.GetComponent<Camera>();
             if (cam != null)
                 cam.nearClipPlane = value;
         }

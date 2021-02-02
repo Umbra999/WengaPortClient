@@ -2,7 +2,7 @@
 using System.Linq;
 using Transmtn.DTO.Notifications;
 using VRC.Core;
-using ModerationManager = ObjectPublicObLi1ApSiLi1ApBoSiUnique;
+using ModerationManager = VRC.Management.ModerationManager;
 using Logger = WengaPort.Extensions.Logger;
 
 namespace WengaPort.Modules
@@ -36,7 +36,7 @@ namespace WengaPort.Modules
         {
             if (userId == null) return false;
 
-            var moderationManager = ModerationManager.prop_ObjectPublicObLi1ApSiLi1ApBoSiUnique_0;
+            var moderationManager = ModerationManager.prop_ModerationManager_0;
             if (moderationManager == null) return false;
             if (APIUser.CurrentUser?.id == userId)
                 return false;

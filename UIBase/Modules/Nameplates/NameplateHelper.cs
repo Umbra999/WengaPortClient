@@ -54,7 +54,7 @@ namespace WengaPort.Modules
             {
                 if (setColour)
                 {
-                    nameplate.uiName.color = nameColour;
+                    //nameplate.uiName.color = nameColour;
                 }
             }
         }
@@ -81,7 +81,7 @@ namespace WengaPort.Modules
                     lerpReverse = false;
                 }
 
-                nameplate.uiName.color = Color.Lerp(nameColour, nameColour2, lerpValue);
+                //nameplate.uiName.color = Color.Lerp(nameColour, nameColour2, lerpValue);
             }
         }
     }

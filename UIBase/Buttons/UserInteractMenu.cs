@@ -56,7 +56,7 @@ namespace WengaPort.Buttons
             InfoText13 = new MenuText(ThisMenu, -1200f, 1450f, "13");
             InfoText14 = new MenuText(ThisMenu, -1200f, 1550f, "14");
             InfoText15 = new MenuText(ThisMenu, -1200f, 1635f, "15");
-            ThisMenu.getMainButton().setActive(false); 
+            ThisMenu.getMainButton().setActive(false);
 
             MelonCoroutines.Start(ReworkedButtonAPI.CreateButton(MenuType.UserInteract, ButtonType.Single, "", 4, 0, delegate ()
             {

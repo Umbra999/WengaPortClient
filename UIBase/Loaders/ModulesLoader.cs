@@ -1,4 +1,5 @@
 ﻿using DiscordRichPresence;
+using System.Diagnostics;
 using UnityEngine;
 using WengaPort.Buttons;
 using WengaPort.Extensions;
@@ -17,8 +18,6 @@ namespace WengaPort.Loaders
             AntiMenuOverrender.UIInit();
             DiscordManager.Init();
             AvatarHider.AvatarSpoofInit();
-            WorldButton.Setup();
-            WorldDownloadStatus.Setup();
             Nameplates.OnUI();
             if (!UnityEngine.XR.XRDevice.isPresent)
             {
@@ -28,6 +27,8 @@ namespace WengaPort.Loaders
             ESP.HighlightColor(Color.green);
             Movement.UIInit();
             MelonLoader.MelonCoroutines.Start(UIChanges.Initialize());
+            Application.targetFrameRate = 144;
+            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
             MelonLoader.MelonCoroutines.Start(UIChanges.UpdateClock());
         }
     }

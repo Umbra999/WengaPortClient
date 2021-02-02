@@ -44,8 +44,7 @@ namespace WengaPort.Buttons
 
         public static IEnumerator Initialize()
         {
-            UnityEngine.Application.targetFrameRate = 144;
-            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
+
             while (VRCPlayer.field_Internal_Static_VRCPlayer_0 == null) yield return null;
             SetQuickMenuCollider(0f,0.5f);
             var FirstPanel = GameObject.Find("/UserInterface/QuickMenu/QuickMenu_NewElements/_Background/Panel");
@@ -54,19 +53,9 @@ namespace WengaPort.Buttons
             var FourthPanel = GameObject.Find("/UserInterface/QuickMenu/QuickMenu_NewElements/_InfoBar");
             var FivePanel = GameObject.Find("/UserInterface/MenuContent/Backdrop/Backdrop/Background");
             var SixPanel = GameObject.Find("/UserInterface/MenuContent/Popups/LoadingPopup/3DElements/LoadingBackground_TealGradient/SkyCube_Baked");
-            var SevenPanel = GameObject.Find("/UserInterface/MenuContent/Backdrop/Header/Tabs/ViewPort/Content/SafetyPageTab/Image (1)");
             var EightPanel = GameObject.Find("/UserInterface/MenuContent/Backdrop/Backdrop/Image");
-            var NinePanel = GameObject.Find("/UserInterface/MenuContent/Screens/Settings/Button_AdvancedOptions/Image_NEW");
-            var TenPanel = GameObject.Find("/UserInterface/MenuContent/Screens/Settings_Safety/TitlePanel/Button_PerformanceOptions/Image_NEW");
             var ElevenPanel = GameObject.Find("/UserInterface/MenuContent/Screens/Settings/Button_EditBindings/Image_NEW");
-            var settingsTitleText = GeneralWrappers.GetVRCUiManager().menuContent.transform.Find("Screens/Settings/TitlePanel/TitleText");
             var TitleText = GameObject.Find("/UserInterface/MenuContent/Screens/Avatar/TitlePanel (1)/TitleText");
-            var EarlyAccess = Utils.QuickMenu.transform.Find("ShortcutMenu/EarlyAccessText");
-            var PingText = Utils.QuickMenu.transform.Find("ShortcutMenu/PingText").gameObject;
-            var FrameText = Utils.QuickMenu.transform.Find("ShortcutMenu/FPSText").gameObject;
-            var WorldText = Utils.QuickMenu.transform.Find("ShortcutMenu/WorldText").gameObject;
-            var BuildText = Utils.QuickMenu.transform.Find("ShortcutMenu/BuildNumText").gameObject;
-            var NameText = Utils.QuickMenu.transform.Find("ShortcutMenu/NameText").gameObject;
             var Ads1 = Utils.QuickMenu.transform.Find("ShortcutMenu/VRCPlusMiniBanner").gameObject;
             var Ads2 = Utils.QuickMenu.transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
             var Ads3 = Utils.QuickMenu.transform.Find("ShortcutMenu/UserIconButton").gameObject;
@@ -133,18 +122,12 @@ namespace WengaPort.Buttons
             QMRespawnButton.transform.localPosition = GetButtonPosition(0f, 2f);
             MicButton.transform.localPosition = GetButtonPosition(0.25f, 4.7f);
             QMHeaderContainer.transform.localPosition = GetButtonPosition(2.5f, -1.75f);
-            EarlyAccess.transform.localPosition = GetButtonPosition(1.45f, 2.55f);
-            BuildText.transform.localPosition = GetButtonPosition(2.4f, 2.55f);
-            WorldText.transform.localPosition = GetButtonPosition(1.75f, 2.75f);
             var UserDetailsButton = Utils.QuickMenu.transform.Find("UserInteractMenu/DetailsButton").gameObject;
             UserDetailsButton.GetComponent<RectTransform>().sizeDelta /= new Vector2(2f, 1f);
             UserDetailsButton.GetComponent<RectTransform>().anchoredPosition -= new Vector2(210f, 0f);
 
-            settingsTitleText.GetComponent<Text>().color = Color.blue;
-            settingsTitleText.GetComponent<Text>().text = "WengaPort";
             TitleText.GetComponent<Text>().color = Color.blue;
             TitleText.GetComponent<Text>().text = "WengaPort";
-            EarlyAccess.GetComponent<Text>().text = "WengaPort";
 
             Object.Destroy(Ads1);
             Object.Destroy(Ads2);
@@ -156,25 +139,19 @@ namespace WengaPort.Buttons
             Object.Destroy(ThirdPanel);
             Object.Destroy(FivePanel);
             Object.Destroy(SixPanel);
-            Object.Destroy(SevenPanel);
             Object.Destroy(EightPanel);
-            Object.Destroy(NinePanel);
-            Object.Destroy(TenPanel);
             Object.Destroy(ElevenPanel);
             Object.Destroy(QMReportWorldButton);
-            Object.Destroy(FrameText);
-            Object.Destroy(PingText);
-            Object.Destroy(NameText);
             Ads3.transform.SetParent(UIElementsMenu.transform);
             Ads4.transform.SetParent(UIElementsMenu.transform);
             FourthPanel.transform.localScale = new Vector3(0, 0, 0);
             FourthPanel.transform.position = new Vector3(999 * 999, 999 * 999, 999 * 999);
+            Console.Title = "WengaPort";
             var cursorManager = VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0;
-            var leftHand = cursorManager.handLeftCursor;
-            var rightHand = cursorManager.handRightCursor;
+            var leftHand = cursorManager.transform.Find("LeftHandBeam").GetComponent<VRCUiCursor>();
+            var rightHand = cursorManager.transform.Find("RightHandBeam").GetComponent<VRCUiCursor>();
             AdjustParticleSystems(leftHand.gameObject);
             AdjustParticleSystems(rightHand.gameObject);
-            Console.Title = "WengaPort";
         }
         internal static void AdjustParticleSystems(GameObject cursorRoot)
         {

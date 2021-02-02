@@ -37,7 +37,7 @@ namespace DiscordRichPresence
             try
             {
                 string optionalSteamId = null;
-                ApiServerEnvironment serverEnvironment = VRCApplicationSetup.prop_VRCApplicationSetup_0.ServerEnvironment;
+                ApiServerEnvironment serverEnvironment = VRCApplicationSetup.prop_VRCApplicationSetup_0.field_Public_ApiServerEnvironment_0;
                 DiscordRpc.Initialize("770056934236880897", ref eventHandlers, true, optionalSteamId);
                 DiscordRpc.UpdatePresence(ref presence);
                 running = true;

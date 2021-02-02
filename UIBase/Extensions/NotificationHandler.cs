@@ -6,16 +6,6 @@ namespace WengaPort.Extensions
 {
     static class NotificationHandler
     {
-		public static void SendNotification(this NotificationManager Instance, string UserID, string Type, string IDKISEMPTY, NotificationDetails notificationDetails)
-		{
-			Instance.Method_Public_Void_String_String_String_NotificationDetails_0(UserID, Type, IDKISEMPTY, notificationDetails);
-		}
-
-		public static void SendNotification(this NotificationManager Instance, string UserID, string Type)
-		{
-			Instance.Method_Public_Void_String_String_String_NotificationDetails_0(UserID, Type, "", null);
-		}
-
 		public static void DismissNotification(this NotificationManager Instance, Notification notification)
 		{
 			Utils.VRCWebSocketsManager.DismissNotification(notification);

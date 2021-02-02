@@ -23,13 +23,13 @@ namespace WengaPort.Modules
             currPageAvatar = avatarPage.GetComponent<PageAvatar>();
             new MenuButton(Utility.MenuType.AvatarMenu, MenuButtonType.PlaylistButton, "Fav/Unfav", -600f, 375, delegate 
             {
-                if(!AvatarObjects.Exists(m => m.id == currPageAvatar.avatar.field_Internal_ApiAvatar_0.id))
+                if(!AvatarObjects.Exists(m => m.id == currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0.id))
                 {
-                    FavoriteAvatar(currPageAvatar.avatar.field_Internal_ApiAvatar_0);
+                    FavoriteAvatar(currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0);
                 }
                 else
                 {
-                    UnfavoriteAvatar(currPageAvatar.avatar.field_Internal_ApiAvatar_0);
+                    UnfavoriteAvatar(currPageAvatar.field_Public_SimpleAvatarPedestal_0.field_Internal_ApiAvatar_0);
                 }
                 MelonCoroutines.Start(RefreshMenu(1));
             });

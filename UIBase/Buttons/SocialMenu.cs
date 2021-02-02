@@ -64,7 +64,7 @@ namespace WengaPort.Buttons
                     var WorldScreen = GameObject.Find("Screens").transform.Find("WorldInfo");
                     var Infos = WorldScreen.transform.GetComponentInChildren<PageWorldInfo>();
 
-                    var wid = Infos.field_Private_ApiWorld_0.id + ":" + Infos.worldInstance.idWithTags;  
+                    var wid = Infos.field_Private_ApiWorld_0.id + ":" + Infos.field_Public_ApiWorldInstance_0.idWithTags;  
                     if (wid.Contains("wrld_"))
                     {
                         Extensions.Logger.WengaLogger("Checking " + wid);

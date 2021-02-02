@@ -9,7 +9,7 @@ namespace WengaPort.Api
         public VRCList(Transform parent,string name,int Position = 0)
         {
             GameObject = UnityEngine.Object.Instantiate(PublicAvatarList.gameObject, parent);
-            GameObject.GetComponent<UiAvatarList>().category = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
+            GameObject.GetComponent<UiAvatarList>().field_Public_EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique_0 = UiAvatarList.EnumNPublicSealedvaInPuMiFaSpClPuLi9vUnique.SpecificList;
             UiVRCList = GameObject.GetComponent<UiVRCList>();
             Text = GameObject.transform.Find("Button").GetComponentInChildren<Text>();
             GameObject.transform.SetSiblingIndex(Position);
