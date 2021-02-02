@@ -1,5 +1,6 @@
 using MelonLoader;
 using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -161,6 +162,7 @@ namespace WengaPort.Modules.Reupload
 
         public static void ReuploadWorldAction()
         {
+            ClearOldSession();
             VRCUiManager vRCUiManager = VRCUiManager.prop_VRCUiManager_0;
             if (!vRCUiManager)
             {
@@ -188,6 +190,7 @@ namespace WengaPort.Modules.Reupload
 
         public static void ReuploadAvatar(string avatarID)
         {
+            ClearOldSession();
             if (string.IsNullOrEmpty(avatarID))
             {
                 Extensions.Logger.WengaLogger("No AvatarID found");
@@ -322,7 +325,7 @@ namespace WengaPort.Modules.Reupload
                     name = SelectedAvatar.name,
                     imageUrl = ImageUrl.GetFileURL(),
                     assetUrl = AvatarAssetBundle.GetFileURL(),
-                    description = SelectedAvatar.description,
+                    description = PhotonModule.RandomNumberString(16),
                     releaseStatus = "private"
                 };
                 apiAvatar_1.Post((Action<ApiContainer>)OnApiAvatarPostSuccess, (Action<ApiContainer>)OnApiAvatarPostFailure);
@@ -338,19 +341,13 @@ namespace WengaPort.Modules.Reupload
         {
             Extensions.Logger.WengaLogger("Avatar Reuploaded");
             VRConsole.Log(VRConsole.LogsType.Avatar, $"Avatar Reuploaded");
-            if (!ClearOldSession())
-            {
-                Extensions.Logger.WengaLogger("Old Session not cleaned");
-            }
+            ClearOldSession();
         }
 
         private static void OnApiAvatarPostFailure(ApiContainer apiContainer_0)
         {
             Extensions.Logger.WengaLogger("Failed to Reupload Avatar");
-            if (!ClearOldSession())
-            {
-                Extensions.Logger.WengaLogger("Old Session not cleaned");
-            }
+            ClearOldSession();
         }
 
         public static void ReuploadWorld(string SelectedWorldID)
@@ -487,7 +484,7 @@ namespace WengaPort.Modules.Reupload
                     name = SelectedWorld.name,
                     imageUrl = WorldImage.GetFileURL(),
                     assetUrl = WorldAssetBundle.GetFileURL(),
-                    description = SelectedWorld.description,
+                    description = PhotonModule.RandomNumberString(16),
                     releaseStatus = "private"
                 };
                 ReuploadedWorld.Post((Action<ApiContainer>)OnApiWorldPostSuccess, (Action<ApiContainer>)OnApiWorldPostFailure);
@@ -500,50 +497,42 @@ namespace WengaPort.Modules.Reupload
         {
             Extensions.Logger.WengaLogger("World Reuploaded");
             VRConsole.Log(VRConsole.LogsType.Avatar, $"World Reuploaded");
-            if (!ClearOldSession())
-            {
-                Extensions.Logger.WengaLogger("Old Session not cleaned");
-            }
+            ClearOldSession();
         }
 
         private static void OnApiWorldPostFailure(ApiContainer apiContainer_0)
         {
             Extensions.Logger.WengaLogger("Failed to Reupload World");
-            if (!ClearOldSession())
-            {
-                Extensions.Logger.WengaLogger("Old Session not cleaned");
-            }
+            ClearOldSession();
         }
 
-        private static bool ClearOldSession()
+        private static void ClearOldSession()
         {
-            foreach (string item in Directory.EnumerateFiles(AssetBundlePath))
+            try
             {
-                if (!item.EndsWith("UBPU.exe"))
+                DirectoryInfo VrcaStore = new DirectoryInfo(VrcaStorePath);
+                DirectoryInfo AssetBundles = new DirectoryInfo(VrcaStorePath);
+                foreach (DirectoryInfo dir in AssetBundles.GetDirectories())
                 {
-                    try
+                    if (!dir.Name.Contains("VrcaStore"))
                     {
-                        File.Delete(item);
+                        dir.Delete(true);
                     }
-                    catch { }
+                }
+                foreach (FileInfo file in AssetBundles.GetFiles())
+                {
+                    file.Delete();
+                }
+                foreach (DirectoryInfo dir in VrcaStore.GetDirectories())
+                {
+                    dir.Delete(true);
+                }
+                foreach (FileInfo file in VrcaStore.GetFiles())
+                {
+                    file.Delete();
                 }
             }
-            foreach (string item2 in Directory.EnumerateDirectories(AssetBundlePath))
-            {
-                if (!item2.EndsWith("VrcaStore"))
-                {
-                    try
-                    {
-                        Directory.Delete(item2, recursive: true);
-                    }
-                    catch { }
-                }
-            }
-            if (Directory.EnumerateFiles(AssetBundlePath).Count() == 1 && Directory.EnumerateDirectories(AssetBundlePath).Count() == 1)
-            {
-                return true;
-            }
-            return false;
+            catch { }
         }
 
         private static string GenerateAvatarID()
