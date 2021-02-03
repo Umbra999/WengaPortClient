@@ -15,14 +15,14 @@ namespace WengaPort.Modules
             if (!screenCamera)
                 return;
             screenCamera.nearClipPlane = value;
-            ChangePhotoCameraNearField(value);
+            ChangePhotoCameraNearField(value); ;
         }
         public static void ChangePhotoCameraNearField(float value)
         {
             var cameraController = UserCameraController.field_Internal_Static_UserCameraController_0;
             if (cameraController == null)
                 return;
-            Camera cam = cameraController.field_Internal_UserCameraIndicator_0.GetComponent<Camera>();
+            Camera cam = cameraController.field_Public_GameObject_1.GetComponent<Camera>();
             if (cam != null)
                 cam.nearClipPlane = value;
         }

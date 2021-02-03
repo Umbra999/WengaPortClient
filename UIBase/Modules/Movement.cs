@@ -34,7 +34,7 @@ namespace WengaPort.Modules
 
         public static void IncreaseSpeed()
         {
-            //FindObjectOfType<LocomotionInputController>().walkSpeed = 4;
+            //FindObjectOfType<LocomotionInputController>().walkspeed = 4;
             //FindObjectOfType<LocomotionInputController>().runSpeed = 8;
             //FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
         }
@@ -80,14 +80,27 @@ namespace WengaPort.Modules
         {
             try
             {
+                var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
+                var ShortCutActive = Shortcut.gameObject.active;
+                var PageFix1 = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/HomeTab");
+                var PageFix2 = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/NotificationsTab");
+                if (ShortCutActive == false && PageFix1.active)
+                {
+                    PageFix1.SetActive(false);
+                    PageFix2.SetActive(false);
+                }
+                else if (ShortCutActive == true && !PageFix1.active)
+                {
+                    PageFix1.SetActive(true);
+                    PageFix2.SetActive(true);
+                }
                 if (isInVR && !NoClipToggle)
                 {
-                    var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                    if (Shortcut.gameObject.active == false)
+                    if (ShortCutActive == false)
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
                     }
-                    else if (Shortcut.gameObject.active == true && !NoClipToggle)
+                    else if (ShortCutActive == true && !NoClipToggle)
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = false;
                     }

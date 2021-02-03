@@ -32,7 +32,7 @@ namespace WengaPort.Buttons
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Drop Portal", -100f, -280f, new Action(() =>
             {
-                APIUser user = Utils.VRCUiManager.SelectedAPIUser();
+                APIUser user = PatchManager.currentUserSocial;
                 if (user.location.Contains("wrld_"))
                 {
                     PortalHandler.DropPortal(user.location);
@@ -43,7 +43,7 @@ namespace WengaPort.Buttons
             {
                 if (PhotonMenu.Ini.GetBool("Toggles", "Bot", true))
                 {
-                    APIUser user = Utils.VRCUiManager.SelectedAPIUser();
+                    APIUser user = PatchManager.currentUserSocial;
                     if (user.location.Contains("wrld_"))
                     {
                         Extensions.Logger.WengaLogger("Checking " + user.location);
@@ -85,7 +85,7 @@ namespace WengaPort.Buttons
 
             new MenuButton(MenuType.UserInfo, MenuButtonType.PlaylistButton, "Open VRChat", 125f, -280f, new Action(() =>
             {
-                Process.Start("https://vrchat.com/home/user/" + Utils.VRCUiManager.SelectedAPIUser().UserID());
+                Process.Start("https://vrchat.com/home/user/" + PatchManager.currentUserSocial.UserID());
             }));
 
             Button button2 = GameObject.Find("/UserInterface/MenuContent/Screens/UserInfo/User Panel/OnlineFriend/JoinButton").GetComponent<Button>();
@@ -95,9 +95,9 @@ namespace WengaPort.Buttons
                 button2.onClick.RemoveAllListeners();
                 button2.onClick.AddListener(new Action(() =>
                 {
-                    if (Utils.VRCUiManager.SelectedAPIUser() != null)
+                    if (PatchManager.currentUserSocial != null)
                     {
-                        APIUser user = Utils.VRCUiManager.SelectedAPIUser();
+                        APIUser user = PatchManager.currentUserSocial;
                         if (user.location.Contains("wrld_"))
                         {
                             Networking.GoToRoom(user.location);

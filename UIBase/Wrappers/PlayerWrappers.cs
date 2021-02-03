@@ -18,7 +18,7 @@ namespace WengaPort.Wrappers
 
         public static Player[] GetAllPlayers(this PlayerManager instance) { return instance.prop_ArrayOf_Player_0; }
 
-        public static ApiAvatar GetAPIAvatar(this VRCPlayer player) { return player.prop_ApiAvatar_0; }
+        public static ApiAvatar GetAPIAvatar(this VRCPlayer player) { return player.prop_VRCAvatarManager_0.prop_ApiAvatar_0; }
 
         public static Player GetVRC_Player(this VRCPlayer player) { return player.field_Private_Player_0; }
 

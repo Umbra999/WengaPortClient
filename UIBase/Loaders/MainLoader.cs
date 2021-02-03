@@ -76,7 +76,6 @@ namespace WengaPort.MainLoader
             ItemHandler.World_ObjectSyncs.Clear();
             ItemHandler.World_Triggers.Clear();
             ItemHandler.World_Mirrors.Clear();
-            ItemHandler.World_Chairs.Clear();
             ItemHandler.PostProcess.Clear();
             ItemHandler.Pedestals.Clear();
             ItemHandler.World_Panorama.Clear();
@@ -84,17 +83,6 @@ namespace WengaPort.MainLoader
             ItemHandler.World_ObjectSyncs = Resources.FindObjectsOfTypeAll<VRC_ObjectSync>().ToArray().ToList();
             ItemHandler.World_Triggers = UnityEngine.Object.FindObjectsOfType<VRC_Trigger>().ToArray().ToList();
             
-            if (ItemHandler.ChairToggle)
-            {
-                foreach (var item in Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRCStation>())
-                {
-                    if (item.gameObject.active)
-                    {
-                        item.gameObject.SetActive(false);
-                        ItemHandler.World_Chairs.Add(item);
-                    }
-                }
-            }
             if (ItemHandler.MirrorToggle)
             {
                 foreach (var item in Resources.FindObjectsOfTypeAll<VRC.SDKBase.VRC_MirrorReflection>())

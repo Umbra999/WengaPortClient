@@ -117,17 +117,17 @@ namespace WengaPort.Modules
 
 		public static void ChangeAvatar(string avatarID)
 		{
-			//new PageAvatar
-			//{
-			//	avatar = new SimpleAvatarPedestal
-			//	{
-			//		field_Internal_ApiAvatar_0 = new ApiAvatar
-			//		{
-			//			id = avatarID
-			//		}
-			//	}
-			//}.ChangeToSelectedAvatar();
-		}
+            new PageAvatar
+            {
+                field_Public_SimpleAvatarPedestal_0 = new SimpleAvatarPedestal
+                {
+                    field_Internal_ApiAvatar_0 = new ApiAvatar
+                    {
+                        id = avatarID
+                    }
+                }
+            }.ChangeToSelectedAvatar();
+        }
 
 
 		public static VRCPlayerApi GetVRCPlayerApi(this VRCPlayer Instance)

@@ -68,10 +68,10 @@ namespace WengaPort.Modules
         //    if (ValidatePlayerAvatar(player))
         //    {
         //        GDBUser user = new GDBUser(player);
-        //        if (user.vrcPlayer.field_Internal_VRCPlayer_0.name == null)
+        //        if (user.vrcPlayer.field_Internal_VRCPlayer_0.field_Public_PlayerNameplate_0 == null)
         //            return;
 
-        //        PlayerNameplate nameplate = user.vrcPlayer.field_Internal_VRCPlayer_0.nameplate;
+        //        PlayerNameplate nameplate = user.vrcPlayer.field_Internal_VRCPlayer_0.field_Public_PlayerNameplate_0 ;
 
         //        resetNameplate(nameplate);
 
@@ -197,15 +197,15 @@ namespace WengaPort.Modules
         //    nameplate.uiUserImage.texture = texture;
         //}
 
-        ///// <summary>
-        ///// Sets the colours of a nameplate
-        ///// </summary>
-        ///// <param name="nameplate">Target nameplate</param>
-        ///// <param name="bgColor">Affects main nameplate background and the quick stats background</param>
-        ///// <param name="iconBGColor">Affects the icon background</param>
-        ///// <param name="textColor">Sets the player name text</param>
-        ///// <param name="textColorLerp">Sets NameplateHelper to do a fade between textColor and textColorLerp on the player name text</param>
-        ///// <param name="resetToDefaultMat">Resets the materials on the nameplate</param>
+        /// <summary>
+        /// Sets the colours of a nameplate
+        /// </summary>
+        /// <param name="nameplate">Target nameplate</param>
+        /// <param name="bgColor">Affects main nameplate background and the quick stats background</param>
+        /// <param name="iconBGColor">Affects the icon background</param>
+        /// <param name="textColor">Sets the player name text</param>
+        /// <param name="textColorLerp">Sets NameplateHelper to do a fade between textColor and textColorLerp on the player name text</param>
+        /// <param name="resetToDefaultMat">Resets the materials on the nameplate</param>
         //private static void ApplyNameplateColour(PlayerNameplate nameplate, Color? bgColor = null, Color? iconBGColor = null, Color? textColor = null, Color? textColorLerp = null, bool resetToDefaultMat = false)
         //{
 
@@ -297,83 +297,83 @@ namespace WengaPort.Modules
             }
         }
 
-        //private static void OnRebuild(PlayerNameplate __instance)
-        //{
-        //    NameplateHelper helper = __instance.gameObject.GetComponent<NameplateHelper>();
-        //    if (helper != null)
-        //    {
-        //        helper.OnRebuild();
-        //    }
-        //    if (AntiMenuOverrender.AntiOverrenderToggle && __instance != null && __instance.gameObject.layer != AntiMenuOverrender._uiPlayerNameplateLayer)
-        //    {
-        //        AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiMenuLayer);
-        //        AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiLayer);
-        //    }
-        //}
+        private static void OnRebuild(PlayerNameplate __instance)
+        {
+            NameplateHelper helper = __instance.gameObject.GetComponent<NameplateHelper>();
+            if (helper != null)
+            {
+                helper.OnRebuild();
+            }
+            if (AntiMenuOverrender.AntiOverrenderToggle && __instance != null && __instance.gameObject.layer != AntiMenuOverrender._uiPlayerNameplateLayer)
+            {
+                AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiMenuLayer);
+                AntiMenuOverrender.SetLayerRecursively(__instance.transform.parent.parent.parent, AntiMenuOverrender._uiPlayerNameplateLayer, AntiMenuOverrender._uiLayer);
+            }
+        }
 
-        //private static void OnVRCAMAwake(VRCAvatarManager __instance)
-        //{
-        //    var d = __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_0;
-        //    VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique converted = new Action<GameObject, VRC_AvatarDescriptor, bool>(OnAvatarInit);
-        //    d = d == null ? converted : Il2CppSystem.Delegate.Combine(d, converted).Cast<VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique>();
-        //    __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_0 = d;
+        private static void OnVRCAMAwake(VRCAvatarManager __instance)
+        {
+            var d = __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_0;
+            VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique converted = new Action<GameObject, VRC_AvatarDescriptor, bool>(OnAvatarInit);
+            d = d == null ? converted : Il2CppSystem.Delegate.Combine(d, converted).Cast<VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique>();
+            __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_0 = d;
 
-        //    var d1 = __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_1;
-        //    VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique converted1 = new Action<GameObject, VRC_AvatarDescriptor, bool>(OnAvatarInit);
-        //    d1 = d1 == null ? converted1 : Il2CppSystem.Delegate.Combine(d1, converted1).Cast<VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique>();
-        //    __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_1 = d1;
+            var d1 = __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_1;
+            VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique converted1 = new Action<GameObject, VRC_AvatarDescriptor, bool>(OnAvatarInit);
+            d1 = d1 == null ? converted1 : Il2CppSystem.Delegate.Combine(d1, converted1).Cast<VRCAvatarManager.MulticastDelegateNPublicSealedVoGaVRBoUnique>();
+            __instance.field_Internal_MulticastDelegateNPublicSealedVoGaVRBoUnique_1 = d1;
 
-        //}
+        }
 
-        //public static void OnAvatarInit(GameObject go, VRC_AvatarDescriptor avatarDescriptor, bool state)
-        //{
-        //    if (avatarDescriptor != null)
-        //    {
-        //        foreach (Player player in Utils.PlayerManager.GetAllPlayers())
-        //        {
-        //            if (player.field_Private_APIUser_0 == null)
-        //                continue;
+        public static void OnAvatarInit(GameObject go, VRC_AvatarDescriptor avatarDescriptor, bool state)
+        {
+            if (avatarDescriptor != null)
+            {
+                foreach (Player player in Utils.PlayerManager.GetAllPlayers())
+                {
+                    if (player.field_Private_APIUser_0 == null)
+                        continue;
 
-        //            VRCPlayer vrcPlayer = player.field_Internal_VRCPlayer_0;
-        //            if (vrcPlayer == null)
-        //                continue;
+                    VRCPlayer vrcPlayer = player.field_Internal_VRCPlayer_0;
+                    if (vrcPlayer == null)
+                        continue;
 
-        //            VRCAvatarManager vrcAM = vrcPlayer.prop_VRCAvatarManager_0;
-        //            if (vrcAM == null)
-        //                continue;
+                    VRCAvatarManager vrcAM = vrcPlayer.prop_VRCAvatarManager_0;
+                    if (vrcAM == null)
+                        continue;
 
-        //            VRC_AvatarDescriptor descriptor = vrcAM.prop_VRC_AvatarDescriptor_0;
-        //            if ((descriptor == null) || (descriptor != avatarDescriptor))
-        //                continue;
+                    VRC_AvatarDescriptor descriptor = vrcAM.prop_VRC_AvatarDescriptor_0;
+                    if ((descriptor == null) || (descriptor != avatarDescriptor))
+                        continue;
 
-        //            OnUpdatePlayer(player);
-        //            break;
-        //        }
-        //    }
-        //}
+                    //OnUpdatePlayer(player);
+                    break;
+                }
+            }
+        }
 
-        //public static Player getPlayerFromPlayerlist(string userID)
-        //{
-        //    foreach (var player in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
-        //    {
-        //        if (player.field_Private_APIUser_0 != null)
-        //        {
-        //            if (player.field_Private_APIUser_0.id.Equals(userID))
-        //                return player;
-        //        }
-        //    }
-        //    return null;
-        //}
+        public static Player getPlayerFromPlayerlist(string userID)
+        {
+            foreach (var player in PlayerManager.field_Private_Static_PlayerManager_0.field_Private_List_1_Player_0)
+            {
+                if (player.field_Private_APIUser_0 != null)
+                {
+                    if (player.field_Private_APIUser_0.id.Equals(userID))
+                        return player;
+                }
+            }
+            return null;
+        }
 
-        //static bool ValidatePlayerAvatar(Player player)
-        //{
-        //    return !(player == null ||
-        //             player.field_Internal_VRCPlayer_0 == null ||
-        //             player.field_Internal_VRCPlayer_0.isActiveAndEnabled == false ||
-        //             player.field_Internal_VRCPlayer_0.field_Internal_Animator_0 == null ||
-        //             player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0 == null ||
-        //             player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0.name.IndexOf("Avatar_Utility_Base_") == 0);
-        //}
+        static bool ValidatePlayerAvatar(Player player)
+        {
+            return !(player == null ||
+                     player.field_Internal_VRCPlayer_0 == null ||
+                     player.field_Internal_VRCPlayer_0.isActiveAndEnabled == false ||
+                     player.field_Internal_VRCPlayer_0.field_Internal_Animator_0 == null ||
+                     player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0 == null ||
+                     player.field_Internal_VRCPlayer_0.field_Internal_GameObject_0.name.IndexOf("Avatar_Utility_Base_") == 0);
+        }
 
     }
 }

@@ -158,21 +158,9 @@ namespace WengaPort.Buttons
             new QMToggleButton(PrefabsPage, 2, 0, "Disable \nChairs", () =>
             {
                 ItemHandler.ChairToggle = true;
-                foreach (var item in Resources.FindObjectsOfTypeAll<VRCStation>())
-                {
-                    if (item.gameObject.active)
-                    {
-                        ItemHandler.World_Chairs.Add(item);
-                        item.gameObject.SetActive(false);
-                    }
-                }
             }, "Disabled", () =>
             {
                 ItemHandler.ChairToggle = false;
-                foreach (var item in ItemHandler.World_Chairs)
-                {
-                    item.gameObject.SetActive(true);
-                }
             }, "Toggle Chairs", Color.cyan, Color.white, false, true);
 
             new QMToggleButton(PrefabsPage, 3, 0, "Disable \nMirror", () =>

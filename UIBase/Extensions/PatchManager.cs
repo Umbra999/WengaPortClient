@@ -54,7 +54,7 @@ namespace WengaPort.Extensions
                 //Instance.Patch(typeof(PhotonPeer).GetMethod("Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_0"), GetPatch("OpRaiseEventPrefix"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(VRC_EventDispatcherRFC), "Method_Public_Void_Player_VrcEvent_VrcBroadcastType_Int32_Single_0", null, null), GetPatch("CaughtEventPatch"), null, null);
                 Instance.Patch(AccessTools.Property(typeof(Time), "smoothDeltaTime").GetMethod, null, GetPatch("FakeFrames"), null);
-                Instance.Patch(typeof(VRC.Udon.UdonBehaviour).GetMethod("RunProgram"), GetPatch("UdonSyncPatch"), null);
+                //Instance.Patch(typeof(VRC.Udon.UdonBehaviour).GetMethod("RunProgram"), GetPatch("UdonSyncPatch"), null);
                 Instance.Patch(AccessTools.Property(typeof(Text), "text").GetMethod, null, GetPatch("TextPatch"));
                 Instance.Patch(AccessTools.Property(typeof(Tools), "Platform").GetMethod, null, GetPatch("ModelSpoof"));
                 Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(), prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
@@ -875,7 +875,11 @@ namespace WengaPort.Extensions
                             }
                             break;
                         case "InteractWithStationRPC":
-                            if (text4.Contains("True"))
+                            if (__0.field_Private_APIUser_0.id == APIUser.CurrentUser.id && ItemHandler.ChairToggle)
+                            {
+                                return false;
+                            }
+                            else if (text4.Contains("True"))
                             {
                                 VRConsole.Log(VRConsole.LogsType.Info, $"{text} --> Chair used");
                                 Logger.WengaLogger($"[Room] [Info] {text} used a Chair");

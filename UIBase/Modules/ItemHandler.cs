@@ -81,8 +81,6 @@ namespace WengaPort.Modules
 
         public static List<VRC.SDKBase.VRC_MirrorReflection> World_Mirrors = new List<VRC.SDKBase.VRC_MirrorReflection>();
 
-        public static List<VRCStation> World_Chairs = new List<VRCStation>();
-
         public static List<PostProcessVolume> PostProcess = new List<PostProcessVolume>();
 
         public static List<VRC.SDKBase.VRC_AvatarPedestal> Pedestals = new List<VRC.SDKBase.VRC_AvatarPedestal>();
