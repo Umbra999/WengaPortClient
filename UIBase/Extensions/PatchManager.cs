@@ -18,6 +18,7 @@ using VRC.Core;
 using VRC.Networking;
 using VRC.SDKBase;
 using VRC.UI;
+using VRCSDK2.Validation.Performance;
 using WengaPort.Buttons;
 using WengaPort.ConsoleUtils;
 using WengaPort.FoldersManager;
@@ -83,17 +84,17 @@ namespace WengaPort.Extensions
             {
                 Logger.WengaLogger(string.Format("[Patches] Failed Patching \n{0}", arg));
             }
-            //try
-            //{
-            //    MethodInfo[] methods = typeof(ObjectPublicAbstractSealedInObInObObObObUnique).GetMethods(BindingFlags.Public | BindingFlags.Static);
-            //    for (int i = 0; i < methods.Length; i++)
-            //        if (methods[i].Name == "Method_Public_Static_IEnumerator_String_GameObject_AvatarPerformanceStats_0" || methods[i].Name == "Method_Public_Static_IEnumerator_GameObject_AvatarPerformanceStats_EnumPublicSealedvaNoExGoMePoVe7vUnique_MulticastDelegateNPublicSealedVoUnique_0" || methods[i].Name == "Method_Public_Static_Void_String_GameObject_AvatarPerformanceStats_0")
-            //            Instance.Patch(methods[i], GetPatch("CalculatePerformance"), null, null);
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.WengaLogger("Failed to patch Performance Scanners: " + e);
-            //}
+            try
+            {
+                MethodInfo[] methods = typeof(AvatarPerformance).GetMethods(BindingFlags.Public | BindingFlags.Static);
+                for (int i = 0; i < methods.Length; i++)
+                    if (methods[i].Name == "Method_Public_Static_IEnumerator_String_GameObject_AvatarPerformanceStats_0" || methods[i].Name == "Method_Public_Static_IEnumerator_GameObject_AvatarPerformanceStats_EnumPublicSealedvaNoExGoMePoVe7vUnique_MulticastDelegateNPublicSealedVoUnique_0" || methods[i].Name == "Method_Public_Static_Void_String_GameObject_AvatarPerformanceStats_0")
+                        Instance.Patch(methods[i], new HarmonyMethod(typeof(PatchManager).GetMethod("CalculatePerformance", BindingFlags.Static | BindingFlags.NonPublic)), null, null);
+            }
+            catch (Exception e)
+            {
+                Logger.WengaLogger("Failed to patch Performance Scanners: " + e);
+            }
         }
 
         private static bool IsValid(ref IKSolverHeuristic __instance, ref bool __result)
@@ -400,7 +401,7 @@ namespace WengaPort.Extensions
         {
             try
             {
-                //PlayerList.IsAllowedClient();
+                PlayerList.IsAllowedClient();
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
                 Utils.VRCUiManager.QueHudMessage($"<color=lime>[+] {__0.DisplayName()}</color>");

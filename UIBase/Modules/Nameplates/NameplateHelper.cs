@@ -1,11 +1,20 @@
 ﻿using System;
+using TMPro;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WengaPort.Modules
 {
     public class NameplateHelper : MonoBehaviour
     {
+        public Graphic uiIconBackground;
+        public RawImage uiUserImage;
+        public GameObject uiUserImageContainer;
+        public ImageThreeSlice uiNameBackground;
+        public ImageThreeSlice uiQuickStatsBackground;
+        public TextMeshProUGUI uiName;
+
         private PlayerNameplate nameplate = null;
         private Color nameColour;
         private Color nameColour2;
@@ -54,7 +63,7 @@ namespace WengaPort.Modules
             {
                 if (setColour)
                 {
-                    //nameplate.uiName.color = nameColour;
+                    uiName.color = nameColour;
                 }
             }
         }
@@ -80,8 +89,7 @@ namespace WengaPort.Modules
                     lerpValue = 0f;
                     lerpReverse = false;
                 }
-
-                //nameplate.uiName.color = Color.Lerp(nameColour, nameColour2, lerpValue);
+                uiName.color = Color.Lerp(nameColour, nameColour2, lerpValue);
             }
         }
     }
