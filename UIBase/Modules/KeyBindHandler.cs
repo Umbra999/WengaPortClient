@@ -42,7 +42,7 @@ namespace WengaPort.Modules
 
                 else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha0))
                 {
-                    Resources.FindObjectsOfTypeAll<DebugLogGui>().First().field_Private_Boolean_0 = !Resources.FindObjectsOfTypeAll<DebugLogGui>().First().field_Private_Boolean_0;
+                    Resources.FindObjectsOfTypeAll<DebugLogGui>().First().field_Public_Boolean_0 = !Resources.FindObjectsOfTypeAll<DebugLogGui>().First().field_Public_Boolean_0;
                 }
 
                 else if (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Alpha9))

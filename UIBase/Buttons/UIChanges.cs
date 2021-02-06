@@ -60,6 +60,10 @@ namespace WengaPort.Buttons
             var Ads2 = Utils.QuickMenu.transform.Find("ShortcutMenu/VRCPlusThankYou").gameObject;
             var Ads3 = Utils.QuickMenu.transform.Find("ShortcutMenu/UserIconButton").gameObject;
             var Ads4 = Utils.QuickMenu.transform.Find("ShortcutMenu/UserIconCameraButton").gameObject;
+            var Ads6 = GameObject.Find("/UserInterface/MenuContent/Popups/RequestInvitePopup/RequestInviteMenu/AddPhotoButton/VRC+");
+            var Ads7 = GameObject.Find("/UserInterface/MenuContent/Popups/RequestInvitePopup/RequestInviteMenu/SubscribeToAddPhotosButton");
+            var Ads8 = GameObject.Find("/UserInterface/MenuContent/Popups/SendInvitePopup/SendInviteMenu/SubscribeToAddPhotosButton");
+            var Ads9 = GameObject.Find("/UserInterface/MenuContent/Popups/SendInvitePopup/SendInviteMenu/AddPhotoButton/VRC+");
             var Ads5 = Utils.QuickMenu.transform.Find("ShortcutMenu/HeaderContainer/VRCPlusBanner").gameObject;
             var QMReportWorldButton = Utils.QuickMenu.transform.Find("ShortcutMenu/ReportWorldButton").gameObject;
             GameObject.Find("UserInterface/UnscaledUI/HudContent/Hud/VoiceDotParent/VoiceDotDisabled").GetComponent<FadeCycleEffect>().enabled = false;
@@ -132,6 +136,10 @@ namespace WengaPort.Buttons
             Object.Destroy(Ads1);
             Object.Destroy(Ads2);
             Object.Destroy(Ads5);
+            Object.Destroy(Ads6);
+            Object.Destroy(Ads7);
+            Object.Destroy(Ads8);
+            Object.Destroy(Ads9);
             Object.Destroy(InteractReport);
             Object.Destroy(MicTextButton);
             Object.Destroy(FirstPanel);

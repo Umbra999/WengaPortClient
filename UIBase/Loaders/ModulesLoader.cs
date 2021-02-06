@@ -28,7 +28,6 @@ namespace WengaPort.Loaders
             Movement.UIInit();
             MelonLoader.MelonCoroutines.Start(UIChanges.Initialize());
             Application.targetFrameRate = 144;
-            Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.AboveNormal;
             MelonLoader.MelonCoroutines.Start(UIChanges.UpdateClock());
         }
     }

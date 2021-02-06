@@ -3,6 +3,7 @@ using Harmony;
 using Il2CppSystem.Collections;
 using MelonLoader;
 using Newtonsoft.Json.Linq;
+using Photon.Realtime;
 using RootMotion.FinalIK;
 using System;
 using System.Diagnostics;
@@ -41,21 +42,21 @@ namespace WengaPort.Extensions
         {
             try
             {
-                Instance.Patch(typeof(NetworkManager).GetMethod("Method_Public_Void_Player_0"), GetPatch("OnPlayerLeft"), null);
-                Instance.Patch(typeof(NetworkManager).GetMethod("Method_Public_Void_Player_1"), GetPatch("OnPlayerJoin"), null);
+                Instance.Patch(typeof(NetworkManager).GetMethod("Method_Public_Void_Player_1"), GetPatch("OnPlayerLeft"), null);
+                Instance.Patch(typeof(NetworkManager).GetMethod("Method_Public_Void_Player_0"), GetPatch("OnPlayerJoin"), null);
                 Instance.Patch(AccessTools.Method(typeof(VRC_EventHandler), "InternalTriggerEvent", null, null), GetPatch("TriggerEvent"), null, null);
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTime").GetMethod, null, GetPatch("FakePing"), null);
                 Instance.Patch(AccessTools.Property(typeof(PhotonPeer), "RoundTripTimeVariance").GetMethod, null, GetPatch("FakePing"), null);
                 Instance.Patch(typeof(PhotonPeer).GetMethod("SendOperation"), GetPatch("OperationPatch"), null);
-                Instance.Patch(typeof(IPhotonPeerListener).GetMethod("OnEvent"), GetPatch("OnEvent"), null);
+                Instance.Patch(typeof(LoadBalancingClient).GetMethod("OnEvent"), GetPatch("OnEvent"), null);
+                Instance.Patch(typeof(LoadBalancingClient).GetMethod(nameof(LoadBalancingClient.Method_Public_Boolean_EnterRoomParams_0)), null, GetPatch("OpJoinRoomPatch"));
                 Instance.Patch(AccessTools.Method(typeof(API), "SendPutRequest", null, null), GetPatch("RequestPatch"), null, null);
-                Instance.Patch(AccessTools.Method(typeof(PostOffice), "Put", null, null), GetPatch("ReceivedNotificationPatch"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(MenuController), "Method_Public_Void_APIUser_0"), postfix: new HarmonyMethod(typeof(PatchManager).GetMethod("OnUserInfoOpen", BindingFlags.Static | BindingFlags.Public)));
                 Instance.Patch(typeof(PortalTrigger).GetMethod(nameof(PortalTrigger.OnTriggerEnter), BindingFlags.Public | BindingFlags.Instance), GetPatch("EnterPortalPrefix"), null, null);
-                //Instance.Patch(typeof(PhotonPeer).GetMethod("Method_Public_Virtual_New_Boolean_Byte_Object_ObjectPublicObByObInByObObUnique_SendOptions_0"), GetPatch("OpRaiseEventPrefix"), null, null);
+                Instance.Patch(typeof(LoadBalancingPeer).GetMethod("Method_Public_Virtual_New_Boolean_Byte_Object_RaiseEventOptions_SendOptions_0"), GetPatch("OpRaiseEventPrefix"), null, null);
                 Instance.Patch(AccessTools.Method(typeof(VRC_EventDispatcherRFC), "Method_Public_Void_Player_VrcEvent_VrcBroadcastType_Int32_Single_0", null, null), GetPatch("CaughtEventPatch"), null, null);
                 Instance.Patch(AccessTools.Property(typeof(Time), "smoothDeltaTime").GetMethod, null, GetPatch("FakeFrames"), null);
-                //Instance.Patch(typeof(VRC.Udon.UdonBehaviour).GetMethod("RunProgram"), GetPatch("UdonSyncPatch"), null);
+                Instance.Patch(typeof(MonoBehaviour2PrivateUdOb1BoObObObObObUnique).GetMethod(nameof(MonoBehaviour2PrivateUdOb1BoObObObObObUnique.UdonSyncRunProgramAsRPC)), GetPatch("UdonSyncPatch"), null);
                 Instance.Patch(AccessTools.Property(typeof(Text), "text").GetMethod, null, GetPatch("TextPatch"));
                 Instance.Patch(AccessTools.Property(typeof(Tools), "Platform").GetMethod, null, GetPatch("ModelSpoof"));
                 Instance.Patch(typeof(IKSolverHeuristic).GetMethods().Where(m => m.Name.Equals("IsValid") && m.GetParameters().Length == 1).First(), prefix: new HarmonyMethod(typeof(PatchManager).GetMethod("IsValid", BindingFlags.NonPublic | BindingFlags.Static)));
@@ -125,6 +126,52 @@ namespace WengaPort.Extensions
             }
 
             avatarLink = new Uri(adjustedLink.Trim("/".ToCharArray()));
+        }
+
+        public static bool JoinRoomLog = false;
+        private static void OpJoinRoomPatch(ref EnterRoomParams __0, ref bool __result)
+        {
+            if (JoinRoomLog)
+            {
+                try
+                {
+                    Console.WriteLine("OpJoinRoom: " + __result);
+                    Console.WriteLine("field_Public_String_0: " + __0.field_Public_String_0);
+                    Console.WriteLine("field_Public_Boolean_1: " + __0.field_Public_Boolean_0);
+                    Console.WriteLine("field_Public_Boolean_1: " + __0.field_Public_Boolean_1);
+                    Console.WriteLine("field_FamOrAssem_Boolean_0: " + __0.field_FamOrAssem_Boolean_0);
+                    Console.WriteLine("string[]_0: " + __0.field_Public_ArrayOf_0?.ToArray().Join());
+                    Console.WriteLine("ObjectPublicStObBoObUnique.field_Public_LobbyType_0: " + __0.field_Public_ObjectPublicStObBoObUnique_0?.field_Public_LobbyType_0.ToString());
+                    Console.WriteLine("ObjectPublicStObBoObUnique.field_Public_String_0: " + __0.field_Public_ObjectPublicStObBoObUnique_0?.field_Public_String_0);
+                    Console.WriteLine("ObjectPublicStObBoObUnique.prop_Boolean_0: " + __0.field_Public_ObjectPublicStObBoObUnique_0?.prop_Boolean_0);
+                    Console.WriteLine("RoomOptions.field_Public_Byte_0: " + __0.field_Public_RoomOptions_0.field_Public_Byte_0);
+                    Console.WriteLine("RoomOptions.prop_Boolean_0: " + __0.field_Public_RoomOptions_0.prop_Boolean_0);
+                    Console.WriteLine("RoomOptions.prop_Boolean_1: " + __0.field_Public_RoomOptions_0.prop_Boolean_1);
+                    Console.WriteLine("RoomOptions.prop_Boolean_2: " + __0.field_Public_RoomOptions_0.prop_Boolean_2);
+                    Console.WriteLine("RoomOptions.prop_Boolean_3: " + __0.field_Public_RoomOptions_0.prop_Boolean_3);
+                    Console.WriteLine("RoomOptions.prop_Boolean_4: " + __0.field_Public_RoomOptions_0.prop_Boolean_4);
+                    Console.WriteLine("RoomOptions.prop_Boolean_5: " + __0.field_Public_RoomOptions_0.prop_Boolean_5);
+                    Console.WriteLine("RoomOptions.prop_Boolean_6: " + __0.field_Public_RoomOptions_0.prop_Boolean_6);
+                    Console.WriteLine("RoomOptions.field_Private_Boolean_0: " + __0.field_Public_RoomOptions_0.field_Private_Boolean_0);
+                    Console.WriteLine("RoomOptions.field_Private_Boolean_1: " + __0.field_Public_RoomOptions_0.field_Private_Boolean_1);
+                    Console.WriteLine("RoomOptions.field_Private_Boolean_2: " + __0.field_Public_RoomOptions_0.field_Private_Boolean_2);
+                    Console.WriteLine("RoomOptions.field_Private_Boolean_3: " + __0.field_Public_RoomOptions_0.field_Private_Boolean_3);
+                    Console.WriteLine("RoomOptions.field_Public_Int32_0: " + __0.field_Public_RoomOptions_0.field_Public_Int32_0);
+                    Console.WriteLine("RoomOptions.field_Public_Int32_1: " + __0.field_Public_RoomOptions_0.field_Public_Int32_1);
+                    Console.WriteLine("RoomOptions.String[]_0: " + __0.field_Public_RoomOptions_0.field_Public_ArrayOf_0?.ToArray().Join());
+                    Console.WriteLine("RoomOptions.String[]_1: " + __0.field_Public_RoomOptions_0.field_Public_ArrayOf_1?.ToArray().Join());
+                    object RoomOptions = Utils.Serialization.FromIL2CPPToManaged<object>(__0.field_Public_RoomOptions_0.field_Public_Hashtable_0);
+                    Console.WriteLine("RoomOptions.field_Public_Hashtable_0: " + Newtonsoft.Json.JsonConvert.SerializeObject(RoomOptions));
+                    object Hashtable = Utils.Serialization.FromIL2CPPToManaged<object>(__0.field_Public_Hashtable_0);
+                    Console.WriteLine("field_Public_Hashtable_0: " + Newtonsoft.Json.JsonConvert.SerializeObject(Hashtable));
+
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
+            }
         }
 
         private static void SetupWorldPage(ref ApiWorld __0)
@@ -337,7 +384,7 @@ namespace WengaPort.Extensions
             random.NextBytes(array);
             SpoofHWID = string.Join("", from it in array select it.ToString("x2"));
             var mainmethod = IL2CPP.il2cpp_resolve_icall("UnityEngine.SystemInfo::GetDeviceUniqueIdentifier");
-            Imports.Hook((IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
+            MelonUtils.NativeHookAttach((IntPtr)(&mainmethod), AccessTools.Method(typeof(PatchManager), "FakeDeviceID").MethodHandle.GetFunctionPointer());
             Logger.WengaLogger($"[HWID] Before {MainHWID}");
             Logger.WengaLogger($"[HWID] Spoofing {SpoofHWID}");
             Logger.WengaLogger($"[HWID] After {SystemInfo.deviceUniqueIdentifier}");
@@ -355,37 +402,37 @@ namespace WengaPort.Extensions
             return new Il2CppSystem.Object(IL2CPP.ManagedStringToIl2Cpp(SpoofHWID)).Pointer;
         }
 
-        //private static bool OpRaiseEventPrefix(ref byte __0, ref Il2CppSystem.Object __1, ref ObjectPublicObByObInByObObUnique __2, ref SendOptions __3)
-        //{
-        //    try
-        //    {
-        //        switch (__0)
-        //        {
-        //            case 202:
-        //                return !PhotonModule.Invisible;
-        //            case 254:
-        //                return !PhotonModule.Invisible;
-        //            case 7:
-        //                return !PhotonModule.Serialize;
-        //            case 206:
-        //                return !PhotonModule.Serialize;
-        //            case 201:
-        //                return !PhotonModule.Serialize;
-        //            case 4:
-        //                return !PhotonModule.LockInstance;
-        //            case 5:
-        //                return !PhotonModule.LockInstance;
-        //            case 1:
-        //                return !PhotonModule.Forcemute;
-        //            default:
-        //                break;
-        //        }
-        //    }
-        //    catch { }
-        //    return true;
-        //}
+        private static bool OpRaiseEventPrefix(ref byte __0, ref Il2CppSystem.Object __1, ref ObjectPublicStObBoObUnique __2, ref SendOptions __3)
+        {
+            try
+            {
+                switch (__0)
+                {
+                    case 202:
+                        return !PhotonModule.Invisible;
+                    case 254:
+                        return !PhotonModule.Invisible;
+                    case 7:
+                        return !PhotonModule.Serialize;
+                    case 206:
+                        return !PhotonModule.Serialize;
+                    case 201:
+                        return !PhotonModule.Serialize;
+                    case 4:
+                        return !PhotonModule.LockInstance;
+                    case 5:
+                        return !PhotonModule.LockInstance;
+                    case 1:
+                        return !PhotonModule.Forcemute;
+                    default:
+                        break;
+                }
+            }
+            catch { }
+            return true;
+        }
 
-        private static void OnPlayerLeft(Player __0)
+        private static void OnPlayerLeft(VRC.Player __0)
         {
             try
             {
@@ -397,11 +444,11 @@ namespace WengaPort.Extensions
         }
         public static bool LoginDelay = true;
 
-        private static void OnPlayerJoin(Player __0)
+        private static void OnPlayerJoin(VRC.Player __0)
         {
             try
             {
-                PlayerList.IsAllowedClient();
+                //PlayerList.IsAllowedClient();
                 VRConsole.Log(VRConsole.LogsType.Join, __0.DisplayName());
                 Logger.WengaLogger($"[+] {__0.DisplayName()}");
                 Utils.VRCUiManager.QueHudMessage($"<color=lime>[+] {__0.DisplayName()}</color>");
@@ -700,11 +747,11 @@ namespace WengaPort.Extensions
             return int.MaxValue == v3.x || int.MaxValue == v3.y || int.MaxValue == v3.z || int.MinValue == v3.x || int.MinValue == v3.y || int.MinValue == v3.z;
         }
 
-        private static bool CaughtEventPatch(ref Player __0, ref VrcEvent __1, ref VrcBroadcastType __2, ref int __3, ref float __4)
+        private static bool CaughtEventPatch(ref VRC.Player __0, ref VrcEvent __1, ref VrcBroadcastType __2, ref int __3, ref float __4)
         {
             try
             {
-                Player instance = __0;
+                VRC.Player instance = __0;
                 string name = __1.ParameterObject.name;
                 string text = instance.DisplayName();
                 string senderID = instance.UserID();
@@ -713,7 +760,7 @@ namespace WengaPort.Extensions
                 {
                     array = new Il2CppSystem.Object[0];
                 }
-                Player player = null;
+                VRC.Player player = null;
                 string a2 = string.Empty;
                 string text3 = string.Empty;
                 try

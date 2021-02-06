@@ -257,7 +257,7 @@ namespace WengaPort.Modules.Reupload
                             }
                             catch (Exception ex)
                             {
-                                MelonLogger.LogError(ex.ToString());
+                                MelonLogger.Error(ex.ToString());
                             }
                         });
                     });
@@ -418,7 +418,7 @@ namespace WengaPort.Modules.Reupload
                             }
                             catch (Exception ex)
                             {
-                                MelonLogger.LogError(ex.ToString());
+                                MelonLogger.Error(ex.ToString());
                             }
                         });
                     });
@@ -601,7 +601,7 @@ namespace WengaPort.Modules.Reupload
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError(ex.ToString());
+                MelonLogger.Error(ex.ToString());
                 return false;
             }
         }
@@ -671,7 +671,7 @@ namespace WengaPort.Modules.Reupload
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError(ex.ToString());
+                MelonLogger.Error(ex.ToString());
             }
         }
 
@@ -745,7 +745,7 @@ namespace WengaPort.Modules.Reupload
             }
             catch (Exception ex)
             {
-                MelonLogger.LogError(ex.Message);
+                MelonLogger.Error(ex.Message);
                 return string.Empty;
             }
         }

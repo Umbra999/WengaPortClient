@@ -74,6 +74,14 @@ namespace WengaPort.Buttons
             {
                 PhotonModule.WorldTravel = false;
             }, "Spoof your location to different worlds");
+
+            new QMToggleButton(ThisMenu, 4, 1, "JoinRoom \nLog", () =>
+            {
+                PatchManager.JoinRoomLog = true;
+            }, "Disabled", () =>
+            {
+                PatchManager.JoinRoomLog = false;
+            }, "Toggle OpJoinRoom logging");
         }
     }
 }

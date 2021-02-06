@@ -11,8 +11,8 @@ namespace WengaPort.Buttons
     {
         public static QMSingleButton PortalToInvite;
 
-        public static Transform NotificationMenu = Utils.QuickMenu.transform.Find("NotificationInteractMenu");
-        public static GameObject NotificationMenuOBJ = Utils.QuickMenu.transform.Find("NotificationInteractMenu").gameObject;
+        public static Transform NotificationMenu = Utils.QuickMenu.transform.Find("QuickModeMenus/QuickModeInviteResponseMoreOptionsMenu");
+        public static GameObject NotificationMenuOBJ = Utils.QuickMenu.transform.Find("QuickModeMenus/QuickModeInviteResponseMoreOptionsMenu").gameObject;
 
         public static void InviteButtonInit()
         {
@@ -33,7 +33,7 @@ namespace WengaPort.Buttons
             }), "Drop a Portal to the Invite");
             PortalToInvite.SetParent(NotificationMenu);
 
-            PortalToInvite = new QMSingleButton("ShortcutMenu", 4, 1, "Check\nInstance", new Action(() =>
+            PortalToInvite = new QMSingleButton("ShortcutMenu", 2, 0, "Check\nInstance", new Action(() =>
             {
                 if (PhotonMenu.Ini.GetBool("Toggles", "Bot", true))
                 {
@@ -58,7 +58,7 @@ namespace WengaPort.Buttons
             }), "Check the Instance for Players");
             PortalToInvite.SetParent(NotificationMenu);
 
-            PortalToInvite = new QMSingleButton("ShortcutMenu", 3, 1, "Copy\nWorldID", new Action(() =>
+            PortalToInvite = new QMSingleButton("ShortcutMenu", 3, 0, "Copy\nWorldID", new Action(() =>
             {
                 string ID = string.Empty;
                 Il2CppSystem.Collections.Generic.Dictionary<string, Il2CppSystem.Object>.Enumerator enumerator = Utils.QuickMenu.Notification().details.GetEnumerator();

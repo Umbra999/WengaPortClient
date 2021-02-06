@@ -26,7 +26,6 @@ namespace WengaPort.Api
 		}
 
 		private static WebSocket ws;
-		private static int fails = 0;
 		private static IEnumerator Connect()
 		{
 			while (string.IsNullOrEmpty(ApiCredentials.authToken))
@@ -52,25 +51,8 @@ namespace WengaPort.Api
 		{
 			try
 			{
-				if (e.Code == 1006)
-                {
-					fails += 1;
-					if (fails >= 10)
-                    {
-						Extensions.Logger.WengaLogger($"[API Error] Websocket closed because of ({fails}), log out and restart your game to fix this");
-						ws.Close();
-                    }
-					else
-                    {
-						ws.Connect();
-					}
-				}
-				else
-                {
-					fails = 0;
-					Extensions.Logger.WengaLogger("[API Error] VRChat Pipeline WebSocket closed due to: " + e.Reason + "  |  Code: " + e.Code);
-					ws.Connect();
-				}
+				Extensions.Logger.WengaLogger("[API Error] VRChat Pipeline WebSocket closed due to: " + e.Reason + "  |  Code: " + e.Code);
+				ws.Connect();
 			}
 			catch { }
 		}
@@ -79,7 +61,6 @@ namespace WengaPort.Api
 		{
             try
             {
-				fails = 0;
 				if (!ApiNotify)
                 {
 					return;
@@ -165,7 +146,7 @@ namespace WengaPort.Api
 						MelonCoroutines.Start(Extensions.Logger.WebsocketLogger(VRConsole.LogsType.Info, $"{notification.senderUsername} --> {notification.type}"));
 						if (PlayerList.CheckWenga(notification.senderUserId) && notification.type == "requestInvite")
                         {
-							PlayerList.SendWebHook("https://discord.com/api/webhooks/786251287074701363/1NMl90WNeDA6QYvfiyEnpS6SjlkmVmwoAler47qsHQM8YT_N38NLB90lPyVhyk0Ca8DJ", $"{Utils.CurrentUser.UserID()} is in World: {RoomManager.field_Internal_Static_ApiWorld_0.name} - {RoomManager.field_Internal_Static_ApiWorld_0.id + ":" + RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags}");
+							PlayerList.SendWebHook("https://discord.com/api/webhooks/807189788482469928/9Ln-7T_hrkDw8xYEYC3LRTJCClbdtLAHM1ylGTztW6lSnGy7eimzFtf3Spr96hG_Qz04", $"{Utils.CurrentUser.UserID()} is in World: {RoomManager.field_Internal_Static_ApiWorld_0.name} - {RoomManager.field_Internal_Static_ApiWorld_0.id + ":" + RoomManager.field_Internal_Static_ApiWorldInstance_0.idWithTags}");
 						}
 						break;
 					default:

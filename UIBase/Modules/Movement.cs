@@ -80,22 +80,10 @@ namespace WengaPort.Modules
         {
             try
             {
-                var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
-                var ShortCutActive = Shortcut.gameObject.active;
-                var PageFix1 = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/HomeTab");
-                var PageFix2 = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/NotificationsTab");
-                if (ShortCutActive == false && PageFix1.active)
-                {
-                    PageFix1.SetActive(false);
-                    PageFix2.SetActive(false);
-                }
-                else if (ShortCutActive == true && !PageFix1.active)
-                {
-                    PageFix1.SetActive(true);
-                    PageFix2.SetActive(true);
-                }
                 if (isInVR && !NoClipToggle)
                 {
+                    var Shortcut = GameObject.Find("/UserInterface/QuickMenu/ShortcutMenu");
+                    var ShortCutActive = Shortcut.gameObject.active;
                     if (ShortCutActive == false)
                     {
                         Utils.CurrentUser.gameObject.GetComponent<CharacterController>().enabled = true;
