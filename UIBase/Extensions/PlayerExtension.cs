@@ -190,7 +190,7 @@ namespace WengaPort.Modules
 				color = "<color=#FF7000>";
 			else
 				color = "<color=red>";
-			string Percent = Instance.GetQuality().ToString().Split(',')[0];
+			string Percent = Instance.GetQuality().ToString().Split('.')[0];
 			return $"{color}{Percent}%</color>";
 		}
 
