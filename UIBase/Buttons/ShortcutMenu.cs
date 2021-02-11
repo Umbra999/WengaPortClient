@@ -13,6 +13,7 @@ using WengaPort.Extensions;
 using static VRC.SDKBase.VRC_EventHandler;
 using VRC.Udon;
 using Object = UnityEngine.Object;
+using VRC.UI;
 
 namespace WengaPort.Buttons
 {
@@ -22,7 +23,7 @@ namespace WengaPort.Buttons
         public static QMSingleButton HalfButton;
         public static QMToggleButton FlyButton;
         public static QMToggleButton NoClipButton;
-        public static QMToggleButton HalfToggleButton;
+        public static QMSingleButton HalfToggleButton;
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern void keybd_event(byte virtualKey, byte scanCode, uint flags, IntPtr extraInfo);
@@ -36,6 +37,7 @@ namespace WengaPort.Buttons
                 QMStuff.ShowQuickmenuPage(ThisMenu.getMenuName()); //Open the menu we created above ^
 
             }, "Open the Client", Color.black, Color.clear, null, "https://i.imgur.com/tfavyxX.png")); // 292 x 281 png
+
 
             Panels.TextMenu(ThisMenu, 2.5f, 1, "\nMenu\nSelector", 4, 3, "Menu Selector");
 
@@ -315,35 +317,13 @@ namespace WengaPort.Buttons
                 Movement.NoClipDisable();
             }, "Toggle NoClip");
 
-            HalfToggleButton = new QMToggleButton("ShortcutMenu", 0, 3, "FM", () =>
+
+            HalfToggleButton = new QMSingleButton("ShortcutMenu", 4, 1, "⇄", delegate
             {
-                try
-                {
-                    foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
-                    {
-                        if (!instance.IsFriend())
-                        {
-                            InteractMenu.HearOffPlayers.Add(instance.GetVRCPlayer().UserID());
-                        }
-                    }
-                }
-                catch
-                { }
-            }, "Off", () =>
-            {
-                try
-                {
-                    foreach (Player instance in Utils.PlayerManager.GetAllPlayers().ToArray())
-                    {
-                        InteractMenu.HearOffPlayers.Remove(instance.GetVRCPlayer().UserID());
-                    }
-                }
-                catch
-                { }
-            }, "Forcemute non Friends");
+                UnityEngine.UI.Button NotifTab = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/NotificationsTab").GetComponent<UnityEngine.UI.Button>();
+                NotifTab.Press();
+            }, "Go to the Notification Menu");
             HalfToggleButton.getGameObject().GetComponent<RectTransform>().sizeDelta /= new Vector2(2, 1.75f); 
-            HalfToggleButton.btnOn.gameObject.GetComponent<RectTransform>().sizeDelta /= new Vector2(2.7f, 1.75f);  
-            HalfToggleButton.btnOff.gameObject.GetComponent<RectTransform>().sizeDelta /= new Vector2(2.7f, 1.75f);
             HalfToggleButton.getGameObject().transform.localPosition = UIChanges.GetButtonPosition(-0.25f, 2.53f);
         }
     }

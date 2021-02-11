@@ -381,7 +381,7 @@ namespace WengaPort.Api
         {
             btnType = "NestedButton";
 
-            Transform menu = UnityEngine.Object.Instantiate<Transform>(QMStuff.NestedMenuTemplate(), QMStuff.GetQuickMenuInstance().transform);
+            Transform menu = UnityEngine.Object.Instantiate(QMStuff.NestedMenuTemplate(), QMStuff.GetQuickMenuInstance().transform);
             menuName = QMButtonAPI.identifier + btnQMLoc + "_" + btnXLocation + "_" + btnYLocation;
             menu.name = menuName;
 
@@ -446,7 +446,6 @@ namespace WengaPort.Api
             label = labelObj.GetComponent<Text>();
             SliderLabel = Slider.transform.Find("SliderLabel").GetComponent<Text>();
             displayState = DisplayState;
-            // Day: this still needs work
             initShift[0] = -1f;
             initShift[1] = -0.5f;
             Slider.GetComponentInChildren<RectTransform>().anchorMin += new Vector2(0.06f, 0f);
@@ -476,7 +475,6 @@ namespace WengaPort.Api
             label = labelObj.GetComponent<Text>();
             SliderLabel = Slider.transform.Find("SliderLabel").GetComponent<Text>();
             displayState = DisplayState;
-            // Day: this still needs work
             initShift[0] = -1f;
             initShift[1] = -0.5f;
             Slider.GetComponentInChildren<RectTransform>().anchorMin += new Vector2(0.06f, 0f);
@@ -615,17 +613,16 @@ namespace WengaPort.Api
             return vrcuimInstance;
         }
 
-        // Cache the FieldInfo for getting the current page. Hope to god this works!
         private static FieldInfo currentPageGetter;
-
-        // Show a Quick Menu page via the Page Name. Hope to god this works!
+        private static GameObject shortcutMenu;
+        private static GameObject userInteractMenu;
         public static void ShowQuickmenuPage(string pagename)
         {
             QuickMenu quickmenu = GetQuickMenuInstance();
             Transform pageTransform = quickmenu?.transform.Find(pagename);
             if (pageTransform == null)
             {
-                Extensions.Logger.WengaLogger("[QMStuff] pageTransform is null !");
+                Console.WriteLine("[QMStuff] pageTransform is null!");
             }
 
             if (currentPageGetter == null)
@@ -634,14 +631,14 @@ namespace WengaPort.Api
                 if (!shortcutMenu.activeInHierarchy)
                     shortcutMenu = quickmenu.transform.Find("UserInteractMenu").gameObject;
 
-                
+
                 FieldInfo[] fis = Il2CppType.Of<QuickMenu>().GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Where((fi) => fi.FieldType == Il2CppType.Of<GameObject>()).ToArray();
                 //MelonLoader.MelonModLogger.Log("[QMStuff] GameObject Fields in QuickMenu:");
                 int count = 0;
                 foreach (FieldInfo fi in fis)
                 {
                     GameObject value = fi.GetValue(quickmenu)?.TryCast<GameObject>();
-                    if (value == shortcutMenu && ++count == 3)
+                    if (value == shortcutMenu && ++count == 2)
                     {
                         //MelonLoader.MelonModLogger.Log("[QMStuff] currentPage field: " + fi.Name);
                         currentPageGetter = fi;
@@ -650,7 +647,7 @@ namespace WengaPort.Api
                 }
                 if (currentPageGetter == null)
                 {
-                    Extensions.Logger.WengaLogger("[QMStuff] Unable to find field currentPage in QuickMenu");
+                    Console.WriteLine("[QMStuff] Unable to find field currentPage in QuickMenu");
                     return;
                 }
             }
@@ -663,10 +660,14 @@ namespace WengaPort.Api
             QuickMenuContextualDisplay quickmenuContextualDisplay = GetQuickMenuInstance().field_Private_QuickMenuContextualDisplay_0;
             quickmenuContextualDisplay.Method_Public_Void_EnumNPublicSealedvaUnNoToUs7vUsNoUnique_0(QuickMenuContextualDisplay.EnumNPublicSealedvaUnNoToUs7vUsNoUnique.NoSelection);
             //quickmenuContextualDisplay.Method_Public_Nested0_0(QuickMenuContextualDisplay.Nested0.NoSelection);
-
             pageTransform.gameObject.SetActive(true);
-
             currentPageGetter.SetValue(quickmenu, pageTransform.gameObject);
+            if (shortcutMenu == null)
+                shortcutMenu = QuickMenu.prop_QuickMenu_0.transform.Find("ShortcutMenu")?.gameObject;
+
+            if (userInteractMenu == null)
+                userInteractMenu = QuickMenu.prop_QuickMenu_0.transform.Find("UserInteractMenu")?.gameObject;
+
             if (pagename == "ShortcutMenu")
             {
                 SetIndex(0);
@@ -678,6 +679,8 @@ namespace WengaPort.Api
             else
             {
                 SetIndex(-1);
+                shortcutMenu?.SetActive(false);
+                userInteractMenu?.SetActive(false);
             }
         }
 

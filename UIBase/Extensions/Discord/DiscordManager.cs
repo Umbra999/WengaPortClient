@@ -41,12 +41,12 @@ namespace DiscordRichPresence
                 DiscordRpc.Initialize("770056934236880897", ref eventHandlers, true, optionalSteamId);
                 DiscordRpc.UpdatePresence(ref presence);
                 running = true;
-                WengaPort.Extensions.Logger.WengaLogger("[WengaPort] Discord Presence Init");
+                WengaPort.Extensions.Logger.WengaLogger("Discord Presence Init");
             }
             catch (Exception arg)
             {
-                WengaPort.Extensions.Logger.WengaLogger("[WengaPort Discord] Unable to init discord RichPresence:");
-                WengaPort.Extensions.Logger.WengaLogger("[WengaPort Discord] " + arg);
+                WengaPort.Extensions.Logger.WengaLogger("[Discord] Unable to init discord RichPresence:");
+                WengaPort.Extensions.Logger.WengaLogger("[Discord] " + arg);
             }
         }
 

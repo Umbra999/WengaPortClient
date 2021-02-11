@@ -11,7 +11,7 @@ namespace WengaPort.Extensions
         public static void WengaLogger(object obj) 
         {
             Console.ForegroundColor = ConsoleColor.DarkCyan;
-            Console.WriteLine("[" + DateTime.Now.ToShortTimeString() + "]" + " [WengaPort] " + obj);
+            Console.WriteLine($"[{DateTime.Now.ToShortTimeString()}] [WengaPort] {obj}");
         }
 
         public static IEnumerator WebsocketLogger(VRConsole.LogsType LogType, object obj)

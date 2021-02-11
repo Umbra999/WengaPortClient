@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using UnhollowerBaseLib;
 using UnityEngine;
+using VRC.SDKBase;
 
 namespace WengaPort.Modules
 {
@@ -12,6 +14,19 @@ namespace WengaPort.Modules
 			if (flag)
 			{
 				Resources.FindObjectsOfTypeAll<HighlightsFXStandalone>().FirstOrDefault().highlightColor = highlightcolor;
+			}
+		}
+
+		public static void PickupESP(bool state)
+		{
+			Il2CppArrayBase<VRC_Pickup> il2CppArrayBase = Resources.FindObjectsOfTypeAll<VRC_Pickup>();
+			foreach (VRC_Pickup vrc_Pickup in il2CppArrayBase)
+			{
+				bool flag = !(vrc_Pickup == null) && !(vrc_Pickup.gameObject == null) && vrc_Pickup.gameObject.active && vrc_Pickup.enabled && vrc_Pickup.pickupable && !vrc_Pickup.name.Contains("ViewFinder") && !(HighlightsFX.prop_HighlightsFX_0 == null);
+				if (flag)
+				{
+					HighlightsFX.prop_HighlightsFX_0.Method_Public_Void_Renderer_Boolean_0(vrc_Pickup.GetComponentInChildren<MeshRenderer>(), state);
+				}
 			}
 		}
 

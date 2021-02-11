@@ -83,25 +83,16 @@ namespace WengaPort.Buttons
             GameObject QMHomeButton = Utils.QuickMenu.transform.Find("ShortcutMenu/GoHomeButton").gameObject;
             GameObject QMRespawnButton = Utils.QuickMenu.transform.Find("ShortcutMenu/RespawnButton").gameObject;
             GameObject InteractReport = Utils.QuickMenu.transform.Find("UserInteractMenu/ReportAbuseButton").gameObject;
+            var HomeTab = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/HomeTab");
+            var NotifTab = GameObject.Find("/UserInterface/QuickMenu/QuickModeTabs/NotificationsTab");
             var MicButton = GameObject.Find("/UserInterface/QuickMenu/MicControls");
             var MicTextButton = GameObject.Find("/UserInterface/QuickMenu/MicControls/MuteText");
             var UIElementsMenu = GameObject.Find("/UserInterface/QuickMenu/UIElementsMenu");
             var NewElementsMenu = GameObject.Find("/UserInterface/QuickMenu/QuickMenu_NewElements");
             GameObject QMHeaderContainer = Utils.QuickMenu.transform.Find("ShortcutMenu/HeaderContainer").gameObject;
 
-            Vector2 ButtonSize = QMSafetyButton.GetComponent<RectTransform>().sizeDelta / new Vector2(1f, 2.0175f);
-            if (QMSafetyButton.GetComponent<RectTransform>().sizeDelta != ButtonSize)
-            {
-                SetSizeButtonfor(QMSafetyButton, 1f, 2.0175f);
-                QMSafetyButton.transform.localPosition = GetButtonPosition(5f, -0.5f);         
-            }
-
-            if (QMSettingsButton.GetComponent<RectTransform>().sizeDelta != ButtonSize)
-            {
-                SetSizeButtonfor(QMSettingsButton, 1f, 2.0175f);
-                QMSettingsButton.transform.localPosition = GetButtonPosition(4f, -0.5f);
-            }
-
+            SetSizeButtonfor(QMSafetyButton, 1f, 2.0175f);
+            SetSizeButtonfor(QMSettingsButton, 1f, 2.0175f);
             SetSizeButtonfor(QMEmojiButton, 1f, 2.0175f);
             SetSizeButtonfor(QMEmoteButton, 1f, 2.0175f);
             SetSizeButtonfor(QMCameraButton, 1f, 2.0175f);
@@ -121,7 +112,9 @@ namespace WengaPort.Buttons
             QMCalibrateButton.transform.localPosition = GetButtonPosition(5, 2.25f);
             QMSitButton.transform.localPosition = GetButtonPosition(5, 2.25f);
             QMRankToggle.transform.localPosition = GetButtonPosition(5, -1.25f);
+            QMSettingsButton.transform.localPosition = GetButtonPosition(4f, -0.5f);
             NewElementsMenu.transform.localPosition = GetButtonPosition(2.25f, 3f);
+            QMSafetyButton.transform.localPosition = GetButtonPosition(5f, -0.5f);
             QMHomeButton.transform.localPosition = GetButtonPosition(0, -0.5f);
             QMRespawnButton.transform.localPosition = GetButtonPosition(0f, 2f);
             MicButton.transform.localPosition = GetButtonPosition(0.25f, 4.7f);
@@ -154,6 +147,12 @@ namespace WengaPort.Buttons
             Ads4.transform.SetParent(UIElementsMenu.transform);
             FourthPanel.transform.localScale = new Vector3(0, 0, 0);
             FourthPanel.transform.position = new Vector3(999 * 999, 999 * 999, 999 * 999);
+
+            NotifTab.transform.localScale = new Vector3(0, 0, 0);
+            NotifTab.transform.position = new Vector3(999 * 999, 999 * 999, 999 * 999);
+
+            HomeTab.transform.localScale = new Vector3(0, 0, 0);
+            HomeTab.transform.position = new Vector3(999 * 999, 999 * 999, 999 * 999);
             Console.Title = "WengaPort";
             var cursorManager = VRCUiCursorManager.field_Private_Static_VRCUiCursorManager_0;
             var leftHand = cursorManager.transform.Find("LeftHandBeam").GetComponent<VRCUiCursor>();

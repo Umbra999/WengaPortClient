@@ -38,6 +38,7 @@ namespace WengaPort.FoldersManager
             {
                 File.Create("WengaPort\\Config.ini");
                 Ini = new IniFile("WengaPort\\Config.ini");
+                Ini.SetBool("Toggles", "QuestSpoof", false);
             }
             else
             {

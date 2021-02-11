@@ -34,16 +34,16 @@ namespace WengaPort.Modules
 
         public static void IncreaseSpeed()
         {
-            //FindObjectOfType<LocomotionInputController>().walkspeed = 4;
-            //FindObjectOfType<LocomotionInputController>().runSpeed = 8;
-            //FindObjectOfType<LocomotionInputController>().strafeSpeed = 4;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_2 = 4;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_0 = 8;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_1 = 4;
         }
 
         public static void DecreaseSpeed()
         {
-            //FindObjectOfType<LocomotionInputController>().walkSpeed = 2;
-            //FindObjectOfType<LocomotionInputController>().runSpeed = 4;
-            //FindObjectOfType<LocomotionInputController>().strafeSpeed = 2;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_2 = 2;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_0 = 4;
+            FindObjectOfType<LocomotionInputController>().field_Public_Single_1 = 2;
         }
 
         public static bool FlyToggle = false;

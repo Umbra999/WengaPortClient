@@ -51,7 +51,6 @@ namespace WengaPort.Modules
 						string.Format("\n<b>Actor Number: {0}</b>", Networking.LocalPlayer.playerId),
 						string.Format("\n<b>Master: {0}</b>", Networking.LocalPlayer.isMaster),
 						string.Format("\n<b>USpeak: {0}</b>", Utils.CurrentUser.prop_USpeaker_0.field_Public_BitRate_0),
-						string.Format("\n<b>Sending: {0}</b>", Utils.CurrentUser.prop_USpeaker_0.field_Public_SpeakerMode_0),
 						string.Format("\n<b>X: {0}</b>", Utils.CurrentUser.transform.position.x),
 						string.Format("\n<b>Y: {0}</b>", Utils.CurrentUser.transform.position.y),
 						string.Format("\n<b>Z: {0}</b>", Utils.CurrentUser.transform.position.z),
